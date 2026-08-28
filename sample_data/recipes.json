@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Butter Paneer",
+    "calorie": "300",
+    "category": "Breakfast",
+    "image": "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800",
+    "rating": 4.5,
+    "review": 10,
+    "time": 25,
+    "isFavorite": false,
+    "ingredientName": ["Paneer", "Butter", "Tomato Puree", "Fresh Cream"],
+    "ingredientAmount": ["400 g", "100 g", "250 ml", "2 tbsp"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=200",
+      "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200",
+      "https://images.unsplash.com/photo-1546470427-e26264be0b0d?w=200",
+      "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200"
+    ]
+  },
+  {
+    "name": "Avocado Toast",
+    "calorie": "220",
+    "category": "Breakfast",
+    "image": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=800",
+    "rating": 4.7,
+    "review": 34,
+    "time": 15,
+    "isFavorite": false,
+    "ingredientName": ["Sourdough Bread", "Avocado", "Lemon Juice", "Chili Flakes"],
+    "ingredientAmount": ["2 pieces", "1 pieces", "1 tsp", "1 tsp"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1585478259715-4d3a5f3a3b1a?w=200",
+      "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=200",
+      "https://images.unsplash.com/photo-1590502593245-40d5d5b28d3d?w=200",
+      "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?w=200"
+    ]
+  },
+  {
+    "name": "Pasta Primavera",
+    "calorie": "410",
+    "category": "Food",
+    "image": "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800",
+    "rating": 4.3,
+    "review": 21,
+    "time": 30,
+    "isFavorite": false,
+    "ingredientName": ["Penne Pasta", "Mixed Vegetables", "Olive Oil", "Parmesan"],
+    "ingredientAmount": ["300 g", "200 g", "2 tbsp", "50 g"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=200",
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200",
+      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200",
+      "https://images.unsplash.com/photo-1618164436241-4473940d1f5c?w=200"
+    ]
+  },
+  {
+    "name": "Vegetable Soup",
+    "calorie": "180",
+    "category": "Vegetables",
+    "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800",
+    "rating": 4.2,
+    "review": 12,
+    "time": 20,
+    "isFavorite": false,
+    "ingredientName": ["Carrot", "Celery", "Vegetable Stock", "Onion"],
+    "ingredientAmount": ["150 g", "100 g", "500 ml", "1 pieces"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1447175008436-054170c2e979?w=200",
+      "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=200",
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200",
+      "https://images.unsplash.com/photo-1508747703725-719777637510?w=200"
+    ]
+  },
+  {
+    "name": "Grilled Chicken Sandwich",
+    "calorie": "480",
+    "category": "Food",
+    "image": "https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=800",
+    "rating": 4.6,
+    "review": 45,
+    "time": 20,
+    "isFavorite": false,
+    "ingredientName": ["Chicken Breast", "Whole Wheat Bread", "Lettuce", "Mayonnaise"],
+    "ingredientAmount": ["200 g", "2 pieces", "2 pieces", "1 tbsp"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200",
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200",
+      "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=200",
+      "https://images.unsplash.com/photo-1589948949104-a9e6e2c3ba75?w=200"
+    ]
+  },
+  {
+    "name": "Berry Smoothie",
+    "calorie": "160",
+    "category": "Dairy",
+    "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800",
+    "rating": 4.8,
+    "review": 29,
+    "time": 5,
+    "isFavorite": false,
+    "ingredientName": ["Mixed Berries", "Greek Yogurt", "Honey", "Milk"],
+    "ingredientAmount": ["150 g", "100 g", "1 tbsp", "200 ml"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=200",
+      "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200",
+      "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200",
+      "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200"
+    ]
+  },
+  {
+    "name": "Fresh Garden Salad",
+    "calorie": "140",
+    "category": "Vegetables",
+    "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+    "rating": 4.1,
+    "review": 8,
+    "time": 10,
+    "isFavorite": false,
+    "ingredientName": ["Mixed Greens", "Cherry Tomatoes", "Cucumber", "Olive Oil"],
+    "ingredientAmount": ["120 g", "100 g", "1 pieces", "1 tbsp"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200",
+      "https://images.unsplash.com/photo-1546470427-e26264be0b0d?w=200",
+      "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=200",
+      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200"
+    ]
+  },
+  {
+    "name": "Fresh Baked Croissant",
+    "calorie": "270",
+    "category": "Bakery",
+    "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800",
+    "rating": 4.4,
+    "review": 17,
+    "time": 40,
+    "isFavorite": false,
+    "ingredientName": ["Flour", "Butter", "Yeast", "Milk"],
+    "ingredientAmount": ["250 g", "150 g", "1 tsp", "100 ml"],
+    "ingredientImage": [
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200",
+      "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200",
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200",
+      "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200"
+    ]
+  }
+]
