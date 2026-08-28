@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/preferences_provider.dart';
 import '../providers/recipe_provider.dart';
 import '../utils/app_theme.dart';
 import '../widgets/category_chip.dart';
@@ -120,7 +121,8 @@ class _RecipeGridSliver extends StatelessWidget {
       );
     }
 
-    final recipes = provider.filteredRecipes;
+    final prefs = context.watch<PreferencesProvider>().current;
+    final recipes = provider.filteredRecipes(prefs);
 
     if (recipes.isEmpty) {
       return const SliverFillRemaining(

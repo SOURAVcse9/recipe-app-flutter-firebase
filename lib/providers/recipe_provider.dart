@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/app_preferences.dart';
 import '../models/food_category.dart';
 import '../models/recipe.dart';
 import '../repositories/recipe_repository.dart';
@@ -9,25 +11,37 @@ import '../repositories/recipe_repository.dart';
 enum LoadStatus { initial, loading, loaded, error }
 
 /// Single source of truth for recipe/category state, filtering, search,
-/// favorites, and per-recipe serving quantity.
-///
-/// Widgets read from this via `context.watch<RecipeProvider>()` /
-/// `Consumer` / `Selector`, and never touch Firestore directly.
+/// user-specific favorites, and serving quantity.
 class RecipeProvider extends ChangeNotifier {
-  RecipeProvider({RecipeRepository? repository})
-      : _repository = repository ?? RecipeRepository() {
-    _subscribeToRecipes();
-    _subscribeToCategories();
+  RecipeProvider({
+    RecipeRepository? repository,
+    FirebaseAuth? auth,
+  })  : _repository = repository ?? RecipeRepository(),
+        _auth = auth ?? FirebaseAuth.instance {
+    _initAuthAndStreams();
   }
 
   final RecipeRepository _repository;
+  final FirebaseAuth _auth;
 
+  StreamSubscription<User?>? _authSub;
   StreamSubscription<List<Recipe>>? _recipeSub;
   StreamSubscription<List<FoodCategory>>? _categorySub;
+  StreamSubscription<Set<String>>? _favoritesSub;
+
+  // ---- Authentication state -----------------------------------------
+  bool _authLoading = true;
+  String? _authError;
+  String? _uid;
+
+  bool get authLoading => _authLoading;
+  String? get authError => _authError;
+  String? get uid => _uid;
 
   // ---- Raw data -----------------------------------------------------
   List<Recipe> _allRecipes = [];
   List<FoodCategory> _categories = [];
+  Set<String> _favoriteIds = {};
 
   // ---- UI-facing state ------------------------------------------------
   LoadStatus _recipeStatus = LoadStatus.initial;
@@ -52,41 +66,110 @@ class RecipeProvider extends ChangeNotifier {
         ..._categories.map((c) => c.name).where((n) => n.isNotEmpty),
       ];
 
-  /// Recipes after search + category filtering are both applied.
-  List<Recipe> get filteredRecipes {
-    final query = _searchQuery.trim().toLowerCase();
+  /// Recipes after search + category filtering + favorite mapping are applied,
+  /// matching case-sensitivity from [AppPreferences].
+  List<Recipe> filteredRecipes(AppPreferences prefs) {
+    final query = _searchQuery.trim();
+    final isCaseInsensitive = prefs.caseInsensitiveSearch;
 
     return _allRecipes.where((recipe) {
       final matchesCategory = _selectedCategory == 'All' ||
           recipe.category.toLowerCase() == _selectedCategory.toLowerCase();
 
-      final matchesSearch = query.isEmpty ||
-          recipe.name.toLowerCase().contains(query) ||
-          recipe.category.toLowerCase().contains(query);
+      bool matchesSearch;
+      if (query.isEmpty) {
+        matchesSearch = true;
+      } else if (isCaseInsensitive) {
+        final q = query.toLowerCase();
+        matchesSearch = recipe.name.toLowerCase().contains(q) ||
+            recipe.category.toLowerCase().contains(q);
+      } else {
+        matchesSearch = recipe.name.contains(query) ||
+            recipe.category.contains(query);
+      }
 
       return matchesCategory && matchesSearch;
+    }).map((recipe) {
+      final isFav = _favoriteIds.contains(recipe.id);
+      return recipe.isFavorite == isFav
+          ? recipe
+          : recipe.copyWith(isFavorite: isFav);
     }).toList();
   }
 
-  List<Recipe> get favoriteRecipes =>
-      _allRecipes.where((r) => r.isFavorite).toList();
+  List<Recipe> get favoriteRecipes {
+    return _allRecipes
+        .where((r) => _favoriteIds.contains(r.id))
+        .map((r) => r.isFavorite ? r : r.copyWith(isFavorite: true))
+        .toList();
+  }
 
-  int quantityFor(String recipeId) => _quantities[recipeId] ?? 1;
+  int quantityFor(String recipeId, {int defaultQuantity = 1}) =>
+      _quantities[recipeId] ?? defaultQuantity;
 
   /// Looks up a single recipe by id from the full (unfiltered) live set.
-  /// Used by the detail screen so it stays correct regardless of whatever
-  /// search/category filter is currently active on Home.
   Recipe? recipeById(String id) {
     for (final r in _allRecipes) {
-      if (r.id == id) return r;
+      if (r.id == id) {
+        final isFav = _favoriteIds.contains(r.id);
+        return r.isFavorite == isFav ? r : r.copyWith(isFavorite: isFav);
+      }
     }
     return null;
   }
 
-  // ---- Subscriptions ------------------------------------------------
-  void _subscribeToRecipes() {
+  // ---- Authentication and Streams Setup -------------------------------
+  void _initAuthAndStreams() {
+    _authSub = _auth.userChanges().listen((user) {
+      if (user != null) {
+        _uid = user.uid;
+        _authLoading = false;
+        _authError = null;
+        notifyListeners();
+        _subscribeToStreams();
+      } else {
+        _signInAnonymously();
+      }
+    }, onError: (Object error) {
+      _authLoading = false;
+      _authError = 'Authentication failed. Please check your connection.';
+      notifyListeners();
+    });
+  }
+
+  Future<void> _signInAnonymously() async {
+    _authLoading = true;
+    _authError = null;
+    notifyListeners();
+
+    try {
+      final credentials = await _auth.signInAnonymously();
+      _uid = credentials.user?.uid;
+      _authLoading = false;
+      notifyListeners();
+      _subscribeToStreams();
+    } catch (e) {
+      _authLoading = false;
+      _authError = 'Failed to connect to backend anonymously. Retrying...';
+      notifyListeners();
+    }
+  }
+
+  /// Triggered manually via the Retry button in the UI if auth fails.
+  void retryAuthentication() {
+    _signInAnonymously();
+  }
+
+  void _subscribeToStreams() {
+    final currentUid = _uid;
+    if (currentUid == null) return;
+
+    _recipeSub?.cancel();
+    _categorySub?.cancel();
+    _favoritesSub?.cancel();
+
     _recipeStatus = LoadStatus.loading;
-    _recipeSub = _repository.getRecipeStream().listen(
+    _recipeSub = _repository.watchRecipes().listen(
       (recipes) {
         _allRecipes = recipes;
         _recipeStatus = LoadStatus.loaded;
@@ -99,11 +182,9 @@ class RecipeProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
-  }
 
-  void _subscribeToCategories() {
     _categoryStatus = LoadStatus.loading;
-    _categorySub = _repository.getCategoryStream().listen(
+    _categorySub = _repository.watchCategories().listen(
       (categories) {
         _categories = categories;
         _categoryStatus = LoadStatus.loaded;
@@ -112,6 +193,16 @@ class RecipeProvider extends ChangeNotifier {
       onError: (Object error, StackTrace _) {
         _categoryStatus = LoadStatus.error;
         notifyListeners();
+      },
+    );
+
+    _favoritesSub = _repository.watchFavoriteIds(currentUid).listen(
+      (favIds) {
+        _favoriteIds = favIds;
+        notifyListeners();
+      },
+      onError: (Object _) {
+        // Fail silently for favorites, keep loading recipe stream
       },
     );
   }
@@ -127,13 +218,9 @@ class RecipeProvider extends ChangeNotifier {
     return 'Something went wrong loading recipes. Please try again.';
   }
 
-  /// Retries subscribing to recipes — useful for a "Try again" button
-  /// after an error state.
+  /// Retries subscribing to the main content streams.
   void retry() {
-    _recipeSub?.cancel();
-    _categorySub?.cancel();
-    _subscribeToRecipes();
-    _subscribeToCategories();
+    _subscribeToStreams();
   }
 
   // ---- Search / filter actions ---------------------------------------
@@ -148,36 +235,47 @@ class RecipeProvider extends ChangeNotifier {
   }
 
   // ---- Favorites ------------------------------------------------------
-
-  /// Optimistically flips the favorite flag locally, then writes through
-  /// to Firestore. If the write fails, the local flag is reverted so the
-  /// UI never shows a "favorited" state that isn't actually persisted.
   Future<void> toggleFavorite(Recipe recipe) async {
-    final index = _allRecipes.indexWhere((r) => r.id == recipe.id);
-    if (index == -1) return;
+    final currentUid = _uid;
+    if (currentUid == null) return;
 
-    final newValue = !recipe.isFavorite;
-    _allRecipes[index] = recipe.copyWith(isFavorite: newValue);
+    final recipeId = recipe.id;
+    final wasFavorite = _favoriteIds.contains(recipeId);
+
+    // Optimistic UI update
+    if (wasFavorite) {
+      _favoriteIds.remove(recipeId);
+    } else {
+      _favoriteIds.add(recipeId);
+    }
     notifyListeners();
 
     try {
-      await _repository.updateFavorite(recipe.id, newValue);
+      if (wasFavorite) {
+        await _repository.removeFavorite(currentUid, recipeId);
+      } else {
+        await _repository.addFavorite(currentUid, recipeId);
+      }
     } catch (_) {
-      // Revert optimistic update on failure.
-      _allRecipes[index] = recipe.copyWith(isFavorite: !newValue);
+      // Revert optimistic update on write failure
+      if (wasFavorite) {
+        _favoriteIds.add(recipeId);
+      } else {
+        _favoriteIds.remove(recipeId);
+      }
       notifyListeners();
     }
   }
 
   // ---- Quantity / serving scaling --------------------------------------
-  void incrementQuantity(String recipeId) {
-    final current = quantityFor(recipeId);
+  void incrementQuantity(String recipeId, {int defaultQuantity = 1}) {
+    final current = quantityFor(recipeId, defaultQuantity: defaultQuantity);
     _quantities[recipeId] = current + 1;
     notifyListeners();
   }
 
-  void decrementQuantity(String recipeId, {int minimum = 1}) {
-    final current = quantityFor(recipeId);
+  void decrementQuantity(String recipeId, {int defaultQuantity = 1, int minimum = 1}) {
+    final current = quantityFor(recipeId, defaultQuantity: defaultQuantity);
     if (current <= minimum) return;
     _quantities[recipeId] = current - 1;
     notifyListeners();
@@ -190,8 +288,10 @@ class RecipeProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _authSub?.cancel();
     _recipeSub?.cancel();
     _categorySub?.cancel();
+    _favoritesSub?.cancel();
     super.dispose();
   }
 }

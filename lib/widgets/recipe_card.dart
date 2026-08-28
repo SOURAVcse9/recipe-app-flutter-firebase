@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 import '../models/recipe.dart';
+import '../providers/preferences_provider.dart';
 import '../utils/app_theme.dart';
 import 'favorite_button.dart';
 import 'rating_widget.dart';
@@ -21,12 +23,16 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final prefs = context.watch<PreferencesProvider>().current;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(color: theme.dividerColor),
           boxShadow: const [
             BoxShadow(
               color: Color(0x0F000000),
@@ -71,38 +77,44 @@ class RecipeCard extends StatelessWidget {
                     recipe.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 14.5,
-                      color: AppColors.textPrimary,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(Iconsax.flash_1,
-                          size: 13, color: AppColors.textSecondary),
-                      const SizedBox(width: 3),
-                      Text(
-                        '${recipe.calorie} Cal',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Icon(Iconsax.clock,
-                          size: 13, color: AppColors.textSecondary),
-                      const SizedBox(width: 3),
-                      Text(
-                        '${recipe.time} min',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
+                  if (prefs.showCalories || prefs.showCookingTime)
+                    Row(
+                      children: [
+                        if (prefs.showCalories) ...[
+                          const Icon(Iconsax.flash_1,
+                              size: 13, color: AppColors.textSecondary),
+                          const SizedBox(width: 3),
+                          Text(
+                            '${recipe.calorie} Cal',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                        if (prefs.showCalories && prefs.showCookingTime)
+                          const SizedBox(width: 10),
+                        if (prefs.showCookingTime) ...[
+                          const Icon(Iconsax.clock,
+                              size: 13, color: AppColors.textSecondary),
+                          const SizedBox(width: 3),
+                          Text(
+                            '${recipe.time} min',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   const SizedBox(height: 6),
                   RatingWidget(rating: recipe.rating, size: 12.5),
                 ],

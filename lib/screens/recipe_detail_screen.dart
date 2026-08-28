@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/preferences_provider.dart';
 import '../providers/recipe_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/ingredient_scaler.dart';
@@ -12,10 +13,8 @@ import '../widgets/rating_widget.dart';
 import '../widgets/safe_network_image.dart';
 import '../widgets/state_views.dart';
 
-/// Looks the recipe up by id from the live [RecipeProvider] stream (rather
-/// than being passed the whole object) so this screen automatically
-/// reflects real-time Firestore changes — e.g. a rating updated from the
-/// Firebase Console while the user is looking at the detail screen.
+/// Renders real-time details from Firestore for the selected recipe ID,
+/// adapting layout displays to theme and content visibility preferences.
 class RecipeDetailScreen extends StatelessWidget {
   const RecipeDetailScreen({super.key, required this.recipeId});
 
@@ -23,7 +22,9 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final provider = context.watch<RecipeProvider>();
+    final prefs = context.watch<PreferencesProvider>().current;
 
     if (provider.recipeStatus == LoadStatus.loading) {
       return const Scaffold(body: LoadingView());
@@ -40,15 +41,17 @@ class RecipeDetailScreen extends StatelessWidget {
       );
     }
 
-    final quantity = provider.quantityFor(recipe.id);
+    final quantity = provider.quantityFor(recipe.id,
+        defaultQuantity: prefs.defaultServingQuantity);
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
-            backgroundColor: AppColors.background,
+            backgroundColor: theme.scaffoldBackgroundColor,
             leading: const _RoundBackButton(),
             flexibleSpace: FlexibleSpaceBar(
               background: SafeNetworkImage(
@@ -69,10 +72,10 @@ class RecipeDetailScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           recipe.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.textPrimary,
+                            color: theme.textTheme.bodyLarge?.color,
                           ),
                         ),
                       ),
@@ -87,24 +90,29 @@ class RecipeDetailScreen extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     recipe.category,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
+                    style: TextStyle(
+                      color: theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                          AppColors.textSecondary,
                       fontSize: 13,
                     ),
                   ),
                   const SizedBox(height: 18),
                   Row(
                     children: [
-                      _StatChip(
-                        icon: Iconsax.flash_1,
-                        label: '${recipe.calorie} Cal',
-                      ),
-                      const SizedBox(width: 10),
-                      _StatChip(
-                        icon: Iconsax.clock,
-                        label: '${recipe.time} Mins',
-                      ),
-                      const SizedBox(width: 10),
+                      if (prefs.showCalories) ...[
+                        _StatChip(
+                          icon: Iconsax.flash_1,
+                          label: '${recipe.calorie} Cal',
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                      if (prefs.showCookingTime) ...[
+                        _StatChip(
+                          icon: Iconsax.clock,
+                          label: '${recipe.time} Mins',
+                        ),
+                        const SizedBox(width: 10),
+                      ],
                       _StatChip(
                         icon: Iconsax.star1,
                         label: '${recipe.rating.toStringAsFixed(1)} Star',
@@ -120,9 +128,11 @@ class RecipeDetailScreen extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           '(${recipe.review} Reviews)',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12.5,
-                            color: AppColors.textSecondary,
+                            color: theme.textTheme.bodyMedium?.color
+                                    ?.withAlpha(204) ??
+                                AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -132,44 +142,49 @@ class RecipeDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Ingredients',
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
                       QuantitySelector(
                         quantity: quantity,
                         onIncrement: () => context
                             .read<RecipeProvider>()
-                            .incrementQuantity(recipe.id),
+                            .incrementQuantity(recipe.id,
+                                defaultQuantity: prefs.defaultServingQuantity),
                         onDecrement: () => context
                             .read<RecipeProvider>()
-                            .decrementQuantity(recipe.id),
+                            .decrementQuantity(recipe.id,
+                                defaultQuantity: prefs.defaultServingQuantity),
                       ),
                     ],
                   ),
                   if (recipe.hasMismatchedIngredientArrays) ...[
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Some ingredient data looks incomplete for this '
                       'recipe — showing what we can safely match.',
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: AppColors.textSecondary,
+                        color: theme.textTheme.bodyMedium?.color
+                                ?.withAlpha(204) ??
+                            AppColors.textSecondary,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
                   ],
                   const SizedBox(height: 16),
                   if (recipe.safeIngredientCount == 0)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        'No ingredients listed for this recipe yet.',
-                        style: TextStyle(color: AppColors.textSecondary),
+                    Text(
+                      'No ingredients listed for this recipe yet.',
+                      style: TextStyle(
+                        color: theme.textTheme.bodyMedium?.color
+                                ?.withAlpha(204) ??
+                            AppColors.textSecondary,
                       ),
                     )
                   else
@@ -192,7 +207,6 @@ class RecipeDetailScreen extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _StatChip extends StatelessWidget {
@@ -203,10 +217,13 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
+        color: isDark ? const Color(0xFF2F2A25) : AppColors.primaryLight,
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Row(
@@ -216,10 +233,10 @@ class _StatChip extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11.5,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: theme.textTheme.bodyLarge?.color,
             ),
           ),
         ],
@@ -233,15 +250,17 @@ class _RoundBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: theme.cardColor,
           shape: BoxShape.circle,
         ),
         child: IconButton(
-          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.textPrimary),
+          icon: Icon(Iconsax.arrow_left_2, color: theme.textTheme.bodyLarge?.color),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
       ),

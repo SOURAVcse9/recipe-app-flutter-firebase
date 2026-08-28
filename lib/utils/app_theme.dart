@@ -39,6 +39,8 @@ ThemeData buildAppTheme() {
   final base = ThemeData.light(useMaterial3: true);
   return base.copyWith(
     scaffoldBackgroundColor: AppColors.background,
+    cardColor: AppColors.surface,
+    dividerColor: AppColors.divider,
     colorScheme: base.colorScheme.copyWith(
       primary: AppColors.primary,
       error: AppColors.error,
@@ -56,8 +58,7 @@ ThemeData buildAppTheme() {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.surface,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppRadius.pill),
         borderSide: const BorderSide(color: AppColors.divider),
@@ -75,6 +76,55 @@ ThemeData buildAppTheme() {
       backgroundColor: AppColors.surface,
       selectedItemColor: AppColors.primary,
       unselectedItemColor: AppColors.textSecondary,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+    ),
+  );
+}
+
+ThemeData buildAppDarkTheme() {
+  final base = ThemeData.dark(useMaterial3: true);
+  return base.copyWith(
+    scaffoldBackgroundColor: const Color(0xFF161310),
+    cardColor: const Color(0xFF221F1B),
+    dividerColor: const Color(0xFF2F2A25),
+    colorScheme: base.colorScheme.copyWith(
+      primary: AppColors.primary,
+      error: AppColors.error,
+      surface: const Color(0xFF221F1B),
+    ),
+    textTheme: base.textTheme.apply(
+      bodyColor: const Color(0xFFF6F1EB),
+      displayColor: const Color(0xFFF6F1EB),
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF161310),
+      foregroundColor: Color(0xFFF6F1EB),
+      elevation: 0,
+      centerTitle: false,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: const Color(0xFF221F1B),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderSide: const BorderSide(color: Color(0xFF2F2A25)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderSide: const BorderSide(color: Color(0xFF2F2A25)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
+      ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFF221F1B),
+      selectedItemColor: AppColors.primary,
+      unselectedItemColor: Color(0xFFA1978E),
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
       elevation: 8,

@@ -1,56 +1,42 @@
 rules_version = '2';
 
-// SECURITY ASSUMPTIONS (documented, see README.md "Security model"):
-// - Recipes and categories are public read-only content (like a menu),
-//   so any client — signed in or not — can read them.
-// - Writes to recipe/category content are restricted to authenticated
-//   admin users only (checked via a custom claim `admin: true`, set
-//   through the Firebase Admin SDK / Cloud Functions — never trust a
-//   client-settable field for this).
-// - Anonymous/arbitrary users can NEVER overwrite recipe or category
-//   documents. This replaces the original open
-//   `allow read, write: if request.time < timestamp.date(2024, 12, 31)`
-//   development rule, which granted unrestricted access to everyone.
-// - `isFavorite` currently lives on the shared recipe document (per the
-//   supplied schema) rather than being scoped per-user. Because that
-//   field is shared, ANY signed-in user is allowed to toggle only that
-//   one field via `favoriteFieldOnly()` below — nothing else on the
-//   document. This is a stopgap: the repository layer is written so this
-//   can be swapped for a `users/{uid}/favorites/{recipeId}` subcollection
-//   without touching the UI (see lib/repositories/recipe_repository.dart).
+// SECURITY ASSUMPTIONS:
+// - Recipes and categories are public read-only content.
+// - Recipe/category modifications are restricted to admin users only (custom claim admin: true).
+// - Users can read and write ONLY their own favorite recipe IDs under users/{uid}/favorites/{recipeId}.
+// - Users can read and write ONLY their own settings under users/{uid}/preferences/{docId}.
+// - Cross-user access is rejected.
 
 function isAdmin() {
   return request.auth != null && request.auth.token.admin == true;
 }
 
-function isSignedIn() {
-  return request.auth != null;
-}
-
-// Only allows a write that changes exclusively the `isFavorite` field.
-function favoriteFieldOnly() {
-  return request.resource.data.diff(resource.data).affectedKeys()
-    .hasOnly(['isFavorite']);
-}
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Collection name intentionally kept as `complete Flutter app` (with
-    // spaces) to match the source specification's schema. Firestore rules
-    // require backticks to reference a path segment containing spaces.
+    // Shared recipe collection
     match /`complete Flutter app`/{recipeId} {
       allow read: if true;
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (isSignedIn() && favoriteFieldOnly());
+      allow write: if isAdmin();
     }
 
+    // Shared category collection
     match /categories/{categoryId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Deny everything else by default.
+    // User-specific favorites subcollection
+    match /users/{uid}/favorites/{recipeId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // User-specific preferences subcollection
+    match /users/{uid}/preferences/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;
     }
