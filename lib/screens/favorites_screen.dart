@@ -3,7 +3,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/recipe_provider.dart';
-import '../utils/app_theme.dart';
 import '../widgets/recipe_card.dart';
 import '../widgets/state_views.dart';
 import 'recipe_detail_screen.dart';
@@ -13,20 +12,21 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final provider = context.watch<RecipeProvider>();
 
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(20, 12, 20, 4),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
             child: Text(
               'Favorites',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ),

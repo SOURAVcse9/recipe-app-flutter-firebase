@@ -19,12 +19,13 @@ class QuantitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final canDecrement = quantity > minimum;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.chipUnselected,
+        color: theme.dividerColor,
         borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
       child: Row(
@@ -39,10 +40,10 @@ class QuantitySelector extends StatelessWidget {
             child: Text(
               '$quantity',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -61,20 +62,25 @@ class _CircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final enabled = onTap != null;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: enabled ? AppColors.primary : AppColors.divider,
+          color: enabled ? AppColors.primary : theme.cardColor,
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
           size: 16,
-          color: enabled ? Colors.white : AppColors.textSecondary,
+          color: enabled
+              ? Colors.white
+              : theme.textTheme.bodyMedium?.color?.withAlpha(100) ??
+                  AppColors.textSecondary,
         ),
       ),
     );

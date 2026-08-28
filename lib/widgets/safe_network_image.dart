@@ -3,9 +3,6 @@ import 'package:iconsax/iconsax.dart';
 
 import '../utils/app_theme.dart';
 
-/// A network image that never breaks the layout: shows a loading
-/// placeholder while fetching, and a food-icon fallback if the URL is
-/// empty, invalid, or fails to load. See IMAGE ERROR HANDLING in spec.
 class SafeNetworkImage extends StatelessWidget {
   const SafeNetworkImage({
     super.key,
@@ -24,16 +21,16 @@ class SafeNetworkImage extends StatelessWidget {
 
     Widget child;
     if (url.trim().isEmpty) {
-      child = _placeholder();
+      child = _placeholder(context);
     } else {
       child = Image.network(
         url,
         fit: fit,
         loadingBuilder: (context, widget, progress) {
           if (progress == null) return widget;
-          return _loadingPlaceholder();
+          return _loadingPlaceholder(context);
         },
-        errorBuilder: (context, error, stackTrace) => _placeholder(),
+        errorBuilder: (context, error, stackTrace) => _placeholder(context),
       );
     }
 
@@ -43,21 +40,24 @@ class SafeNetworkImage extends StatelessWidget {
     );
   }
 
-  Widget _placeholder() {
+  Widget _placeholder(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
-      color: AppColors.chipUnselected,
+      color: theme.dividerColor,
       alignment: Alignment.center,
-      child: const Icon(
+      child: Icon(
         Iconsax.reserve,
-        color: AppColors.textSecondary,
+        color: theme.textTheme.bodyMedium?.color?.withAlpha(128) ??
+            AppColors.textSecondary,
         size: 32,
       ),
     );
   }
 
-  Widget _loadingPlaceholder() {
+  Widget _loadingPlaceholder(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
-      color: AppColors.chipUnselected,
+      color: theme.dividerColor,
       alignment: Alignment.center,
       child: const SizedBox(
         width: 22,

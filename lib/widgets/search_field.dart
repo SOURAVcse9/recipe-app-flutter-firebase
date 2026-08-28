@@ -15,14 +15,18 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final secondaryColor = theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+        AppColors.textSecondary;
+
     return TextField(
       onChanged: onChanged,
-      style: const TextStyle(fontSize: 14.5),
+      style: TextStyle(fontSize: 14.5, color: theme.textTheme.bodyLarge?.color),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(color: AppColors.textSecondary),
-        prefixIcon: const Icon(Iconsax.search_normal_1,
-            size: 20, color: AppColors.textSecondary),
+        hintStyle: TextStyle(color: secondaryColor),
+        prefixIcon: Icon(Iconsax.search_normal_1,
+            size: 20, color: secondaryColor),
       ),
     );
   }

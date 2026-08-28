@@ -22,6 +22,10 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final secondaryColor = theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+        AppColors.textSecondary;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -33,7 +37,7 @@ class ErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: secondaryColor),
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 16),
@@ -67,27 +71,31 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final secondaryColor = theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+        AppColors.textSecondary;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 44, color: AppColors.textSecondary),
+            Icon(icon, size: 44, color: secondaryColor),
             const SizedBox(height: 14),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: secondaryColor),
             ),
           ],
         ),

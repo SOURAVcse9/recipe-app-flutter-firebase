@@ -16,13 +16,14 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary : AppColors.chipUnselected,
+          color: selected ? AppColors.primary : theme.dividerColor,
           borderRadius: BorderRadius.circular(AppRadius.pill),
         ),
         child: Text(
@@ -30,7 +31,10 @@ class CategoryChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.5,
             fontWeight: FontWeight.w600,
-            color: selected ? Colors.white : AppColors.textSecondary,
+            color: selected
+                ? Colors.white
+                : theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                    AppColors.textSecondary,
           ),
         ),
       ),

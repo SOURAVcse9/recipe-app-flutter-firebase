@@ -7,8 +7,9 @@ class AboutAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('About this app'),
         centerTitle: true,
@@ -24,34 +25,36 @@ class AboutAppScreen extends StatelessWidget {
               color: AppColors.primary,
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Recipe App',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Version 1.0.0',
               style: TextStyle(
                 fontSize: 13,
-                color: AppColors.textSecondary,
+                color: theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                    AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Discover delicious recipes, explore ingredients, scale servings, and save your favorite meals.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.5,
                 height: 1.4,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 32),
             _buildSection(
+              context,
               title: 'Features',
               items: [
                 'Browse recipes',
@@ -64,6 +67,7 @@ class AboutAppScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             _buildSection(
+              context,
               title: 'Technology Stack',
               items: [
                 'Flutter',
@@ -78,7 +82,9 @@ class AboutAppScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection({required String title, required List<String> items}) {
+  Widget _buildSection(BuildContext context,
+      {required String title, required List<String> items}) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,10 +92,11 @@ class AboutAppScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: AppColors.textSecondary,
+              color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                  AppColors.textSecondary,
               letterSpacing: 1.0,
             ),
           ),
@@ -98,9 +105,9 @@ class AboutAppScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(color: AppColors.divider),
+            border: Border.all(color: theme.dividerColor),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,9 +128,9 @@ class AboutAppScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13.5,
-                              color: AppColors.textPrimary,
+                              color: theme.textTheme.bodyLarge?.color,
                             ),
                           ),
                         ),

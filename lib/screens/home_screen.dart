@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: CustomScrollView(
         slivers: [
@@ -24,20 +25,21 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'What are you cooking today?',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
+                  Text(
                     'Find a recipe, scale the servings, and get cooking.',
                     style: TextStyle(
                       fontSize: 13.5,
-                      color: AppColors.textSecondary,
+                      color: theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                          AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 18),
