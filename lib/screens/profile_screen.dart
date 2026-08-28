@@ -11,13 +11,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+        padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Profile',
               style: TextStyle(
                 fontSize: 22,
@@ -25,10 +25,10 @@ class ProfileScreen extends StatelessWidget {
                 color: AppColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 24),
-            const _SettingsTile(icon: Iconsax.notification, label: 'Notifications'),
-            const _SettingsTile(icon: Iconsax.setting_2, label: 'App preferences'),
-            const _SettingsTile(icon: Iconsax.info_circle, label: 'About this app'),
+            SizedBox(height: 24),
+            _SettingsTile(icon: Iconsax.notification, label: 'Notifications'),
+            _SettingsTile(icon: Iconsax.setting_2, label: 'App preferences'),
+            _SettingsTile(icon: Iconsax.info_circle, label: 'About this app'),
           ],
         ),
       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-import '../models/recipe.dart';
 import '../providers/recipe_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/ingredient_scaler.dart';
@@ -81,7 +80,7 @@ class RecipeDetailScreen extends StatelessWidget {
                         isFavorite: recipe.isFavorite,
                         onTap: () => context
                             .read<RecipeProvider>()
-                            .toggleFavorite(recipe!),
+                            .toggleFavorite(recipe),
                       ),
                     ],
                   ),
@@ -145,10 +144,10 @@ class RecipeDetailScreen extends StatelessWidget {
                         quantity: quantity,
                         onIncrement: () => context
                             .read<RecipeProvider>()
-                            .incrementQuantity(recipe!.id),
+                            .incrementQuantity(recipe.id),
                         onDecrement: () => context
                             .read<RecipeProvider>()
-                            .decrementQuantity(recipe!.id),
+                            .decrementQuantity(recipe.id),
                       ),
                     ],
                   ),
@@ -176,7 +175,7 @@ class RecipeDetailScreen extends StatelessWidget {
                   else
                     ...List.generate(recipe.safeIngredientCount, (i) {
                       final scaled = IngredientScaler.scale(
-                        recipe!.ingredientAmount[i],
+                        recipe.ingredientAmount[i],
                         quantity,
                       );
                       return IngredientTile(
