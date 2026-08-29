@@ -225,26 +225,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         scaledAmount: scaled,
                       );
                     }),
-                  const SizedBox(height: 32),
-                  Text(
-                    'Cooking Instructions',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: theme.textTheme.bodyLarge?.color,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (recipe.instructions.isEmpty)
+                  if (recipe.instructions.isNotEmpty) ...[
+                    const SizedBox(height: 32),
                     Text(
-                      'No cooking instructions listed for this recipe.',
+                      'Cooking Instructions',
                       style: TextStyle(
-                        color: theme.textTheme.bodyMedium?.color
-                                ?.withAlpha(204) ??
-                            AppColors.textSecondary,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
-                    )
-                  else
+                    ),
+                    const SizedBox(height: 16),
                     ...List.generate(recipe.instructions.length, (index) {
                       final stepNum = index + 1;
                       final stepText = recipe.instructions[index];
@@ -285,6 +276,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         ),
                       );
                     }),
+                  ],
                   const SizedBox(height: 32),
                   Row(
                     children: [

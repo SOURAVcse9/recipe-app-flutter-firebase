@@ -14,6 +14,7 @@ import 'screens/login_screen.dart';
 import 'screens/verification_screen.dart';
 import 'utils/app_theme.dart';
 import 'widgets/state_views.dart';
+import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize notification handlers
+  await NotificationService.instance.initialize();
 
   runApp(
     MultiProvider(
@@ -41,6 +45,8 @@ Future<void> main() async {
 class RecipeApp extends StatelessWidget {
   const RecipeApp({super.key});
 
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     final themeMode =
@@ -48,6 +54,7 @@ class RecipeApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Recipe App',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       darkTheme: buildAppDarkTheme(),

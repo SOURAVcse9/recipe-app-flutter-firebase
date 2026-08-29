@@ -43,6 +43,11 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
+    // User-specific notification_tokens subcollection
+    match /users/{uid}/notification_tokens/{tokenId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
     // User-specific favorites subcollection
     match /users/{uid}/favorites/{recipeId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;

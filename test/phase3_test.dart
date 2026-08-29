@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_app/models/recipe.dart';
+import 'package:recipe_app/models/app_preferences.dart';
 import 'package:recipe_app/models/review.dart';
 import 'package:recipe_app/providers/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
@@ -187,6 +188,35 @@ void main() {
       int viewCount = 5;
       viewCount++;
       expect(viewCount, equals(6));
+    });
+
+    test('Notification preferences serialization in AppPreferences', () {
+      const prefs = AppPreferences(
+        recipeRecommendations: false,
+        newRecipes: true,
+        cookingReminders: true,
+      );
+      final map = prefs.toMap();
+      expect(map['recipeRecommendations'], isFalse);
+      expect(map['newRecipes'], isTrue);
+      expect(map['cookingReminders'], isTrue);
+
+      final fromMap = AppPreferences.fromMap(map);
+      expect(fromMap.recipeRecommendations, isFalse);
+      expect(fromMap.newRecipes, isTrue);
+      expect(fromMap.cookingReminders, isTrue);
+    });
+
+    test('Notification payload parsing test', () {
+      final payload = {
+        'type': 'recipe',
+        'notificationType': 'new_recipe',
+        'recipeId': 'rec_123',
+      };
+      
+      expect(payload['type'], equals('recipe'));
+      expect(payload['notificationType'], equals('new_recipe'));
+      expect(payload['recipeId'], equals('rec_123'));
     });
   });
 }

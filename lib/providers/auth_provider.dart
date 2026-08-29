@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../repositories/auth_repository.dart';
+import '../services/notification_service.dart';
 
 class AuthExceptionMapper {
   static String toMessage(dynamic exception) {
@@ -64,12 +65,20 @@ class AuthProvider extends ChangeNotifier {
 
   void _initAuthListener() {
     _authSub = _repository.authStateChanges.listen((user) async {
+      final oldUser = _currentUser;
       _currentUser = user;
       _error = null;
+
+      // Clean old token first if shifting users or logging out
+      if (oldUser != null && oldUser.uid != user?.uid) {
+        await NotificationService.instance.clearToken(oldUser.uid);
+      }
+
       if (user != null) {
         try {
           await _repository.ensureUserProfile(user);
           _userProfile = await _repository.fetchUserProfile(user.uid);
+          await NotificationService.instance.syncToken(user.uid);
         } catch (_) {
           // Graceful fallback
         }

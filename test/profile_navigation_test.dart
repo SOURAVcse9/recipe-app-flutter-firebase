@@ -13,6 +13,7 @@ import 'package:recipe_app/screens/notifications_screen.dart';
 import 'package:recipe_app/screens/profile_screen.dart';
 import 'package:recipe_app/providers/auth_provider.dart';
 import 'package:recipe_app/repositories/auth_repository.dart';
+import 'package:recipe_app/services/notification_service.dart';
 class FakeFirebaseFirestore implements FirebaseFirestore {
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -104,6 +105,7 @@ class FakePreferencesRepository extends PreferencesRepository {
 }
 
 void main() {
+  NotificationService.isTest = true;
   group('Profile Navigation & Firestore Preferences Tests', () {
     late FakeFirebaseAuth mockAuth;
     late FakePreferencesRepository mockRepo;
