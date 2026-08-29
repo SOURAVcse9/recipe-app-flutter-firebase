@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -124,6 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final provider = context.watch<AuthProvider>();
+    final isWindows = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -302,32 +304,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+                  if (!isWindows) ...[
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+                          ),
                         ),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  OutlinedButton.icon(
-                    onPressed: provider.loading ? null : _submitGoogle,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.textTheme.bodyLarge?.color,
-                      side: BorderSide(color: theme.dividerColor),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                        const Expanded(child: Divider()),
+                      ],
                     ),
-                    icon: const Text('G', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 18)),
-                    label: const Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
+                    const SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      onPressed: provider.loading ? null : _submitGoogle,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: theme.textTheme.bodyLarge?.color,
+                        side: BorderSide(color: theme.dividerColor),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                      ),
+                      icon: const Text('G', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 18)),
+                      label: const Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
