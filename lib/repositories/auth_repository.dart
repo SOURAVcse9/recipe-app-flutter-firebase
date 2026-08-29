@@ -60,31 +60,42 @@ class AuthRepository {
   }
 
   Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      throw FirebaseAuthException(
-        code: 'sign_in_canceled',
-        message: 'Google sign-in was canceled by the user.',
+    if (kIsWeb) {
+      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      googleProvider.setCustomParameters({'prompt': 'select_account'});
+      final UserCredential cred = await _auth.signInWithPopup(googleProvider);
+      final User? user = cred.user;
+      if (user != null) {
+        await ensureUserProfile(user);
+      }
+      return cred;
+    } else {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw FirebaseAuthException(
+          code: 'sign_in_canceled',
+          message: 'Google sign-in was canceled by the user.',
+        );
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-    }
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final UserCredential cred = await _auth.signInWithCredential(credential);
-    final User? user = cred.user;
-    if (user != null) {
-      await ensureUserProfile(user);
+      final UserCredential cred = await _auth.signInWithCredential(credential);
+      final User? user = cred.user;
+      if (user != null) {
+        await ensureUserProfile(user);
+      }
+      return cred;
     }
-    return cred;
   }
 
   Future<void> signOut() async {
     await _auth.signOut();
-    if (await _googleSignIn.isSignedIn()) {
+    if (!kIsWeb && await _googleSignIn.isSignedIn()) {
       await _googleSignIn.signOut();
     }
   }
