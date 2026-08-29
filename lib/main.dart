@@ -11,6 +11,7 @@ import 'providers/recently_viewed_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/main_navigation.dart';
 import 'screens/login_screen.dart';
+import 'screens/verification_screen.dart';
 import 'utils/app_theme.dart';
 import 'widgets/state_views.dart';
 
@@ -69,7 +70,12 @@ class AuthWrapper extends StatelessWidget {
     }
 
     if (authProvider.isAuthenticated) {
-      return const MainNavigation();
+      final user = authProvider.currentUser;
+      final isGoogle = user?.providerData.any((p) => p.providerId == 'google.com') ?? false;
+      if (isGoogle || (user?.emailVerified ?? false)) {
+        return const MainNavigation();
+      }
+      return const VerificationScreen();
     }
 
     return const LoginScreen();

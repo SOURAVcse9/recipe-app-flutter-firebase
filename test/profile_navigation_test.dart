@@ -160,7 +160,9 @@ void main() {
       expect(find.text('About this app'), findsOneWidget);
 
       // 1. Test Notifications Screen Navigation
-      await tester.tap(find.text('Notifications'));
+      final notifFinder = find.text('Notifications');
+      await tester.ensureVisible(notifFinder);
+      await tester.tap(notifFinder);
       await tester.pumpAndSettle();
       expect(find.byType(NotificationsScreen), findsOneWidget);
 
@@ -182,7 +184,9 @@ void main() {
       expect(find.byType(ProfileScreen), findsOneWidget);
 
       // 2. Test App Preferences Screen Navigation
-      await tester.tap(find.text('App preferences'));
+      final appPrefsFinder = find.text('App preferences');
+      await tester.ensureVisible(appPrefsFinder);
+      await tester.tap(appPrefsFinder);
       await tester.pumpAndSettle();
       expect(find.byType(AppPreferencesScreen), findsOneWidget);
 
@@ -201,7 +205,9 @@ void main() {
       expect(find.byType(ProfileScreen), findsOneWidget);
 
       // 3. Test About Screen Navigation
-      await tester.tap(find.text('About this app'));
+      final aboutFinder = find.text('About this app');
+      await tester.ensureVisible(aboutFinder);
+      await tester.tap(aboutFinder);
       await tester.pumpAndSettle();
       expect(find.byType(AboutAppScreen), findsOneWidget);
 

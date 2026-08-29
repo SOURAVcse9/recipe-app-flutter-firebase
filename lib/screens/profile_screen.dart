@@ -11,8 +11,11 @@ import 'shopping_list_screen.dart';
 import 'recently_viewed_screen.dart';
 import 'my_reviews_screen.dart';
 import 'favorites_screen.dart';
+import 'edit_profile_screen.dart';
+import 'change_password_screen.dart';
 
-/// Renders option cards to configure notifications, app preferences, and about info.
+/// Renders options and dynamic profiles displaying provider indicators, photos,
+/// verification flags, and custom settings widgets.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -21,8 +24,14 @@ class ProfileScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final authProvider = context.watch<AuthProvider>();
     final profile = authProvider.userProfile;
-    final name = profile?['name'] ?? authProvider.currentUser?.displayName ?? 'Anonymous User';
-    final email = profile?['email'] ?? authProvider.currentUser?.email ?? '';
+    final user = authProvider.currentUser;
+
+    final name = profile?['name'] ?? user?.displayName ?? 'Anonymous User';
+    final email = profile?['email'] ?? user?.email ?? '';
+    final photoUrl = profile?['photoUrl'] ?? user?.photoURL;
+    final providerType = profile?['provider'] ??
+        (user?.providerData.any((p) => p.providerId == 'google.com') == true ? 'google' : 'password');
+    final isVerified = user?.emailVerified ?? false;
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
 
     return SafeArea(
@@ -55,14 +64,17 @@ class ProfileScreen extends StatelessWidget {
                       CircleAvatar(
                         radius: 28,
                         backgroundColor: AppColors.primary,
-                        child: Text(
-                          initial,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                        backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                        child: photoUrl == null
+                            ? Text(
+                                initial,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : null,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -85,6 +97,42 @@ class ProfileScreen extends StatelessWidget {
                                 color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
                               ),
                             ),
+                            const SizedBox(height: 8),
+                            // Verification and Provider status layout
+                            Row(
+                              children: [
+                                Icon(
+                                  isVerified ? Icons.verified_user : Icons.warning_amber_rounded,
+                                  size: 14,
+                                  color: isVerified ? Colors.green : Colors.orange,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  isVerified ? '✓ Verified' : '⚠ Unverified',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: isVerified ? Colors.green : Colors.orange,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: providerType == 'google' ? Colors.blue.withAlpha(30) : Colors.orange.withAlpha(30),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    providerType == 'google' ? 'Google Account' : 'Email/Password',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      color: providerType == 'google' ? Colors.blue : Colors.orange,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -92,7 +140,22 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Option cards list
+                // Options list
+                _SettingsTile(
+                  icon: Iconsax.user_edit,
+                  label: 'Edit Profile',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                  ),
+                ),
+                if (providerType == 'password')
+                  _SettingsTile(
+                    icon: Iconsax.key,
+                    label: 'Change Password',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
+                    ),
+                  ),
                 _SettingsTile(
                   icon: Iconsax.heart,
                   label: 'My Favorites',

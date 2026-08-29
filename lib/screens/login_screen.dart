@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_theme.dart';
+import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -29,12 +32,23 @@ class _LoginScreenState extends State<LoginScreen> {
     final provider = context.read<AuthProvider>();
     final success = await provider.login(
       _emailController.text.trim(),
-      _passwordController.text.trim(),
+      _passwordController.text,
     );
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully logged in!')),
+      );
+    }
+  }
+
+  void _submitGoogle() async {
+    final provider = context.read<AuthProvider>();
+    final success = await provider.loginWithGoogle();
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Successfully logged in with Google!')),
       );
     }
   }
@@ -96,21 +110,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: _obscurePassword,
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock_outline, color: AppColors.primary),
+                      prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primary),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                     ),
                     validator: (val) {
                       if (val == null || val.isEmpty) {
                         return 'Password cannot be empty.';
                       }
-                      if (val.length < 6) {
-                        return 'Password must be at least 6 characters.';
-                      }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+                        );
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   if (provider.error != null) ...[
                     const SizedBox(height: 16),
@@ -120,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ],
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: provider.loading ? null : _submit,
                     style: ElevatedButton.styleFrom(
@@ -144,6 +181,32 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                   ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  OutlinedButton.icon(
+                    onPressed: provider.loading ? null : _submitGoogle,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.textTheme.bodyLarge?.color,
+                      side: BorderSide(color: theme.dividerColor),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                    ),
+                    icon: const Text('G', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 18)),
+                    label: const Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                   const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -159,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: const Text(
-                          'Sign Up',
+                          'Create Account',
                           style: TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
