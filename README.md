@@ -25,7 +25,7 @@ RecipeRepository (repositories/recipe_repository.dart) — all Firebase
         │  access lives here, isolated from the UI
         ▼
 Cloud Firestore                    Firebase Storage
-  complete Flutter app (recipes)     image/ (recipe + ingredient photos)
+  recipes (recipes collection)       image/ (recipe + ingredient photos)
   categories
 ```
 
@@ -66,8 +66,7 @@ sample_data/           Sample recipes/categories + a Node seed script
 
 ## 3. Firestore schema
 
-**Collection: `complete Flutter app`** (name kept exactly as specified;
-see note in `recipe_repository.dart` if you want to rename it)
+**Collection: `recipes`** (renamed from `complete Flutter app`)
 
 | Field              | Type            | Notes                               |
 |--------------------|-----------------|--------------------------------------|

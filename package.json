@@ -1,0 +1,12 @@
+{
+  "name": "recipe-app-seeding",
+  "version": "1.0.0",
+  "description": "Seeding script for the Firebase Firestore recipe database",
+  "main": "sample_data/seed.js",
+  "scripts": {
+    "seed": "node sample_data/seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

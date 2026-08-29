@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Recipe model mapped 1:1 to the "complete Flutter app" Firestore collection.
+/// Recipe model mapped 1:1 to the "recipes" Firestore collection.
 ///
 /// Field names are intentionally kept exactly as they exist in Firestore
 /// (e.g. `calorie`, not `calories`) to avoid silent mapping failures.

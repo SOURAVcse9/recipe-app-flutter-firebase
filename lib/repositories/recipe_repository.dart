@@ -14,7 +14,7 @@ class RecipeRepository {
 
   final FirebaseFirestore _firestore;
 
-  static const String recipesCollection = 'complete Flutter app';
+  static const String recipesCollection = 'recipes';
   static const String categoriesCollection = 'categories';
 
   CollectionReference<Map<String, dynamic>> get _recipesRef =>
