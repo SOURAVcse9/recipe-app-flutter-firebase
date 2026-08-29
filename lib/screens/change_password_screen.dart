@@ -46,6 +46,92 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     final theme = Theme.of(context);
     final provider = context.watch<AuthProvider>();
 
+    // 1. Google Provider check
+    final providerType = provider.userProfile?['provider'] ??
+        (provider.currentUser?.providerData.any((p) => p.providerId == 'google.com') == true ? 'google' : 'password');
+
+    if (providerType == 'google') {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Icon(Icons.g_mobiledata, size: 72, color: AppColors.primary),
+                const SizedBox(height: 24),
+                Text(
+                  'Google Authentication',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Your account is secured via Google Sign-In. Password management is handled by Google and cannot be modified within this app.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // 2. Email verification check
+    final isVerified = provider.currentUser?.emailVerified ?? false;
+    if (!isVerified) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Icon(Icons.warning_amber_rounded, size: 72, color: Colors.orange),
+                const SizedBox(height: 24),
+                Text(
+                  'Email Verification Required',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Please verify your email before continuing.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(

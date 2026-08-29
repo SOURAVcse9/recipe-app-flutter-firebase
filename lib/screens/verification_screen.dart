@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,37 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
+  Timer? _cooldownTimer;
+  int _cooldownSeconds = 0;
+
   @override
   void initState() {
     super.initState();
     // Clear any previous errors on entry
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthProvider>().setError(null);
+    });
+  }
+
+  @override
+  void dispose() {
+    _cooldownTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startCooldown() {
+    setState(() {
+      _cooldownSeconds = 60;
+    });
+    _cooldownTimer?.cancel();
+    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_cooldownSeconds > 0) {
+        setState(() {
+          _cooldownSeconds--;
+        });
+      } else {
+        _cooldownTimer?.cancel();
+      }
     });
   }
 
@@ -32,13 +58,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email is still not verified. Please check your inbox.')),
+          const SnackBar(
+            content: Text('Your email is not verified yet. Please check your inbox and spam folder.'),
+          ),
         );
       }
     }
   }
 
   void _resendEmail() async {
+    if (_cooldownSeconds > 0) return;
+
     final provider = context.read<AuthProvider>();
     final success = await provider.sendVerificationEmail();
 
@@ -46,6 +76,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Verification email resent successfully!')),
       );
+      _startCooldown();
     }
   }
 
@@ -122,7 +153,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
-                onPressed: provider.loading ? null : _resendEmail,
+                onPressed: provider.loading || _cooldownSeconds > 0 ? null : _resendEmail,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.primary),
@@ -130,7 +161,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                 ),
                 icon: const Icon(Iconsax.send_2),
-                label: const Text('Resend Email', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: Text(
+                  _cooldownSeconds > 0 ? 'Resend Email (${_cooldownSeconds}s)' : 'Resend Email',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 24),
               TextButton.icon(

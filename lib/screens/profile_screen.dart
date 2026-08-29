@@ -152,9 +152,17 @@ class ProfileScreen extends StatelessWidget {
                   _SettingsTile(
                     icon: Iconsax.key,
                     label: 'Change Password',
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
-                    ),
+                    onTap: () {
+                      if (!isVerified) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please verify your email before continuing.')),
+                        );
+                        return;
+                      }
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
+                      );
+                    },
                   ),
                 _SettingsTile(
                   icon: Iconsax.heart,

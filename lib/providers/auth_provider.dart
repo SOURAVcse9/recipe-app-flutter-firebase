@@ -139,7 +139,11 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      _error = AuthExceptionMapper.toMessage(e);
+      if (e is FirebaseAuthException && e.code == 'sign_in_canceled') {
+        _error = null;
+      } else {
+        _error = AuthExceptionMapper.toMessage(e);
+      }
       _loading = false;
       notifyListeners();
       return false;

@@ -1,16 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final GoogleSignIn _googleSignIn;
 
   AuthRepository({
     FirebaseAuth? auth,
     FirebaseFirestore? firestore,
+    GoogleSignIn? googleSignIn,
   })  : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn(
+          clientId: kIsWeb ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com' : null,
+        );
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -54,8 +60,7 @@ class AuthRepository {
   }
 
   Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
       throw FirebaseAuthException(
         code: 'sign_in_canceled',
@@ -72,37 +77,15 @@ class AuthRepository {
     final UserCredential cred = await _auth.signInWithCredential(credential);
     final User? user = cred.user;
     if (user != null) {
-      final docRef = _firestore.collection('users').doc(user.uid);
-      final snap = await docRef.get();
-
-      if (!snap.exists) {
-        await docRef.set({
-          'uid': user.uid,
-          'name': user.displayName ?? 'Google User',
-          'email': user.email ?? '',
-          'photoUrl': user.photoURL,
-          'provider': 'google',
-          'emailVerified': true,
-          'createdAt': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      } else {
-        await docRef.update({
-          'photoUrl': user.photoURL,
-          'provider': 'google',
-          'emailVerified': true,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-      }
+      await ensureUserProfile(user);
     }
     return cred;
   }
 
   Future<void> signOut() async {
     await _auth.signOut();
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    if (await googleSignIn.isSignedIn()) {
-      await googleSignIn.signOut();
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
     }
   }
 
@@ -168,15 +151,34 @@ class AuthRepository {
       if (data == null) return;
 
       final updates = <String, dynamic>{};
-      if (!data.containsKey('photoUrl') && user.photoURL != null) {
-        updates['photoUrl'] = user.photoURL;
+      if (isGoogle) {
+        if (user.displayName != null && data['name'] != user.displayName) {
+          updates['name'] = user.displayName;
+        }
+        if (user.photoURL != null && data['photoUrl'] != user.photoURL) {
+          updates['photoUrl'] = user.photoURL;
+        }
+        if (user.email != null && data['email'] != user.email) {
+          updates['email'] = user.email;
+        }
+        if (data['provider'] != 'google') {
+          updates['provider'] = 'google';
+        }
+        if (data['emailVerified'] != true) {
+          updates['emailVerified'] = true;
+        }
+      } else {
+        if (!data.containsKey('photoUrl') && user.photoURL != null) {
+          updates['photoUrl'] = user.photoURL;
+        }
+        if (!data.containsKey('provider')) {
+          updates['provider'] = 'password';
+        }
+        if (data['emailVerified'] != user.emailVerified) {
+          updates['emailVerified'] = user.emailVerified;
+        }
       }
-      if (!data.containsKey('provider')) {
-        updates['provider'] = isGoogle ? 'google' : 'password';
-      }
-      if (data['emailVerified'] != user.emailVerified) {
-        updates['emailVerified'] = user.emailVerified;
-      }
+
       if (updates.isNotEmpty) {
         updates['updatedAt'] = FieldValue.serverTimestamp();
         await docRef.update(updates);
