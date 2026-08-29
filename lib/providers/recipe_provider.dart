@@ -82,10 +82,12 @@ class RecipeProvider extends ChangeNotifier {
       } else if (isCaseInsensitive) {
         final q = query.toLowerCase();
         matchesSearch = recipe.name.toLowerCase().contains(q) ||
-            recipe.category.toLowerCase().contains(q);
+            recipe.category.toLowerCase().contains(q) ||
+            recipe.ingredientName.any((ing) => ing.toLowerCase().contains(q));
       } else {
         matchesSearch = recipe.name.contains(query) ||
-            recipe.category.contains(query);
+            recipe.category.contains(query) ||
+            recipe.ingredientName.any((ing) => ing.contains(query));
       }
 
       return matchesCategory && matchesSearch;
@@ -128,7 +130,16 @@ class RecipeProvider extends ChangeNotifier {
         notifyListeners();
         _subscribeToStreams();
       } else {
-        _signInAnonymously();
+        _uid = null;
+        _authLoading = false;
+        _authError = null;
+        _favoritesSub?.cancel();
+        _favoriteIds = {};
+        _allRecipes = [];
+        _categories = [];
+        _recipeStatus = LoadStatus.initial;
+        _categoryStatus = LoadStatus.initial;
+        notifyListeners();
       }
     }, onError: (Object error) {
       _authLoading = false;
@@ -137,27 +148,8 @@ class RecipeProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> _signInAnonymously() async {
-    _authLoading = true;
-    _authError = null;
-    notifyListeners();
-
-    try {
-      final credentials = await _auth.signInAnonymously();
-      _uid = credentials.user?.uid;
-      _authLoading = false;
-      notifyListeners();
-      _subscribeToStreams();
-    } catch (e) {
-      _authLoading = false;
-      _authError = 'Failed to connect to backend anonymously. Retrying...';
-      notifyListeners();
-    }
-  }
-
-  /// Triggered manually via the Retry button in the UI if auth fails.
   void retryAuthentication() {
-    _signInAnonymously();
+    _initAuthAndStreams();
   }
 
   void _subscribeToStreams() {
@@ -284,6 +276,12 @@ class RecipeProvider extends ChangeNotifier {
   void resetQuantity(String recipeId) {
     _quantities[recipeId] = 1;
     notifyListeners();
+  }
+
+  Future<void> incrementRecipeViewCount(String recipeId) async {
+    try {
+      await _repository.incrementViewCount(recipeId);
+    } catch (_) {}
   }
 
   @override

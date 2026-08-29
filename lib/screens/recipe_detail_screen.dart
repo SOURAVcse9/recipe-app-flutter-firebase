@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/preferences_provider.dart';
 import '../providers/recipe_provider.dart';
+import '../providers/recently_viewed_provider.dart';
+import '../providers/review_provider.dart';
+import '../providers/shopping_list_provider.dart';
+import '../models/review.dart';
 import '../utils/app_theme.dart';
 import '../utils/ingredient_scaler.dart';
 import '../widgets/favorite_button.dart';
@@ -12,13 +17,34 @@ import '../widgets/quantity_selector.dart';
 import '../widgets/rating_widget.dart';
 import '../widgets/safe_network_image.dart';
 import '../widgets/state_views.dart';
+import '../widgets/timer_widget.dart';
 
 /// Renders real-time details from Firestore for the selected recipe ID,
 /// adapting layout displays to theme and content visibility preferences.
-class RecipeDetailScreen extends StatelessWidget {
+class RecipeDetailScreen extends StatefulWidget {
   const RecipeDetailScreen({super.key, required this.recipeId});
 
   final String recipeId;
+
+  @override
+  State<RecipeDetailScreen> createState() => _RecipeDetailScreenState();
+}
+
+class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<RecipeProvider>().resetQuantity(widget.recipeId);
+        // Record recently viewed and increment viewCount
+        context.read<RecentlyViewedProvider>().addRecipeToRecentlyViewed(widget.recipeId);
+        context.read<RecipeProvider>().incrementRecipeViewCount(widget.recipeId);
+        // Stream reviews
+        context.read<ReviewProvider>().watchReviews(widget.recipeId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +56,7 @@ class RecipeDetailScreen extends StatelessWidget {
       return const Scaffold(body: LoadingView());
     }
 
-    final recipe = provider.recipeById(recipeId);
+    final recipe = provider.recipeById(widget.recipeId);
 
     if (recipe == null) {
       return const Scaffold(
@@ -199,12 +225,412 @@ class RecipeDetailScreen extends StatelessWidget {
                         scaledAmount: scaled,
                       );
                     }),
+                  const SizedBox(height: 32),
+                  Text(
+                    'Cooking Instructions',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (recipe.instructions.isEmpty)
+                    Text(
+                      'No cooking instructions listed for this recipe.',
+                      style: TextStyle(
+                        color: theme.textTheme.bodyMedium?.color
+                                ?.withAlpha(204) ??
+                            AppColors.textSecondary,
+                      ),
+                    )
+                  else
+                    ...List.generate(recipe.instructions.length, (index) {
+                      final stepNum = index + 1;
+                      final stepText = recipe.instructions[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                '$stepNum',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                stepText,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  height: 1.4,
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            final dynamicAmounts = <String>[];
+                            for (int i = 0; i < recipe.safeIngredientCount; i++) {
+                              dynamicAmounts.add(
+                                IngredientScaler.scale(
+                                  recipe.ingredientAmount[i],
+                                  quantity,
+                                ),
+                              );
+                            }
+                            context.read<ShoppingListProvider>().addIngredientsToShoppingList(
+                              recipeId: recipe.id,
+                              recipeName: recipe.name,
+                              names: recipe.ingredientName,
+                              amounts: dynamicAmounts,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Added ingredients to shopping list!')),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.cardColor,
+                            foregroundColor: AppColors.primary,
+                            side: const BorderSide(color: AppColors.primary),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                          ),
+                          icon: const Icon(Iconsax.shopping_bag),
+                          label: const Text('Add to Shopping List', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            if (recipe.time > 0) {
+                              showDialog(
+                                context: context,
+                                builder: (_) => TimerWidget(
+                                  initialMinutes: recipe.time,
+                                  recipeName: recipe.name,
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('This recipe has no cooking time listed.')),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                          ),
+                          icon: const Icon(Iconsax.timer_1),
+                          label: const Text('Start Cooking', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  const _ReviewsSectionHeader(),
+                  const SizedBox(height: 16),
+                  _ReviewsList(recipeId: recipe.id),
+                  const SizedBox(height: 24),
+                  _WriteReviewSection(recipeId: recipe.id),
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ReviewsSectionHeader extends StatelessWidget {
+  const _ReviewsSectionHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final reviewProvider = context.watch<ReviewProvider>();
+    final count = reviewProvider.reviews.length;
+    final avg = count > 0
+        ? reviewProvider.reviews.map((r) => r.rating).reduce((a, b) => a + b) / count
+        : 0.0;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Reviews',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: theme.textTheme.bodyLarge?.color,
+          ),
+        ),
+        Row(
+          children: [
+            const Icon(Iconsax.star1, color: AppColors.star, size: 18),
+            const SizedBox(width: 4),
+            Text(
+              '${avg.toStringAsFixed(1)} ($count Reviews)',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: theme.textTheme.bodyLarge?.color,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewsList extends StatelessWidget {
+  final String recipeId;
+
+  const _ReviewsList({required this.recipeId});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final provider = context.watch<ReviewProvider>();
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (provider.status == ReviewStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (provider.status == ReviewStatus.error) {
+      return Text('Failed to load reviews: ${provider.errorMessage}');
+    }
+
+    final reviews = provider.reviews;
+
+    if (reviews.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Text(
+          'No reviews yet. Be the first to review this recipe!',
+          style: TextStyle(
+            color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: reviews.length,
+      itemBuilder: (context, index) {
+        final review = reviews[index];
+        final isOwner = review.userId == currentUserId;
+
+        return Card(
+          color: theme.cardColor,
+          margin: const EdgeInsets.only(bottom: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            side: BorderSide(color: theme.dividerColor),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      review.userName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: theme.textTheme.bodyLarge?.color,
+                      ),
+                    ),
+                    if (isOwner)
+                      IconButton(
+                        icon: const Icon(Iconsax.trash, size: 16, color: AppColors.error),
+                        onPressed: () => provider.deleteReview(recipeId, review.id),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: List.generate(5, (starIdx) {
+                    return Icon(
+                      starIdx < review.rating ? Iconsax.star1 : Iconsax.star,
+                      size: 14,
+                      color: AppColors.star,
+                    );
+                  }),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  review.reviewText,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: theme.textTheme.bodyLarge?.color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _WriteReviewSection extends StatefulWidget {
+  final String recipeId;
+
+  const _WriteReviewSection({required this.recipeId});
+
+  @override
+  State<_WriteReviewSection> createState() => _WriteReviewSectionState();
+}
+
+class _WriteReviewSectionState extends State<_WriteReviewSection> {
+  double _rating = 5.0;
+  final _textController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final provider = context.watch<ReviewProvider>();
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+    final existingReview = provider.reviews.firstWhere(
+      (r) => r.userId == currentUserId,
+      orElse: () => const Review(id: '', userId: '', userName: '', rating: 0, reviewText: ''),
+    );
+
+    final isEditing = existingReview.id.isNotEmpty;
+
+    if (isEditing && _textController.text.isEmpty && _rating == 5.0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _rating = existingReview.rating;
+            _textController.text = existingReview.reviewText;
+          });
+        }
+      });
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          isEditing ? 'Update Your Review' : 'Rate & Review this Recipe',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: theme.textTheme.bodyLarge?.color,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: List.generate(5, (index) {
+            final starVal = index + 1.0;
+            return IconButton(
+              icon: Icon(
+                starVal <= _rating ? Iconsax.star1 : Iconsax.star,
+                color: AppColors.star,
+              ),
+              onPressed: () {
+                setState(() {
+                  _rating = starVal;
+                });
+              },
+            );
+          }),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _textController,
+          decoration: InputDecoration(
+            hintText: 'Share your experience with this recipe...',
+            hintStyle: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+            fillColor: theme.cardColor,
+            filled: true,
+          ),
+          maxLines: 3,
+          style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              if (_textController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please write a review comment.')),
+                );
+                return;
+              }
+              context.read<ReviewProvider>().submitReview(
+                    recipeId: widget.recipeId,
+                    rating: _rating,
+                    reviewText: _textController.text.trim(),
+                  );
+              if (!isEditing) {
+                _textController.clear();
+                setState(() {
+                  _rating = 5.0;
+                });
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(isEditing ? 'Review updated!' : 'Review submitted!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+            ),
+            child: Text(
+              isEditing ? 'Update Review' : 'Submit Review',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

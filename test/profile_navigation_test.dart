@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +11,8 @@ import 'package:recipe_app/screens/about_app_screen.dart';
 import 'package:recipe_app/screens/app_preferences_screen.dart';
 import 'package:recipe_app/screens/notifications_screen.dart';
 import 'package:recipe_app/screens/profile_screen.dart';
-
+import 'package:recipe_app/providers/auth_provider.dart';
+import 'package:recipe_app/repositories/auth_repository.dart';
 class FakeFirebaseFirestore implements FirebaseFirestore {
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -48,6 +49,9 @@ class FakeFirebaseAuth implements FirebaseAuth {
 
   @override
   Stream<User?> userChanges() => _userChangesController.stream;
+
+  @override
+  Stream<User?> authStateChanges() => _userChangesController.stream;
 
   @override
   Future<UserCredential> signInAnonymously() async {
@@ -104,12 +108,16 @@ void main() {
     late FakeFirebaseAuth mockAuth;
     late FakePreferencesRepository mockRepo;
     late PreferencesProvider prefsProvider;
+    late AuthProvider authProvider;
 
     setUp(() {
       mockAuth = FakeFirebaseAuth(initialUser: FakeUser());
       mockRepo = FakePreferencesRepository();
       prefsProvider =
           PreferencesProvider(repository: mockRepo, auth: mockAuth);
+      authProvider = AuthProvider(
+        repository: AuthRepository(auth: mockAuth, firestore: FakeFirebaseFirestore()),
+      );
 
       mockRepo.emitPreferences(const AppPreferences(
         recipeRecommendations: true,
@@ -129,8 +137,11 @@ void main() {
     testWidgets('ProfileScreen renders option cards and navigates successfully',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        ChangeNotifierProvider<PreferencesProvider>.value(
-          value: prefsProvider,
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<PreferencesProvider>.value(value: prefsProvider),
+            ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+          ],
           child: const MaterialApp(
             home: Scaffold(
               body: ProfileScreen(),

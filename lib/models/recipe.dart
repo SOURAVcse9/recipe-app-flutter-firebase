@@ -18,6 +18,9 @@ class Recipe {
   final List<String> ingredientImage;
   final List<String> ingredientName;
   final List<String> ingredientAmount;
+  final List<String> instructions;
+  final int viewCount;
+  final int favoriteCount;
 
   const Recipe({
     required this.id,
@@ -32,6 +35,9 @@ class Recipe {
     required this.ingredientImage,
     required this.ingredientName,
     required this.ingredientAmount,
+    required this.instructions,
+    this.viewCount = 0,
+    this.favoriteCount = 0,
   });
 
   /// Empty/placeholder recipe used for error/empty states.
@@ -48,6 +54,9 @@ class Recipe {
         ingredientImage: [],
         ingredientName: [],
         ingredientAmount: [],
+        instructions: [],
+        viewCount: 0,
+        favoriteCount: 0,
       );
 
   /// Safely builds a Recipe from a Firestore document.
@@ -72,6 +81,9 @@ class Recipe {
       ingredientImage: _asStringList(data['ingredientImage']),
       ingredientName: _asStringList(data['ingredientName']),
       ingredientAmount: _asStringList(data['ingredientAmount']),
+      instructions: _asStringList(data['instructions']),
+      viewCount: _asInt(data['viewCount']),
+      favoriteCount: _asInt(data['favoriteCount']),
     );
   }
 
@@ -88,6 +100,9 @@ class Recipe {
       'ingredientImage': ingredientImage,
       'ingredientName': ingredientName,
       'ingredientAmount': ingredientAmount,
+      'instructions': instructions,
+      'viewCount': viewCount,
+      'favoriteCount': favoriteCount,
     };
   }
 
@@ -104,6 +119,9 @@ class Recipe {
     List<String>? ingredientImage,
     List<String>? ingredientName,
     List<String>? ingredientAmount,
+    List<String>? instructions,
+    int? viewCount,
+    int? favoriteCount,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -118,6 +136,9 @@ class Recipe {
       ingredientImage: ingredientImage ?? this.ingredientImage,
       ingredientName: ingredientName ?? this.ingredientName,
       ingredientAmount: ingredientAmount ?? this.ingredientAmount,
+      instructions: instructions ?? this.instructions,
+      viewCount: viewCount ?? this.viewCount,
+      favoriteCount: favoriteCount ?? this.favoriteCount,
     );
   }
 

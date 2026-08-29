@@ -96,4 +96,11 @@ class RecipeRepository {
         .doc(recipeId)
         .delete();
   }
+
+  /// Increments viewCount on the recipe document to track popularity.
+  Future<void> incrementViewCount(String recipeId) {
+    return _recipesRef.doc(recipeId).update({
+      'viewCount': FieldValue.increment(1),
+    });
+  }
 }

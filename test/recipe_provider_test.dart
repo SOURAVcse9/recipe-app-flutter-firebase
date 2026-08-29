@@ -135,6 +135,7 @@ void main() {
       ingredientImage: ['https://...'],
       ingredientName: ['Paneer'],
       ingredientAmount: ['100 g'],
+      instructions: ['Step 1'],
     ),
     const Recipe(
       id: '2',
@@ -149,6 +150,7 @@ void main() {
       ingredientImage: ['https://...'],
       ingredientName: ['Avocado'],
       ingredientAmount: ['1 piece'],
+      instructions: ['Step 1'],
     ),
     const Recipe(
       id: '3',
@@ -163,6 +165,7 @@ void main() {
       ingredientImage: ['https://...'],
       ingredientName: ['Penne Pasta'],
       ingredientAmount: ['300 g'],
+      instructions: ['Step 1'],
     ),
   ];
 
@@ -179,7 +182,7 @@ void main() {
 
   setUp(() {
     mockRepo = MockRecipeRepository();
-    mockAuth = FakeFirebaseAuth();
+    mockAuth = FakeFirebaseAuth(initialUser: FakeUser());
     provider = RecipeProvider(repository: mockRepo, auth: mockAuth);
   });
 
@@ -253,6 +256,19 @@ void main() {
       expect(provider.filteredRecipes(defaultPrefs).length, equals(1));
       expect(provider.filteredRecipes(defaultPrefs).first.name,
           equals('Butter Paneer'));
+    });
+
+    test('Search by ingredients works correctly', () async {
+      await waitForAuth();
+      mockRepo.emitRecipes(sampleRecipes);
+      mockRepo.emitFavoriteIds({});
+      await Future<void>.delayed(const Duration(milliseconds: 2));
+
+      // Search matching ingredient name "Avocado"
+      provider.setSearchQuery('avocado');
+      expect(provider.filteredRecipes(defaultPrefs).length, equals(1));
+      expect(provider.filteredRecipes(defaultPrefs).first.name,
+          equals('Avocado Toast'));
     });
 
     test('Case-sensitive search works correctly when disabled', () async {

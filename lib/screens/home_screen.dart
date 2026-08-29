@@ -3,12 +3,15 @@ import 'package:provider/provider.dart';
 
 import '../providers/preferences_provider.dart';
 import '../providers/recipe_provider.dart';
+import '../models/recipe.dart';
 import '../utils/app_theme.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/recipe_card.dart';
 import '../widgets/search_field.dart';
 import '../widgets/state_views.dart';
 import 'recipe_detail_screen.dart';
+import 'popular_recipes_screen.dart';
+import 'top_rated_recipes_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -135,6 +138,76 @@ class _RecipeGridSliver extends StatelessWidget {
       );
     }
 
+    final isDefaultState = provider.selectedCategory == 'All' && provider.searchQuery.trim().isEmpty;
+
+    if (isDefaultState) {
+      // Feature 10: Dynamic discovery sections
+      final topRated = List<Recipe>.from(recipes)
+        ..sort((a, b) {
+          if (a.review == 0 && b.review > 0) return 1;
+          if (b.review == 0 && a.review > 0) return -1;
+          return b.rating.compareTo(a.rating);
+        });
+      final topRatedSliced = topRated.take(5).toList();
+
+      final popular = List<Recipe>.from(recipes)
+        ..sort((a, b) => b.viewCount.compareTo(a.viewCount));
+      final popularSliced = popular.take(5).toList();
+
+      return SliverPadding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate([
+            _HorizontalRecipeList(
+              title: '⭐ Top Rated',
+              recipes: topRatedSliced,
+            ),
+            const SizedBox(height: 12),
+            _HorizontalRecipeList(
+              title: '🔥 Popular',
+              recipes: popularSliced,
+            ),
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'All Recipes',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+            ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.68,
+              ),
+              itemCount: recipes.length,
+              itemBuilder: (context, index) {
+                final recipe = recipes[index];
+                return RecipeCard(
+                  recipe: recipe,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => RecipeDetailScreen(recipeId: recipe.id),
+                    ),
+                  ),
+                  onFavoriteTap: () =>
+                      context.read<RecipeProvider>().toggleFavorite(recipe),
+                );
+              },
+            ),
+          ]),
+        ),
+      );
+    }
+
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
       sliver: SliverGrid(
@@ -161,6 +234,75 @@ class _RecipeGridSliver extends StatelessWidget {
           childCount: recipes.length,
         ),
       ),
+    );
+  }
+}
+
+class _HorizontalRecipeList extends StatelessWidget {
+  final String title;
+  final List<Recipe> recipes;
+
+  const _HorizontalRecipeList({required this.title, required this.recipes});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => title.contains('Popular')
+                          ? const PopularRecipesScreen()
+                          : const TopRatedRecipesScreen(),
+                    ),
+                  );
+                },
+                child: const Text('See All', style: TextStyle(color: AppColors.primary)),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 240,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: recipes.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 14),
+            itemBuilder: (context, index) {
+              final recipe = recipes[index];
+              return SizedBox(
+                width: 160,
+                child: RecipeCard(
+                  recipe: recipe,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => RecipeDetailScreen(recipeId: recipe.id),
+                    ),
+                  ),
+                  onFavoriteTap: () =>
+                      context.read<RecipeProvider>().toggleFavorite(recipe),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

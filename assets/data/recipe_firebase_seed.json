@@ -45,7 +45,12 @@
       "isFavorite": false,
       "rating": 4.5,
       "review": 10,
-      "time": 25
+      "time": 25,
+      "instructions": [
+        "Heat butter in a pan and sauté the chopped onions.",
+        "Add pureed tomatoes and cook until oil separates.",
+        "Add paneer cubes and simmer for 5 minutes."
+      ]
     },
     "french_toast": {
       "name": "French Toast",
@@ -70,7 +75,12 @@
       "isFavorite": false,
       "rating": 4.6,
       "review": 14,
-      "time": 15
+      "time": 15,
+      "instructions": [
+        "Whisk the eggs in a shallow bowl.",
+        "Dip the bread slices to coat them on both sides.",
+        "Fry in butter until golden brown on both sides."
+      ]
     },
     "chocolate_cake": {
       "name": "Chocolate Cake",
@@ -95,7 +105,12 @@
       "isFavorite": false,
       "rating": 4.8,
       "review": 22,
-      "time": 50
+      "time": 50,
+      "instructions": [
+        "Whisk flour, egg, and chocolate into batter.",
+        "Pour into a lined cake tin.",
+        "Bake at 180°C for 35-40 minutes."
+      ]
     },
     "strawberry_pancake": {
       "name": "Strawberry Pancake",
@@ -120,7 +135,12 @@
       "isFavorite": false,
       "rating": 4.7,
       "review": 18,
-      "time": 25
+      "time": 25,
+      "instructions": [
+        "Combine flour and milk to make pancake batter.",
+        "Cook ladlefuls on a griddle until bubbles pop.",
+        "Flip and serve with fresh strawberry slices."
+      ]
     },
     "chicken_curry": {
       "name": "Chicken Curry",
@@ -145,7 +165,12 @@
       "isFavorite": false,
       "rating": 4.7,
       "review": 20,
-      "time": 45
+      "time": 45,
+      "instructions": [
+        "Sauté onions and spices in oil until aromatic.",
+        "Add chicken and cook until no longer pink.",
+        "Stir in tomato puree and simmer until fully cooked."
+      ]
     },
     "beef_steak": {
       "name": "Beef Steak",
@@ -170,7 +195,12 @@
       "isFavorite": false,
       "rating": 4.6,
       "review": 17,
-      "time": 30
+      "time": 30,
+      "instructions": [
+        "Season beef steak with salt and crushed garlic.",
+        "Heat olive oil in a skillet and sear steak on high heat.",
+        "Flip and cook to desired doneness, then rest before slicing."
+      ]
     },
     "chicken_biryani": {
       "name": "Chicken Biryani",
@@ -195,7 +225,12 @@
       "isFavorite": false,
       "rating": 4.9,
       "review": 31,
-      "time": 60
+      "time": 60,
+      "instructions": [
+        "Boil rice with whole aromatic spices.",
+        "Cook chicken with marinated spices and caramelized onions.",
+        "Layer rice and chicken in a pot, cover, and steam (dum) on low."
+      ]
     },
     "vegetable_fried_rice": {
       "name": "Vegetable Fried Rice",
@@ -220,7 +255,12 @@
       "isFavorite": false,
       "rating": 4.5,
       "review": 13,
-      "time": 25
+      "time": 25,
+      "instructions": [
+        "Sauté chopped carrot and bell pepper in oil.",
+        "Add cooked rice and soy sauce to the pan.",
+        "Stir-fry on high heat for 3-5 minutes."
+      ]
     },
     "grilled_vegetable_salad": {
       "name": "Grilled Vegetable Salad",
@@ -245,7 +285,12 @@
       "isFavorite": false,
       "rating": 4.6,
       "review": 16,
-      "time": 20
+      "time": 20,
+      "instructions": [
+        "Toss tomato and bell pepper slices in olive oil.",
+        "Grill until soft and lightly charred.",
+        "Mix with fresh lettuce and your favorite dressing."
+      ]
     },
     "vegetable_stir_fry": {
       "name": "Vegetable Stir Fry",
@@ -270,7 +315,12 @@
       "isFavorite": false,
       "rating": 4.4,
       "review": 11,
-      "time": 18
+      "time": 18,
+      "instructions": [
+        "Heat olive oil in a wok.",
+        "Add broccoli and bell pepper pieces.",
+        "Stir-fry with soy sauce over high heat until crisp-tender."
+      ]
     }
   }
 }

@@ -5,7 +5,12 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/preferences_provider.dart';
 import 'providers/recipe_provider.dart';
+import 'providers/review_provider.dart';
+import 'providers/shopping_list_provider.dart';
+import 'providers/recently_viewed_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/main_navigation.dart';
+import 'screens/login_screen.dart';
 import 'utils/app_theme.dart';
 import 'widgets/state_views.dart';
 
@@ -21,7 +26,11 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PreferencesProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => RecipeProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewProvider()),
+        ChangeNotifierProvider(create: (_) => ShoppingListProvider()),
+        ChangeNotifierProvider(create: (_) => RecentlyViewedProvider()),
       ],
       child: const RecipeApp(),
     ),
@@ -47,28 +56,22 @@ class RecipeApp extends StatelessWidget {
   }
 }
 
-/// A loading wrapper that blocks normal application entry until anonymous
-/// Firebase authentication is successfully completed.
+/// A wrapper that handles routing based on active Firebase Auth state.
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<RecipeProvider>();
+    final authProvider = context.watch<AuthProvider>();
 
-    if (provider.authLoading) {
+    if (authProvider.loading && authProvider.currentUser == null) {
       return const Scaffold(body: LoadingView());
     }
 
-    if (provider.authError != null) {
-      return Scaffold(
-        body: ErrorView(
-          message: provider.authError!,
-          onRetry: () => provider.retryAuthentication(),
-        ),
-      );
+    if (authProvider.isAuthenticated) {
+      return const MainNavigation();
     }
 
-    return const MainNavigation();
+    return const LoginScreen();
   }
 }

@@ -2,10 +2,10 @@ rules_version = '2';
 
 // SECURITY ASSUMPTIONS:
 // - Recipes and categories are public read-only content.
-// - Recipe/category modifications are restricted to admin users only (custom claim admin: true).
-// - Users can read and write ONLY their own favorite recipe IDs under users/{uid}/favorites/{recipeId}.
-// - Users can read and write ONLY their own settings under users/{uid}/preferences/{docId}.
-// - Cross-user access is rejected.
+// - Recipe/category details modification is restricted to admin users only (custom claim admin: true).
+// - Authenticated users can modify ONLY the aggregate rating/review count fields on recipes.
+// - Users can read and write ONLY their own favorites, settings, shopping list, reviews, and viewed history.
+// - Reviews can be read by anyone, but created/updated/deleted only by their owner.
 
 function isAdmin() {
   return request.auth != null && request.auth.token.admin == true;
@@ -17,7 +17,19 @@ service cloud.firestore {
     // Shared recipe collection
     match /recipes/{recipeId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        request.auth != null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'review'])
+      );
+
+      // Recipe reviews subcollection
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+        allow update: if request.auth != null && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+        allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      }
     }
 
     // Shared category collection
@@ -33,6 +45,21 @@ service cloud.firestore {
 
     // User-specific preferences subcollection
     match /users/{uid}/preferences/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // User-specific shoppingList subcollection
+    match /users/{uid}/shoppingList/{itemId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // User-specific recentlyViewed subcollection
+    match /users/{uid}/recentlyViewed/{recipeId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // User-specific reviews index subcollection
+    match /users/{uid}/reviews/{recipeId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
