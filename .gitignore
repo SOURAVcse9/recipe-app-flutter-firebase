@@ -1,65 +1,110 @@
-# Miscellaneous
+# ==============================================================================
+# Git Ignore Configuration for Flutter + Firebase Recipe App
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Operating System & IDE Files
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
 *.class
 *.log
 *.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
-Thumbs.db
-desktop.ini
 
-# IntelliJ related
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IntelliJ / Android Studio
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
+.project
+.classpath
+.cproject
+.settings/
 
-# VS Code related
-.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# ------------------------------------------------------------------------------
+# Flutter & Dart Build Outputs & Caches
+# ------------------------------------------------------------------------------
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.metadata
 .packages
 .pub-cache/
 .pub/
+build/
 /build/
-/coverage/
+doc/api/
+coverage/
 .widget_preview/
 
-# Android Studio and Gradle related
+# ------------------------------------------------------------------------------
+# Android Build Files & Local Properties
+# ------------------------------------------------------------------------------
 android/.gradle/
+android/captures/
+android/gradleBuild/
 android/local.properties
+android/app/build/
+android/app/debug/
+android/app/profile/
+android/app/release/
 android/key.properties
-/android/app/debug/
-/android/app/profile/
-/android/app/release/
+*.apk
+*.aab
 
-# iOS related
+# ------------------------------------------------------------------------------
+# iOS & macOS Build Files
+# ------------------------------------------------------------------------------
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/ephemeral/
 ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
-DerivedData/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/DerivedData/
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
 
-# Keystores and signing files
+# ------------------------------------------------------------------------------
+# Windows & Desktop Build Artifacts
+# ------------------------------------------------------------------------------
+windows/flutter/ephemeral/
+windows/.gradle/
+*.exe
+*.dll
+*.obj
+
+# ------------------------------------------------------------------------------
+# Security, Keys, Tokens & Private Credentials (NEVER COMMIT)
+# ------------------------------------------------------------------------------
+# Keystores & Signing Certificates
 *.jks
 *.keystore
 *.pem
 *.p12
 *.pfx
 key.properties
+
+# Environment Variables & Local Secrets
 .env
 .env.*
 *.secret
@@ -67,10 +112,15 @@ secrets/
 credentials/
 private_keys/
 
-# Firebase Admin / Node.js
+# Firebase Admin SDK & Server Keys
 **/serviceAccountKey.json
 **/serviceAccountKey.json.local
-firebase-adminsdk-*.json
+**/firebase-adminsdk-*.json
+sample_data/serviceAccountKey.json
+
+# ------------------------------------------------------------------------------
+# Node.js & Tooling Dependencies (Seed script)
+# ------------------------------------------------------------------------------
 node_modules/
 npm-debug.log*
 yarn-debug.log*
