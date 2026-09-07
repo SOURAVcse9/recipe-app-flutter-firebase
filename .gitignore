@@ -1,9 +1,9 @@
 # ==============================================================================
-# Git Ignore Configuration for Flutter + Firebase Recipe App
+# Production .gitignore for Public GitHub Repository (Flutter + Firebase)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Operating System & IDE Files
+# 1. Operating System & Local Environment Files
 # ------------------------------------------------------------------------------
 .DS_Store
 .DS_Store?
@@ -19,8 +19,11 @@ desktop.ini
 *.log
 *.pyc
 
-# Visual Studio Code
-.vscode/
+# ------------------------------------------------------------------------------
+# 2. IDE & Editor Specific Configs
+# ------------------------------------------------------------------------------
+# Visual Studio Code (preserves team recommended extensions & launch configs)
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -37,7 +40,7 @@ desktop.ini
 .settings/
 
 # ------------------------------------------------------------------------------
-# Flutter & Dart Build Outputs & Caches
+# 3. Flutter & Dart Build Outputs & Caches
 # ------------------------------------------------------------------------------
 .dart_tool/
 .flutter-plugins
@@ -52,9 +55,10 @@ coverage/
 .widget_preview/
 
 # ------------------------------------------------------------------------------
-# Android Build Files & Local Properties
+# 4. Android Build Files & Local Properties
 # ------------------------------------------------------------------------------
 android/.gradle/
+android/build/
 android/captures/
 android/gradleBuild/
 android/local.properties
@@ -63,11 +67,9 @@ android/app/debug/
 android/app/profile/
 android/app/release/
 android/key.properties
-*.apk
-*.aab
 
 # ------------------------------------------------------------------------------
-# iOS & macOS Build Files
+# 5. iOS & macOS Build Files
 # ------------------------------------------------------------------------------
 ios/Pods/
 ios/.symlinks/
@@ -85,18 +87,17 @@ ios/DerivedData/
 *.perspectivev3
 
 # ------------------------------------------------------------------------------
-# Windows & Desktop Build Artifacts
+# 6. Windows Desktop Ephemeral Files
 # ------------------------------------------------------------------------------
 windows/flutter/ephemeral/
 windows/.gradle/
-*.exe
 *.dll
 *.obj
 
 # ------------------------------------------------------------------------------
-# Security, Keys, Tokens & Private Credentials (NEVER COMMIT)
+# 7. CRITICAL: Security, Private Keys & Credentials (NEVER PUBLISH)
 # ------------------------------------------------------------------------------
-# Keystores & Signing Certificates
+# Android Keystores & Signing Certificates
 *.jks
 *.keystore
 *.pem
@@ -112,14 +113,14 @@ secrets/
 credentials/
 private_keys/
 
-# Firebase Admin SDK & Server Keys
+# Firebase Admin SDK & Server Keys (Do not leak in public repositories)
 **/serviceAccountKey.json
 **/serviceAccountKey.json.local
 **/firebase-adminsdk-*.json
 sample_data/serviceAccountKey.json
 
 # ------------------------------------------------------------------------------
-# Node.js & Tooling Dependencies (Seed script)
+# 8. Node.js & Tooling (Seed script)
 # ------------------------------------------------------------------------------
 node_modules/
 npm-debug.log*

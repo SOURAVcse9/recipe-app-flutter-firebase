@@ -1,64 +1,89 @@
 # 🍳 Flutter + Firebase Recipe App
 
-A production-ready, cross-platform recipe discovery and cooking companion application built with **Flutter** and **Firebase**. The app is **100% dynamic and Firebase-driven**—all recipes, categories, user profiles, reviews, favorites, shopping lists, preferences, and notifications are synchronized in real-time with Cloud Firestore and Firebase Authentication.
+<p align="center">
+  <img src="assets/icons/app_icon.png" alt="Recipe App Logo" width="120" onerror="this.style.display='none'"/>
+</p>
+
+<p align="center">
+  <b>A Production-Grade, Cross-Platform Recipe Discovery & Cooking Companion Application</b>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/>
+  <img src="https://img.shields.io/badge/Firebase-Spark_Plan-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/>
+  <img src="https://img.shields.io/badge/Platforms-Android%20|%20Web%20|%20Windows-4CAF50?style=for-the-badge" alt="Platforms"/>
+  <img src="https://img.shields.io/badge/Tests-36%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
+</p>
 
 ---
 
-## 📱 Features
+## 📥 Download Release APK
 
-### 🔐 1. Production-Grade Authentication
-* **Email & Password**: Full signup, login, and validation with password strength requirements.
-* **Email Verification**: Built-in verification flow with 60-second resend cooldown timer and reactive state refresh.
-* **Enumeration-Safe Password Reset**: Secure password recovery that protects against account enumeration attacks.
-* **Google Sign-In**:
-  * **Web (Chrome / Edge)**: Uses native Firebase Web popup authentication (`signInWithPopup(GoogleAuthProvider())`) avoiding client-side ID mismatches and port issues on `localhost`.
+The latest production release APK is built and ready for Android devices:
+
+| Version | Target | File | Size | Link |
+| :--- | :--- | :--- | :--- | :--- |
+| **v1.0.0 (Release)** | Android (ARM64 / ARMv7 / x86_64) | `app-release.apk` | ~52 MB | [⬇️ Download Direct APK](release/app-release.apk) |
+
+> 💡 **Installation Note**: Enable **"Install from unknown sources"** on your Android device settings if prompted when opening the downloaded `.apk` file.
+
+---
+
+## ✨ Key Features
+
+### 🔐 1. Production-Grade Firebase Authentication
+* **Email/Password**: Signup, login, real-time validation, and password strength indicators.
+* **Email Verification**: Built-in verification flow with a 60-second resend cooldown timer and reactive state refresh.
+* **Enumeration-Safe Password Recovery**: Protects against account enumeration attacks.
+* **Cross-Platform Google Sign-In**:
+  * **Web (Chrome / Edge)**: Employs native Firebase Web popup authentication (`signInWithPopup(GoogleAuthProvider())`) that works seamlessly without client-side Client ID origin mismatches on `localhost`.
   * **Android**: Uses native Google Sign-In SDK with Firebase credential authentication.
-* **Session Persistence & Isolation**: Reactive auth state listener with automatic token registration and cleanup upon logout or account switching.
-
-### 🍲 2. Dynamic Recipe Discovery & Exploration
-* **25 Production Recipes** across 5 distinct categories:
-  * 🥞 **Breakfast** (5 recipes)
-  * 🍰 **Dessert** (5 recipes)
-  * 🍛 **Dinner** (5 recipes)
-  * 🍱 **Lunch** (5 recipes)
-  * 🥗 **Vegetables** (5 recipes)
-* **Real-Time Search & Filtering**: Multi-term search by recipe name or ingredient combined with category chip filtering.
-* **Curated Feeds**: Dynamic "Popular Recipes" (by view count) and "Top Rated" sections.
-* **Fail-Safe Image Loading**: All images render through `SafeNetworkImage` with animated progress loading, fallback placeholder icons (`Iconsax.reserve`), and error boundary recovery.
-
-### 📖 3. Interactive Recipe Details & Cooking Companion
-* **Step-by-Step Cooking Instructions**: Clean, numbered instruction cards with typography matching the dark/orange theme. Sections hide automatically if instructions are unavailable.
-* **Dynamic Ingredient Quantity Scaler**: Interactive serving multiplier (`+` / `-`) that scales integer, decimal, and fraction ingredient amounts dynamically while preserving units.
-* **Integrated Cooking Timer**: Built-in interactive countdown timer tailored to the specific recipe cooking time.
-* **Reviews & Ratings**: User review submission, aggregate rating calculation, and duplicate review prevention.
-* **Shopping List Integration**: Add missing ingredients directly to your personal shopping list with one-tap completion toggles.
-* **Recently Viewed Tracking**: Automatically tracks recently viewed recipes with timestamp ordering.
-
-### 🔔 4. Firebase Cloud Messaging (FCM) Notifications
-* **Cross-Platform Support**: Native push notification integration for Android and Web.
-* **Service Worker Integration**: Compat-mode `web/firebase-messaging-sw.js` for background web pushes.
-* **Notification Preferences**: Real-time Firestore-persisted toggles for:
-  * Recipe recommendations
-  * New recipe alerts
-  * Cooking reminders
-* **In-App Foreground Alerts**: Custom SnackBar banners for foreground notifications with direct deep-linking to recipe detail screens.
-* **Permission UX**: Dynamic status cards displaying permission states (Granted, Denied, Prompt, or Windows fallback).
-
-### 🎨 5. Customization & Preferences
-* **Theme Modes**: Supports Light, Dark, and System theme preferences.
-* **Display Settings**: Toggle calorie visibility, cooking time badges, default serving quantities, and case-insensitive search.
+* **Clean Session Isolation**: Automatic FCM token synchronization on login and complete token revocation/cache clearing on logout or account switching.
 
 ---
 
-## 🏗️ Architecture & Project Structure
+### 🍲 2. Dynamic 25-Recipe Catalog
+* **25 Recipes** across **5 Categories** (Breakfast, Dessert, Dinner, Lunch, Vegetables).
+* **Multi-Parameter Search & Filtering**: Real-time search across recipe names, ingredients, and categories.
+* **Curated Discovery Feeds**: "Popular Recipes" (ordered by dynamic view counts) and "Top Rated" feeds.
+* **Fail-Safe Image Loading**: All network images render through `SafeNetworkImage` featuring loading animations, placeholder fallbacks (`Iconsax.reserve`), and error boundary recovery.
 
-The project follows a clean repository and provider architecture:
+---
+
+### 📖 3. Interactive Detail View & Cooking Companion
+* **Step-by-Step Cooking Instructions**: Numbered instruction cards formatted to the dark/orange theme. Sections hide automatically if instructions are unavailable.
+* **Dynamic Serving Scaler**: Multiplies integer, decimal, and fractional ingredient amounts dynamically while preserving units.
+* **Built-in Cooking Timer**: Countdown timer configured directly to each recipe's cooking duration.
+* **Reviews & Ratings System**: User review submissions, real-time aggregate score recalculation, and duplicate review prevention.
+* **Integrated Shopping List**: Add ingredients directly to a personalized shopping list with one-tap completion checkboxes.
+* **Recently Viewed History**: Tracks viewed recipes with chronological timestamp ordering.
+
+---
+
+### 🔔 4. Firebase Cloud Messaging (FCM)
+* **Android & Web Push Notifications**: Service worker integration (`web/firebase-messaging-sw.js`) for background push alerts.
+* **User-Managed Notification Preferences**: Persisted toggles for Recommendations, New Recipes, and Cooking Reminders.
+* **In-App Foreground Alerts**: SnackBars with deep-linking directly into recipe detail screens.
+* **Permission Status Indicators**: Dynamic UI cards showing permission status (Granted, Denied, Prompt, or Windows Desktop fallback).
+
+---
+
+### 🎨 5. Theme & App Customizations
+* **Theme Modes**: Supports Dark, Light, and System themes.
+* **Display Preferences**: Custom toggles for calorie counters, cooking time badges, default serving quantities, and search case-sensitivity.
+
+---
+
+## 🏛️ Architecture & Project Structure
+
+The project uses a clean **Provider + Repository Architecture**:
 
 ```
 lib/
-├── main.dart                       # App entry point, Firebase init & AuthWrapper routing
-├── firebase_options.dart           # Firebase configuration across platforms
-├── models/                         # Immutable data models & Firestore serializers
+├── main.dart                       # App entry point, Firebase init & AuthWrapper
+├── firebase_options.dart           # Cross-platform Firebase config
+├── models/                         # Immutable models & Firestore serializers
 │   ├── app_preferences.dart        # User settings & layout preferences
 │   ├── food_category.dart          # Recipe category model
 │   ├── recipe.dart                 # Recipe model with safe array coercion & instructions
@@ -66,17 +91,17 @@ lib/
 │   ├── shopping_list_item.dart     # Shopping list model with toggleable status
 │   └── recently_viewed.dart        # Recently viewed history model
 ├── providers/                      # State management layer (ChangeNotifiers)
-│   ├── auth_provider.dart          # Authentication state & error mapping
+│   ├── auth_provider.dart          # Auth lifecycle, error mapping & token hooks
 │   ├── preferences_provider.dart   # Real-time user preferences
 │   ├── recipe_provider.dart        # Recipe streaming, search, filters & servings
 │   ├── review_provider.dart        # Review submissions & stream listeners
 │   ├── shopping_list_provider.dart # Shopping list item management
 │   └── recently_viewed_provider.dart # Recipe viewing history
 ├── repositories/                   # Data access layer (Firestore & Auth abstractions)
-│   ├── auth_repository.dart        # Firebase Auth & Google Sign-In implementation
+│   ├── auth_repository.dart        # Firebase Auth & Google Sign-In logic
 │   ├── preferences_repository.dart # Firestore user preferences CRUD
 │   ├── recipe_repository.dart      # Recipe & category stream queries
-│   └── review_repository.dart      # Reviews index & aggregate calculation
+│   └── review_repository.dart      # Reviews index & aggregate calculations
 ├── screens/                        # UI Screens
 │   ├── main_navigation.dart        # Root bottom navigation shell
 │   ├── home_screen.dart            # Home discovery feed & category tabs
@@ -110,105 +135,101 @@ lib/
 
 ## 🗄️ Firestore Database Schema
 
-### Public Collections
-* `recipes/{recipeId}`: Public read-only catalog with restricted aggregate updates (`rating`, `review`, `viewCount`).
-* `categories/{categoryId}`: Public read-only category items.
-
-### User-Scoped Subcollections (`users/{uid}`)
-All user-specific collections require authenticated user matching (`request.auth.uid == uid`):
-* `users/{uid}`: Profile details (`displayName`, `email`, `photoUrl`, `provider`, `createdAt`).
-* `users/{uid}/favorites/{recipeId}`: User's favorited recipes.
-* `users/{uid}/preferences/settings`: Theme and notification preferences.
-* `users/{uid}/shoppingList/{itemId}`: User's shopping list items.
-* `users/{uid}/recentlyViewed/{recipeId}`: Recently viewed recipes sorted by timestamp.
-* `users/{uid}/reviews/{recipeId}`: User's submitted reviews.
-* `users/{uid}/notification_tokens/{tokenId}`: FCM device tokens for multi-device push delivery.
+```
+recipes/ {recipeId}                 # Public read-only recipe catalog
+categories/ {categoryId}            # Public read-only food categories
+users/ {uid}                        # Private user profile document
+  ├── favorites/ {recipeId}         # User favorited recipes
+  ├── preferences/ settings         # User theme & notification settings
+  ├── shoppingList/ {itemId}        # User shopping list items
+  ├── recentlyViewed/ {recipeId}    # Recipe view history
+  ├── reviews/ {recipeId}           # User-submitted reviews
+  └── notification_tokens/ {tokenId}# Multi-device FCM registration tokens
+```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Setup & Local Installation
 
 ### 1. Prerequisites
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) (3.22.0 or higher)
-* [Node.js](https://nodejs.org/) (for running the sample data seed script)
+* [Flutter SDK](https://docs.flutter.dev/get-started/install) (v3.22.0 or higher)
+* [Node.js](https://nodejs.org/) (for running database seed scripts)
 * [Firebase CLI](https://firebase.google.com/docs/cli) & [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/)
 
-### 2. Firebase Configuration
-1. Create a Firebase Project on the [Firebase Console](https://console.firebase.google.com/) (Compatible with the free **Spark Plan**).
-2. Enable **Authentication** with **Email/Password** and **Google** providers.
-3. Enable **Cloud Firestore** (in Production mode).
-4. Run FlutterFire CLI to link your project:
+### 2. Clone the Repository
+```bash
+git clone https://github.com/<YOUR-USERNAME>/recipe-app-flutter-firebase.git
+cd recipe-app-flutter-firebase
+```
+
+### 3. Connect Your Firebase Project
+1. Create a project in the [Firebase Console](https://console.firebase.google.com/) (Compatible with the free **Spark Plan**).
+2. Enable **Authentication** (Email/Password & Google) and **Cloud Firestore**.
+3. Configure your Flutter app with FlutterFire:
    ```bash
    flutterfire configure
    ```
-5. Deploy Firestore Security Rules:
+4. Deploy Firestore security rules:
    ```bash
    firebase deploy --only firestore:rules
    ```
 
-### 3. Google Sign-In Setup
-* **Android**: Add your debug and release SHA-1 and SHA-256 fingerprints to your Android app settings in the Firebase Console:
-  * **SHA-1**: `38:32:0C:8E:D9:E8:15:70:8A:4A:8F:D1:17:08:C0:34:8E:A1:B9:4D`
-  * **SHA-256**: `F8:8D:49:A9:49:AC:60:77:C5:CA:08:88:4B:8A:01:01:8B:CF:80:13:02:49:FD:6D:CA:F9:36:3F:F7:1A:D3:37`
-* **Web**:
-  1. In the [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials), select your Web Client ID.
-  2. Add `http://localhost` and `http://localhost:5555` to **Authorized JavaScript origins**.
-  3. Ensure `https://<YOUR-PROJECT-ID>.firebaseapp.com/__/auth/handler` is in **Authorized redirect URIs**.
-
-### 4. Seed 25 Recipes into Firestore
-To seed the Firestore database with the 25 recipes:
-1. Download a private service account key from **Firebase Console -> Project Settings -> Service Accounts -> Generate new private key**.
-2. Save the key as `serviceAccountKey.json` in the project root directory or `sample_data/` folder.
-3. Run:
+### 4. Seed the 25 Recipes Dataset
+1. Download a service account private key from **Firebase Console -> Project Settings -> Service Accounts -> Generate new private key**.
+2. Save it as `serviceAccountKey.json` in the project root or `sample_data/` folder.
+3. Run the automated seed script:
    ```bash
    cd sample_data
    npm install
    node seed.js
    ```
 
-### 5. Run the Application
+---
 
-#### Web (Chrome / Edge):
+## 💻 Run the Application
+
 ```bash
+# Get dependencies
+flutter pub get
+
+# Run on Web (Chrome)
 flutter run -d chrome
-```
 
-#### Android (USB Connected Device):
-```bash
+# Run on Physical Android USB Device
 flutter run -d <device-id>
-```
 
-#### Windows Desktop:
-```bash
+# Run on Windows Desktop
 flutter run -d windows
 ```
 
 ---
 
-## 🧪 Testing & Verification
+## 🧪 Automated Testing & Verification
 
-Run the full automated test suite containing 36 unit, widget, and programmatic schema validation tests:
+The project includes a test suite with 36 unit, widget, and programmatic schema validation tests:
 
 ```bash
-# Static analysis
+# Run static analysis
 flutter analyze
 
-# Run all test suites
+# Execute all automated test suites
 flutter test
 
-# Build release targets
+# Build production artifacts
 flutter build web --no-tree-shake-icons
-flutter build apk --debug --no-tree-shake-icons
+flutter build apk --release --no-tree-shake-icons
 ```
 
 ---
 
-## 🔒 Security Best Practices
-* **No Hardcoded Secrets**: Sensitive API keys, OAuth client secrets, and service account files are strictly excluded via `.gitignore`.
-* **Database Isolation**: Granular `firestore.rules` ensure users can only access and modify their own private subcollections.
-* **Input Validation**: Defensively coerced Firestore models ensure that missing or malformed database fields never crash the UI.
+## 🔒 Security & Privacy Notice
+
+* **No Hardcoded Credentials**: API secrets, private keystores, and service account JSONs (`serviceAccountKey.json`) are excluded via `.gitignore`.
+* **Database Isolation**: Granular Firestore rules enforce strict user-level data segregation under `users/{uid}`.
+* **Spark Plan Compatible**: Operates entirely within the free Firebase Spark tier without requiring paid Cloud Functions or external APIs.
 
 ---
 
 ## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
