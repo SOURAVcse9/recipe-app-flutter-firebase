@@ -17,6 +17,11 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/></a>
 </p>
 
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=SOURAVcse9&repo=recipe-app-flutter-firebase&color=007ec6&style=for-the-badge&label=VISITORS" alt="Visitors"/>
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases"><img src="https://img.shields.io/github/downloads/SOURAVcse9/recipe-app-flutter-firebase/total?style=for-the-badge&logo=android&logoColor=white&color=brightgreen&label=APK%20DOWNLOADS" alt="APK Downloads"/></a>
+</p>
+
 ---
 
 ## 📥 Download Production Release APK
