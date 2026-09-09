@@ -1,11 +1,10 @@
 rules_version = '2';
 
-// SECURITY ASSUMPTIONS:
-// - Recipes and categories are public read-only content.
-// - Recipe/category details modification is restricted to admin users only (custom claim admin: true).
+// SECURITY ARCHITECTURE:
+// - Recipes & Categories: Audience can read only published recipes & active categories; Admins (custom claim admin == true) have full read/write.
 // - Authenticated users can modify ONLY the aggregate rating/review count/viewCount fields on recipes.
-// - Users can read and write ONLY their own profile, favorites, settings, shopping list, reviews index, and viewed history.
-// - Reviews can be read by anyone, but created/updated/deleted only by their owner.
+// - Users can read and write ONLY their own profile, favorites, settings, shopping list, reviews index, and viewed history under users/{uid}.
+// - Reviews can be read by anyone, but created/updated/deleted only by their respective owner or admin.
 
 function isAdmin() {
   return request.auth != null && request.auth.token.admin == true;
@@ -16,7 +15,7 @@ service cloud.firestore {
 
     // Shared recipe collection
     match /recipes/{recipeId} {
-      allow read: if true;
+      allow read: if resource == null || resource.data.isPublished != false || isAdmin();
       allow create, delete: if isAdmin();
       allow update: if isAdmin() || (
         request.auth != null &&
@@ -28,13 +27,13 @@ service cloud.firestore {
         allow read: if true;
         allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
         allow update: if request.auth != null && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
-        allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+        allow delete: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
       }
     }
 
     // Shared category collection
     match /categories/{categoryId} {
-      allow read: if true;
+      allow read: if resource == null || resource.data.isActive != false || isAdmin();
       allow write: if isAdmin();
     }
 

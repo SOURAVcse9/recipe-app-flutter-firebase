@@ -12,7 +12,7 @@
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/></a>
   <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
   <img src="https://img.shields.io/badge/Platforms-Android%20|%20Web%20|%20Windows-4CAF50?style=for-the-badge" alt="Platforms"/>
-  <img src="https://img.shields.io/badge/Tests-36%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/Tests-44%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
   <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange?style=for-the-badge&logo=android&logoColor=white" alt="Release"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/></a>
 </p>
@@ -45,7 +45,26 @@ The compiled production APK is ready for direct installation on Android devices:
 
 ## ✨ Key Features & Capabilities
 
-### 🔐 1. Production-Grade Firebase Authentication
+### 🛡️ 1. Role-Based Production Architecture (Admin + Audience)
+* **Custom Claims-Gated Admin Access**: Admin roles are managed strictly via Firebase Auth Custom Claims (`admin: true`) via backend scripts (`sample_data/set_admin.js`), completely eliminating client-side tampering and public admin registration.
+* **Interactive Admin Dashboard (`/admin`)**:
+  * **Analytics Overview**: Real-time KPI summary cards (Total Recipes, Published, Drafts, Total Categories, Active Categories).
+  * **Quick Actions**: Direct navigation to create recipes, manage categories, and audit content.
+* **Comprehensive Admin Recipe Management**:
+  * **Dynamic Ingredient & Step Builders**: Add/remove/reorder ingredients with fractional amounts and step-by-step instructions.
+  * **Firebase Storage Image Upload**: Validated image uploader with format restrictions (JPG, PNG, WEBP) and 5MB size limits.
+  * **Draft & Publish Controls**: Toggle publication state instantly or save drafts without exposing them to audience feeds.
+  * **Safety Checks**: Deletion confirmations and search/filtering across drafts & published recipes.
+* **Category Management**:
+  * Category CRUD with duplicate name prevention and active/inactive status toggles.
+  * Dependency-aware deletion prevents removing categories that have linked recipes.
+* **Audience Isolation**:
+  * Regular users only read published recipes (`isPublished == true`) and active categories (`isActive == true`).
+  * Private user data (favorites, preferences, reviews, history) is strictly isolated under `users/{uid}/`.
+
+---
+
+### 🔐 2. Production-Grade Firebase Authentication
 * **Email & Password Authentication**: Complete signup, sign-in, and real-time form validation with password strength scoring.
 * **Email Verification**: Verification banner with a 60-second rate-limited resend cooldown timer and reactive state refresh.
 * **Enumeration-Safe Password Recovery**: Sanitized password reset flow that prevents account enumeration attacks.
@@ -56,15 +75,15 @@ The compiled production APK is ready for direct installation on Android devices:
 
 ---
 
-### 🍲 2. Dynamic 25-Recipe Catalog
-* **25 Recipes across 5 Categories** (Breakfast, Dessert, Dinner, Lunch, Vegetables).
+### 🍲 3. Dynamic Recipe Catalog & Search
+* **Active Category & Recipe Discovery**: Audience-filtered real-time Firestore streams.
 * **Multi-Parameter Search & Filtering**: Fast, case-insensitive search by recipe name or ingredient, combined with interactive category filter chips.
 * **Curated Feeds**: Dynamic "Popular Recipes" (ordered by real-time view counts) and "Top Rated" feeds.
 * **Fail-Safe Image Loading**: All images render through `SafeNetworkImage` featuring loading animations, placeholder fallbacks (`Iconsax.reserve`), and error boundary recovery.
 
 ---
 
-### 📖 3. Interactive Detail View & Cooking Companion
+### 📖 4. Interactive Detail View & Cooking Companion
 * **Step-by-Step Cooking Instructions**: Numbered badge instruction cards formatted to the dark/orange theme. Automatically hides if instructions are unavailable.
 * **Dynamic Serving Scaler**: Multiplies integer, decimal, and fractional ingredient amounts dynamically while preserving units.
 * **Integrated Cooking Timer**: Built-in interactive countdown timer tailored to each recipe's cooking duration.
@@ -74,18 +93,14 @@ The compiled production APK is ready for direct installation on Android devices:
 
 ---
 
-### 🔔 4. Firebase Cloud Messaging (FCM) Push Notifications
-* **Android & Web Push Notifications**: Service worker integration (`web/firebase-messaging-sw.js`) for background push alerts.
-* **User-Managed Notification Preferences**: Real-time Firestore-persisted toggles for:
-  * 💡 Recipe Recommendations
-  * 🍳 New Recipe Alerts
-  * ⏰ Cooking Reminders
-* **In-App Foreground Alerts**: SnackBars with deep-linking directly into the target recipe detail screens.
-* **Permission Status Indicators**: Dynamic UI cards displaying permission states (Granted, Denied, Prompt, or Windows Desktop fallback).
+### 🔔 5. Push Notifications & Event Triggers
+* **Cloud Functions (`functions/`)**: Event-driven Firebase Functions listening to Firestore `onCreate` events to dispatch FCM alerts when new recipes or categories are published.
+* **Invalid Token Self-Cleaning**: Automatically prunes stale/invalid FCM device tokens on failure (`messaging/invalid-registration-token`, `messaging/registration-token-not-registered`).
+* **User-Managed Notification Preferences**: Real-time Firestore-persisted toggles for recipe recommendations, new recipe alerts, and cooking reminders.
 
 ---
 
-### 🎨 5. Theme & App Customizations
+### 🎨 6. Theme & App Customizations
 * **Theme Modes**: Supports Dark, Light, and System themes.
 * **Display Preferences**: Custom toggles for calorie counters, cooking time badges, default serving quantities, and search case-sensitivity.
 
@@ -93,46 +108,53 @@ The compiled production APK is ready for direct installation on Android devices:
 
 ## 🏛️ Architecture & Project Structure
 
-The project uses a clean **Provider + Repository Architecture**:
-
 ```
 lib/
-├── main.dart                       # App entry point, Firebase init & AuthWrapper
+├── main.dart                       # App entry point, Firebase init & role-based AuthWrapper
 ├── firebase_options.dart           # Cross-platform Firebase config
 ├── models/                         # Immutable models & Firestore serializers
 │   ├── app_preferences.dart        # User settings & layout preferences
-│   ├── food_category.dart          # Recipe category model
-│   ├── recipe.dart                 # Recipe model with safe array coercion & instructions
+│   ├── food_category.dart          # Category model (isActive, searchName)
+│   ├── recipe.dart                 # Recipe model (IngredientItem, isPublished, legacy array compatibility)
 │   ├── review.dart                 # Review & rating model
 │   ├── shopping_list_item.dart     # Shopping list model with toggleable status
 │   └── recently_viewed.dart        # Recently viewed history model
 ├── providers/                      # State management layer (ChangeNotifiers)
-│   ├── auth_provider.dart          # Auth lifecycle, error mapping & token hooks
+│   ├── auth_provider.dart          # Auth lifecycle, custom claims admin verification
 │   ├── preferences_provider.dart   # Real-time user preferences
-│   ├── recipe_provider.dart        # Recipe streaming, search, filters & servings
+│   ├── recipe_provider.dart        # Role-aware recipe streaming, search, filters & CRUD
 │   ├── review_provider.dart        # Review submissions & stream listeners
 │   ├── shopping_list_provider.dart # Shopping list item management
 │   └── recently_viewed_provider.dart # Recipe viewing history
 ├── repositories/                   # Data access layer (Firestore & Auth abstractions)
-│   ├── auth_repository.dart        # Firebase Auth & Google Sign-In logic
+│   ├── auth_repository.dart        # Firebase Auth, Google Sign-In & custom claims reader
 │   ├── preferences_repository.dart # Firestore user preferences CRUD
-│   ├── recipe_repository.dart      # Recipe & category stream queries
+│   ├── recipe_repository.dart      # Role-isolated Recipe & Category stream queries and CRUD
 │   └── review_repository.dart      # Reviews index & aggregate calculations
 ├── screens/                        # UI Screens
-│   ├── main_navigation.dart        # Root bottom navigation shell
+│   ├── main_navigation.dart        # Root bottom navigation shell for Audience
 │   ├── home_screen.dart            # Home discovery feed & category tabs
 │   ├── recipe_detail_screen.dart   # Interactive detail view, timer & instructions
 │   ├── favorites_screen.dart       # User-favorited recipes list
-│   ├── profile_screen.dart         # User profile, account info & settings navigation
+│   ├── profile_screen.dart         # User profile, account info & Admin Dashboard shortcut
 │   ├── login_screen.dart           # Email & Google login
 │   ├── signup_screen.dart          # Email signup with password validation
 │   ├── verification_screen.dart    # Email verification & resend cooldown
 │   ├── forgot_password_screen.dart # Password recovery
 │   ├── notifications_screen.dart   # Push notifications & preference toggles
 │   ├── app_preferences_screen.dart # Theme & display settings
-│   └── shopping_list_screen.dart   # User shopping list
+│   ├── shopping_list_screen.dart   # User shopping list
+│   └── admin/                      # Role-Gated Admin Portal Screens
+│       ├── admin_dashboard_screen.dart   # Analytics overview & quick navigation
+│       ├── admin_recipes_screen.dart     # Recipe management, search & filters
+│       ├── add_recipe_screen.dart        # Recipe creator with dynamic builders & storage upload
+│       ├── edit_recipe_screen.dart       # Recipe editor
+│       ├── admin_categories_screen.dart  # Category list & status toggles
+│       ├── add_category_screen.dart      # Category creator with duplicate check
+│       └── edit_category_screen.dart     # Category editor
 ├── services/
-│   └── notification_service.dart   # Centralized FCM setup, tokens, permissions & routing
+│   ├── notification_service.dart   # Centralized FCM setup, tokens, permissions & routing
+│   └── storage_service.dart        # Firebase Storage image uploads (5MB limit, format checks)
 ├── utils/
 │   ├── app_theme.dart              # Custom color palette, typography & ThemeData
 │   └── ingredient_scaler.dart      # Fraction & unit parsing mathematical scaler
@@ -145,6 +167,14 @@ lib/
     ├── timer_widget.dart           # Interactive cooking timer
     ├── rating_widget.dart          # Star rating & review counter
     └── favorite_button.dart        # Animated favorite heart toggle
+
+functions/                          # Cloud Functions for FCM event triggers
+├── index.js                        # OnCreate triggers for recipes & categories
+└── package.json                    # Firebase Admin & Functions dependencies
+
+sample_data/
+├── seed.js                         # Initial 25-recipe database seed script
+└── set_admin.js                    # Admin Custom Claims CLI assignment script
 ```
 
 ---

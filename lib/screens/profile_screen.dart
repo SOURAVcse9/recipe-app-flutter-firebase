@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../utils/app_theme.dart';
 import 'about_app_screen.dart';
+import 'admin/admin_dashboard_screen.dart';
 import 'app_preferences_screen.dart';
 import 'notifications_screen.dart';
 import 'shopping_list_screen.dart';
@@ -32,6 +33,7 @@ class ProfileScreen extends StatelessWidget {
     final providerType = profile?['provider'] ??
         (user?.providerData.any((p) => p.providerId == 'google.com') == true ? 'google' : 'password');
     final isVerified = user?.emailVerified ?? false;
+    final isAdmin = authProvider.isAdmin;
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
 
     return SafeArea(
@@ -50,7 +52,39 @@ class ProfileScreen extends StatelessWidget {
                     color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+                if (isAdmin) ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withAlpha(38),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(color: AppColors.primary),
+                    ),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        backgroundColor: AppColors.primary,
+                        child: Icon(Iconsax.shield_tick, color: Colors.white, size: 20),
+                      ),
+                      title: const Text(
+                        'Admin Dashboard',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: const Text(
+                        'Return to administrative control panel',
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.primary),
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 8),
                 // Dynamic profile header card
                 Container(
                   padding: const EdgeInsets.all(18),

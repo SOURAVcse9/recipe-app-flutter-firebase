@@ -58,7 +58,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
     final recipe = provider.recipeById(widget.recipeId);
 
-    if (recipe == null) {
+    if (recipe.id.isEmpty) {
       return const Scaffold(
         body: EmptyView(
           title: 'Recipe not found',

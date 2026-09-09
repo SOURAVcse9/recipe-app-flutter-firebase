@@ -4,12 +4,13 @@ import 'package:iconsax/iconsax.dart';
 import '../utils/app_theme.dart';
 
 class SafeNetworkImage extends StatelessWidget {
-  const SafeNetworkImage({
+  SafeNetworkImage({
     super.key,
-    required this.url,
+    String? url,
+    String? imageUrl,
     this.fit = BoxFit.cover,
     this.borderRadius,
-  });
+  }) : url = (imageUrl ?? url ?? '').trim();
 
   final String url;
   final BoxFit fit;

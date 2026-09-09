@@ -46,6 +46,12 @@ class FakeFirebaseAuth implements FirebaseAuth {
   Stream<User?> userChanges() => _userChangesController.stream;
 
   @override
+  Stream<User?> authStateChanges() => _userChangesController.stream;
+
+  @override
+  Stream<User?> idTokenChanges() => _userChangesController.stream;
+
+  @override
   Future<UserCredential> signInAnonymously() async {
     final cred = FakeUserCredential();
     _currentUser = cred.user;
@@ -80,7 +86,19 @@ class MockRecipeRepository extends RecipeRepository {
   Stream<List<Recipe>> watchRecipes() => _recipesController.stream;
 
   @override
+  Stream<List<Recipe>> watchPublishedRecipes() => _recipesController.stream;
+
+  @override
+  Stream<List<Recipe>> watchAllRecipes() => _recipesController.stream;
+
+  @override
   Stream<List<FoodCategory>> watchCategories() => _categoriesController.stream;
+
+  @override
+  Stream<List<FoodCategory>> watchActiveCategories() => _categoriesController.stream;
+
+  @override
+  Stream<List<FoodCategory>> watchAllCategories() => _categoriesController.stream;
 
   @override
   Stream<Set<String>> watchFavoriteIds(String uid) => _favoritesController.stream;

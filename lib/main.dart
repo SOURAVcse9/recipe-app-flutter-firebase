@@ -9,6 +9,7 @@ import 'providers/review_provider.dart';
 import 'providers/shopping_list_provider.dart';
 import 'providers/recently_viewed_provider.dart';
 import 'providers/auth_provider.dart';
+import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/main_navigation.dart';
 import 'screens/login_screen.dart';
 import 'screens/verification_screen.dart';
@@ -64,7 +65,7 @@ class RecipeApp extends StatelessWidget {
   }
 }
 
-/// A wrapper that handles routing based on active Firebase Auth state.
+/// A wrapper that handles routing based on active Firebase Auth state and roles.
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
@@ -77,6 +78,11 @@ class AuthWrapper extends StatelessWidget {
     }
 
     if (authProvider.isAuthenticated) {
+      // Direct Admin routing via Firebase custom claims
+      if (authProvider.isAdmin) {
+        return const AdminDashboardScreen();
+      }
+
       final user = authProvider.currentUser;
       final isGoogle = user?.providerData.any((p) => p.providerId == 'google.com') ?? false;
       if (isGoogle || (user?.emailVerified ?? false)) {

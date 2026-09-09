@@ -125,7 +125,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
         final createdAt = createdVal is Timestamp ? createdVal.toDate() : DateTime.now();
 
         final recipe = recipeProvider.recipeById(recipeId);
-        final recipeName = recipe?.name ?? 'Unknown Recipe';
+        final recipeName = recipe.name.isNotEmpty ? recipe.name : 'Unknown Recipe';
 
         return Card(
           color: theme.cardColor,

@@ -212,4 +212,14 @@ class AuthRepository {
       await currentUser.updateDisplayName(newName);
     }
   }
+
+  Future<bool> checkIsAdmin(User user) async {
+    try {
+      final idTokenResult = await user.getIdTokenResult(true);
+      return idTokenResult.claims?['admin'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
+

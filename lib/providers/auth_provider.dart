@@ -52,6 +52,9 @@ class AuthProvider extends ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
 
+  bool _isAdmin = false;
+  bool get isAdmin => _isAdmin;
+
   bool _loading = false;
   bool get loading => _loading;
 
@@ -76,6 +79,7 @@ class AuthProvider extends ChangeNotifier {
 
       if (user != null) {
         try {
+          _isAdmin = await _repository.checkIsAdmin(user);
           await _repository.ensureUserProfile(user);
           _userProfile = await _repository.fetchUserProfile(user.uid);
           await NotificationService.instance.syncToken(user.uid);
@@ -84,9 +88,18 @@ class AuthProvider extends ChangeNotifier {
         }
       } else {
         _userProfile = null;
+        _isAdmin = false;
       }
       notifyListeners();
     });
+  }
+
+  Future<void> refreshAdminStatus() async {
+    final user = _currentUser;
+    if (user != null) {
+      _isAdmin = await _repository.checkIsAdmin(user);
+      notifyListeners();
+    }
   }
 
   void setError(String? err) {

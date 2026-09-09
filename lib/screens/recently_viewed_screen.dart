@@ -3,7 +3,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../providers/recently_viewed_provider.dart';
 import '../providers/recipe_provider.dart';
-import '../models/recipe.dart';
 import '../widgets/recipe_card.dart';
 import '../widgets/state_views.dart';
 import 'recipe_detail_screen.dart';
@@ -49,8 +48,7 @@ class RecentlyViewedScreen extends StatelessWidget {
     // Resolve the actual recipes from the in-memory pool in RecipeProvider
     final recipes = history
         .map((h) => recipeProvider.recipeById(h.recipeId))
-        .where((r) => r != null)
-        .cast<Recipe>()
+        .where((r) => r.id.isNotEmpty)
         .toList();
 
     if (recipes.isEmpty) {

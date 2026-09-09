@@ -29,14 +29,16 @@ class RecipeProvider extends ChangeNotifier {
   StreamSubscription<List<FoodCategory>>? _categorySub;
   StreamSubscription<Set<String>>? _favoritesSub;
 
-  // ---- Authentication state -----------------------------------------
+  // ---- Authentication & Mode state -----------------------------------
   bool _authLoading = true;
   String? _authError;
   String? _uid;
+  bool _isAdminMode = false;
 
   bool get authLoading => _authLoading;
   String? get authError => _authError;
   String? get uid => _uid;
+  bool get isAdminMode => _isAdminMode;
 
   // ---- Raw data -----------------------------------------------------
   List<Recipe> _allRecipes = [];
@@ -61,13 +63,16 @@ class RecipeProvider extends ChangeNotifier {
   String get searchQuery => _searchQuery;
   String get selectedCategory => _selectedCategory;
 
+  List<Recipe> get allRecipes => _allRecipes;
+  List<FoodCategory> get categories => _categories;
+  Set<String> get favoriteIds => _favoriteIds;
+
   List<String> get categoryNames => [
         'All',
         ..._categories.map((c) => c.name).where((n) => n.isNotEmpty),
       ];
 
-  /// Recipes after search + category filtering + favorite mapping are applied,
-  /// matching case-sensitivity from [AppPreferences].
+  /// Recipes after search + category filtering + favorite mapping are applied.
   List<Recipe> filteredRecipes(AppPreferences prefs) {
     final query = _searchQuery.trim();
     final isCaseInsensitive = prefs.caseInsensitiveSearch;
@@ -83,11 +88,13 @@ class RecipeProvider extends ChangeNotifier {
         final q = query.toLowerCase();
         matchesSearch = recipe.name.toLowerCase().contains(q) ||
             recipe.category.toLowerCase().contains(q) ||
-            recipe.ingredientName.any((ing) => ing.toLowerCase().contains(q));
+            recipe.ingredientName.any((ing) => ing.toLowerCase().contains(q)) ||
+            recipe.ingredients.any((ing) => ing.name.toLowerCase().contains(q));
       } else {
         matchesSearch = recipe.name.contains(query) ||
             recipe.category.contains(query) ||
-            recipe.ingredientName.any((ing) => ing.contains(query));
+            recipe.ingredientName.any((ing) => ing.contains(query)) ||
+            recipe.ingredients.any((ing) => ing.name.contains(query));
       }
 
       return matchesCategory && matchesSearch;
@@ -99,142 +106,176 @@ class RecipeProvider extends ChangeNotifier {
     }).toList();
   }
 
+  /// Popular recipes ordered by viewCount desc.
+  List<Recipe> get popularRecipes {
+    final sorted = List<Recipe>.from(_allRecipes)
+      ..sort((a, b) => b.viewCount.compareTo(a.viewCount));
+    return sorted.map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id))).toList();
+  }
+
+  /// Top rated recipes ordered by rating and review count desc.
+  List<Recipe> get topRatedRecipes {
+    final sorted = List<Recipe>.from(_allRecipes)
+      ..sort((a, b) {
+        final ratingCmp = b.rating.compareTo(a.rating);
+        if (ratingCmp != 0) return ratingCmp;
+        return b.review.compareTo(a.review);
+      });
+    return sorted.map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id))).toList();
+  }
+
+  /// User's favorite recipes list.
   List<Recipe> get favoriteRecipes {
     return _allRecipes
         .where((r) => _favoriteIds.contains(r.id))
-        .map((r) => r.isFavorite ? r : r.copyWith(isFavorite: true))
+        .map((r) => r.copyWith(isFavorite: true))
         .toList();
   }
+
+  Recipe recipeById(String id) =>
+      _allRecipes.firstWhere((r) => r.id == id, orElse: () => Recipe.empty());
+
+  int getQuantity(String recipeId) => _quantities[recipeId] ?? 1;
 
   int quantityFor(String recipeId, {int defaultQuantity = 1}) =>
       _quantities[recipeId] ?? defaultQuantity;
 
-  /// Looks up a single recipe by id from the full (unfiltered) live set.
-  Recipe? recipeById(String id) {
-    for (final r in _allRecipes) {
-      if (r.id == id) {
-        final isFav = _favoriteIds.contains(r.id);
-        return r.isFavorite == isFav ? r : r.copyWith(isFavorite: isFav);
-      }
-    }
-    return null;
+  void setQuantity(String recipeId, int qty) {
+    if (qty < 1) return;
+    _quantities[recipeId] = qty;
+    notifyListeners();
   }
 
-  // ---- Authentication and Streams Setup -------------------------------
+  void resetQuantity(String recipeId) {
+    _quantities.remove(recipeId);
+    notifyListeners();
+  }
+
+  void incrementQuantity(String recipeId, {int defaultQuantity = 1}) =>
+      setQuantity(recipeId, quantityFor(recipeId, defaultQuantity: defaultQuantity) + 1);
+
+  void decrementQuantity(String recipeId, {int defaultQuantity = 1}) =>
+      setQuantity(recipeId, (quantityFor(recipeId, defaultQuantity: defaultQuantity) - 1).clamp(1, 999));
+
+  void setSearchQuery(String query) {
+    if (_searchQuery == query) return;
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void selectCategory(String category) {
+    if (_selectedCategory == category) return;
+    _selectedCategory = category;
+    notifyListeners();
+  }
+
+  void setSelectedCategory(String category) => selectCategory(category);
+
+  void retry() => _subscribeToContentStreams();
+
+  void resetFilters() {
+    _searchQuery = '';
+    _selectedCategory = 'All';
+    notifyListeners();
+  }
+
+  void setAdminMode(bool enabled) {
+    if (_isAdminMode == enabled) return;
+    _isAdminMode = enabled;
+    _subscribeToContentStreams();
+  }
+
+  // ---- Internal subscription initialization ---------------------------
+
   void _initAuthAndStreams() {
-    _authSub = _auth.userChanges().listen((user) {
-      if (user != null) {
-        _uid = user.uid;
-        _authLoading = false;
-        _authError = null;
-        notifyListeners();
-        _subscribeToStreams();
-      } else {
-        _uid = null;
-        _authLoading = false;
-        _authError = null;
-        _favoritesSub?.cancel();
-        _favoriteIds = {};
-        _allRecipes = [];
-        _categories = [];
-        _recipeStatus = LoadStatus.initial;
-        _categoryStatus = LoadStatus.initial;
-        notifyListeners();
-      }
-    }, onError: (Object error) {
+    _authSub = _auth.authStateChanges().listen((user) {
+      _uid = user?.uid;
       _authLoading = false;
-      _authError = 'Authentication failed. Please check your connection.';
+      _authError = null;
+
+      _subscribeToFavorites(user?.uid);
+      _subscribeToContentStreams();
+      notifyListeners();
+    }, onError: (e) {
+      _authLoading = false;
+      _authError = e.toString();
       notifyListeners();
     });
   }
 
-  void retryAuthentication() {
-    _initAuthAndStreams();
+  void _subscribeToFavorites(String? uid) {
+    _favoritesSub?.cancel();
+    _favoritesSub = null;
+
+    if (uid == null) {
+      _favoriteIds = {};
+      notifyListeners();
+      return;
+    }
+
+    _favoritesSub = _repository.watchFavoriteIds(uid).listen(
+      (favs) {
+        _favoriteIds = favs;
+        notifyListeners();
+      },
+      onError: (_) {
+        // Silently preserve local favorites state
+      },
+    );
   }
 
-  void _subscribeToStreams() {
-    final currentUid = _uid;
-    if (currentUid == null) return;
-
+  void _subscribeToContentStreams() {
     _recipeSub?.cancel();
     _categorySub?.cancel();
-    _favoritesSub?.cancel();
 
     _recipeStatus = LoadStatus.loading;
-    _recipeSub = _repository.watchRecipes().listen(
+    _categoryStatus = LoadStatus.loading;
+    notifyListeners();
+
+    final recipeStream = _isAdminMode
+        ? _repository.watchAllRecipes()
+        : _repository.watchPublishedRecipes();
+
+    final categoryStream = _isAdminMode
+        ? _repository.watchAllCategories()
+        : _repository.watchActiveCategories();
+
+    _recipeSub = recipeStream.listen(
       (recipes) {
         _allRecipes = recipes;
         _recipeStatus = LoadStatus.loaded;
         _errorMessage = null;
         notifyListeners();
       },
-      onError: (Object error, StackTrace _) {
+      onError: (e) {
         _recipeStatus = LoadStatus.error;
-        _errorMessage = _friendlyError(error);
+        _errorMessage = 'Failed to load recipes. Please try again.';
         notifyListeners();
       },
     );
 
-    _categoryStatus = LoadStatus.loading;
-    _categorySub = _repository.watchCategories().listen(
+    _categorySub = categoryStream.listen(
       (categories) {
         _categories = categories;
         _categoryStatus = LoadStatus.loaded;
         notifyListeners();
       },
-      onError: (Object error, StackTrace _) {
+      onError: (e) {
         _categoryStatus = LoadStatus.error;
         notifyListeners();
       },
     );
-
-    _favoritesSub = _repository.watchFavoriteIds(currentUid).listen(
-      (favIds) {
-        _favoriteIds = favIds;
-        notifyListeners();
-      },
-      onError: (Object _) {
-        // Fail silently for favorites, keep loading recipe stream
-      },
-    );
   }
 
-  String _friendlyError(Object error) {
-    final text = error.toString().toLowerCase();
-    if (text.contains('permission')) {
-      return "You don't have permission to view this content right now.";
-    }
-    if (text.contains('network') || text.contains('unavailable')) {
-      return 'No internet connection. Showing the latest data we have.';
-    }
-    return 'Something went wrong loading recipes. Please try again.';
-  }
+  // ---- User Actions: Favorites & Views ---------------------------------
 
-  /// Retries subscribing to the main content streams.
-  void retry() {
-    _subscribeToStreams();
-  }
+  Future<void> toggleFavorite(dynamic recipeOrId) async {
+    final String recipeId =
+        recipeOrId is Recipe ? recipeOrId.id : recipeOrId.toString();
+    final uid = _uid;
+    if (uid == null) return;
 
-  // ---- Search / filter actions ---------------------------------------
-  void setSearchQuery(String query) {
-    _searchQuery = query;
-    notifyListeners();
-  }
-
-  void setSelectedCategory(String category) {
-    _selectedCategory = category;
-    notifyListeners();
-  }
-
-  // ---- Favorites ------------------------------------------------------
-  Future<void> toggleFavorite(Recipe recipe) async {
-    final currentUid = _uid;
-    if (currentUid == null) return;
-
-    final recipeId = recipe.id;
     final wasFavorite = _favoriteIds.contains(recipeId);
-
-    // Optimistic UI update
     if (wasFavorite) {
       _favoriteIds.remove(recipeId);
     } else {
@@ -244,12 +285,12 @@ class RecipeProvider extends ChangeNotifier {
 
     try {
       if (wasFavorite) {
-        await _repository.removeFavorite(currentUid, recipeId);
+        await _repository.removeFavorite(uid, recipeId);
       } else {
-        await _repository.addFavorite(currentUid, recipeId);
+        await _repository.addFavorite(uid, recipeId);
       }
     } catch (_) {
-      // Revert optimistic update on write failure
+      // Revert optimistic update
       if (wasFavorite) {
         _favoriteIds.add(recipeId);
       } else {
@@ -259,29 +300,111 @@ class RecipeProvider extends ChangeNotifier {
     }
   }
 
-  // ---- Quantity / serving scaling --------------------------------------
-  void incrementQuantity(String recipeId, {int defaultQuantity = 1}) {
-    final current = quantityFor(recipeId, defaultQuantity: defaultQuantity);
-    _quantities[recipeId] = current + 1;
-    notifyListeners();
-  }
-
-  void decrementQuantity(String recipeId, {int defaultQuantity = 1, int minimum = 1}) {
-    final current = quantityFor(recipeId, defaultQuantity: defaultQuantity);
-    if (current <= minimum) return;
-    _quantities[recipeId] = current - 1;
-    notifyListeners();
-  }
-
-  void resetQuantity(String recipeId) {
-    _quantities[recipeId] = 1;
-    notifyListeners();
-  }
-
-  Future<void> incrementRecipeViewCount(String recipeId) async {
+  Future<void> recordRecipeView(String recipeId) async {
     try {
       await _repository.incrementViewCount(recipeId);
     } catch (_) {}
+  }
+
+  Future<void> incrementRecipeViewCount(String recipeId) =>
+      recordRecipeView(recipeId);
+
+  // ---- Admin Operations -----------------------------------------------
+
+  Future<bool> createRecipe(Recipe recipe, String uid) async {
+    try {
+      await _repository.createRecipe(recipe, uid);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateRecipe(Recipe recipe, String uid) async {
+    try {
+      await _repository.updateRecipe(recipe, uid);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> togglePublishRecipe(String recipeId, bool isPublished) async {
+    try {
+      await _repository.togglePublishRecipe(recipeId, isPublished);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> deleteRecipe(String recipeId) async {
+    try {
+      await _repository.deleteRecipe(recipeId);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> createCategory(FoodCategory category, String uid) async {
+    try {
+      await _repository.createCategory(category, uid);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateCategory(FoodCategory category) async {
+    try {
+      await _repository.updateCategory(category);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> toggleCategoryActive(String categoryId, bool isActive) async {
+    try {
+      await _repository.toggleCategoryActive(categoryId, isActive);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> deleteCategory(String categoryId) async {
+    try {
+      await _repository.deleteCategory(categoryId);
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> isCategoryNameTaken(String name, {String? excludeId}) async {
+    return await _repository.categoryNameExists(name, excludeId: excludeId);
+  }
+
+  Future<int> getRecipeCountForCategory(String categoryName) async {
+    return await _repository.countRecipesInCategory(categoryName);
   }
 
   @override
