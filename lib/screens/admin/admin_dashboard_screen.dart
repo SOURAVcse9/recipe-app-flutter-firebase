@@ -164,7 +164,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: _buildStatCard(
                       title: 'Total Recipes',
                       count: recipes.length.toString(),
-                      subtitle: '$publishedCount Published • $draftCount Drafts',
+                      subtitle:
+                          '$publishedCount Published • $draftCount Drafts',
                       icon: Iconsax.book_1,
                       color: AppColors.primary,
                       onTap: () {
@@ -441,7 +442,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white38),
+            const Icon(Icons.arrow_forward_ios,
+                size: 14, color: Colors.white38),
           ],
         ),
       ),
@@ -453,7 +455,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Admin Logout'),
-        content: const Text('Are you sure you want to sign out from the Admin panel?'),
+        content: const Text(
+            'Are you sure you want to sign out from the Admin panel?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -465,7 +468,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               Navigator.pop(ctx);
               await authProvider.logout();
             },
-            child: const Text('Sign Out', style: TextStyle(color: Colors.white)),
+            child:
+                const Text('Sign Out', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

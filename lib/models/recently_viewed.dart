@@ -9,7 +9,8 @@ class RecentlyViewed {
     this.viewedAt,
   });
 
-  factory RecentlyViewed.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory RecentlyViewed.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? <String, dynamic>{};
     final viewedVal = data['viewedAt'];
 
@@ -22,7 +23,9 @@ class RecentlyViewed {
   Map<String, dynamic> toMap() {
     return {
       'recipeId': recipeId,
-      'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : FieldValue.serverTimestamp(),
+      'viewedAt': viewedAt != null
+          ? Timestamp.fromDate(viewedAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 }

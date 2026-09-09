@@ -78,7 +78,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                     : null,
                 filled: true,
                 fillColor: theme.cardColor,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -95,7 +96,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
               children: [
                 // Status Filter Segment
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: theme.cardColor,
                     borderRadius: BorderRadius.circular(10),
@@ -106,10 +108,14 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                       value: _statusFilter,
                       isDense: true,
                       dropdownColor: theme.cardColor,
-                      style: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 13),
+                      style: TextStyle(
+                          color: theme.textTheme.bodyMedium?.color,
+                          fontSize: 13),
                       items: const [
-                        DropdownMenuItem(value: 'All', child: Text('All Status')),
-                        DropdownMenuItem(value: 'Published', child: Text('Published')),
+                        DropdownMenuItem(
+                            value: 'All', child: Text('All Status')),
+                        DropdownMenuItem(
+                            value: 'Published', child: Text('Published')),
                         DropdownMenuItem(value: 'Draft', child: Text('Drafts')),
                       ],
                       onChanged: (val) {
@@ -136,12 +142,18 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                             checkmarkColor: AppColors.primary,
                             labelStyle: TextStyle(
                               fontSize: 12,
-                              color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : AppColors.textSecondary,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                             backgroundColor: theme.cardColor,
                             side: BorderSide(
-                              color: isSelected ? AppColors.primary : Colors.white10,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : Colors.white10,
                             ),
                             onSelected: (selected) {
                               setState(() => _selectedCategory = cat);
@@ -159,13 +171,15 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
 
           // Recipes Count Indicator
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Showing ${filtered.length} of ${recipes.length} recipes',
-                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                      fontSize: 12, color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -178,13 +192,15 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Iconsax.book, size: 48, color: Colors.white24),
+                        const Icon(Iconsax.book,
+                            size: 48, color: Colors.white24),
                         const SizedBox(height: 12),
                         Text(
                           _search.isEmpty
                               ? 'No recipes in this filter.'
                               : 'No matching recipes found.',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          style:
+                              const TextStyle(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -229,7 +245,9 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: recipe.isPublished ? Colors.white10 : Colors.orangeAccent.withAlpha(76),
+          color: recipe.isPublished
+              ? Colors.white10
+              : Colors.orangeAccent.withAlpha(76),
         ),
       ),
       child: Column(
@@ -272,7 +290,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                         ),
                         // Status Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: recipe.isPublished
                                 ? Colors.green.withAlpha(38)
@@ -296,7 +315,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withAlpha(38),
                             borderRadius: BorderRadius.circular(4),
@@ -313,21 +333,25 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                         const SizedBox(width: 8),
                         Text(
                           '${recipe.time} min',
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                              fontSize: 12, color: AppColors.textSecondary),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '${recipe.calorie} kcal',
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                              fontSize: 12, color: AppColors.textSecondary),
                         ),
                         const SizedBox(width: 8),
                         Row(
                           children: [
-                            const Icon(Iconsax.star1, size: 13, color: Colors.amber),
+                            const Icon(Iconsax.star1,
+                                size: 13, color: Colors.amber),
                             const SizedBox(width: 2),
                             Text(
                               recipe.rating.toStringAsFixed(1),
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -367,7 +391,9 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                     recipe.isPublished ? 'Live' : 'Draft',
                     style: TextStyle(
                       fontSize: 12,
-                      color: recipe.isPublished ? Colors.greenAccent : Colors.orangeAccent,
+                      color: recipe.isPublished
+                          ? Colors.greenAccent
+                          : Colors.orangeAccent,
                     ),
                   ),
                 ],
@@ -377,7 +403,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
               Row(
                 children: [
                   TextButton.icon(
-                    style: TextButton.styleFrom(foregroundColor: Colors.white70),
+                    style:
+                        TextButton.styleFrom(foregroundColor: Colors.white70),
                     icon: const Icon(Iconsax.edit, size: 16),
                     label: const Text('Edit', style: TextStyle(fontSize: 13)),
                     onPressed: () {
@@ -391,9 +418,11 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
                   ),
                   const SizedBox(width: 4),
                   IconButton(
-                    icon: const Icon(Iconsax.trash, size: 18, color: Colors.redAccent),
+                    icon: const Icon(Iconsax.trash,
+                        size: 18, color: Colors.redAccent),
                     tooltip: 'Delete Recipe',
-                    onPressed: () => _confirmDeleteRecipe(context, recipe, recipeProvider),
+                    onPressed: () =>
+                        _confirmDeleteRecipe(context, recipe, recipeProvider),
                   ),
                 ],
               ),
@@ -413,7 +442,8 @@ class _AdminRecipesScreenState extends State<AdminRecipesScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Recipe'),
-        content: Text('Are you sure you want to permanently delete "${recipe.name}"?'),
+        content: Text(
+            'Are you sure you want to permanently delete "${recipe.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),

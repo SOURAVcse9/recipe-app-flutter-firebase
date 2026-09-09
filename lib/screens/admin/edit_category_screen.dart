@@ -64,7 +64,8 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
 
     // Check duplicate name if changed
     if (name.toLowerCase() != widget.category.name.toLowerCase()) {
-      final isTaken = await recipeProvider.isCategoryNameTaken(name, excludeId: widget.category.id);
+      final isTaken = await recipeProvider.isCategoryNameTaken(name,
+          excludeId: widget.category.id);
       if (isTaken) {
         if (!mounted) return;
         setState(() => _isLoading = false);
@@ -112,7 +113,8 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(recipeProvider.errorMessage ?? 'Failed to update category.'),
+            content: Text(
+                recipeProvider.errorMessage ?? 'Failed to update category.'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -178,20 +180,23 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                               child: Icon(Iconsax.image, size: 40),
                             ),
                           )
-                        else if (widget.category.image != null && widget.category.image!.isNotEmpty)
+                        else if (widget.category.image != null &&
+                            widget.category.image!.isNotEmpty)
                           SafeNetworkImage(
                             imageUrl: widget.category.image!,
                             fit: BoxFit.cover,
                           )
                         else
                           const Center(
-                            child: Icon(Iconsax.image, size: 40, color: AppColors.primary),
+                            child: Icon(Iconsax.image,
+                                size: 40, color: AppColors.primary),
                           ),
                         Positioned(
                           bottom: 8,
                           right: 8,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               color: Colors.black87,
                               borderRadius: BorderRadius.circular(8),
@@ -199,9 +204,12 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Iconsax.edit, size: 14, color: Colors.white),
+                                Icon(Iconsax.edit,
+                                    size: 14, color: Colors.white),
                                 SizedBox(width: 4),
-                                Text('Change', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                Text('Change',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12)),
                               ],
                             ),
                           ),
@@ -263,7 +271,8 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
 
               // Active Switch
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
@@ -276,12 +285,14 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                       children: [
                         Text(
                           'Category Active Status',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         SizedBox(height: 2),
                         Text(
                           'Inactive categories are hidden from audience users',
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                          style: TextStyle(
+                              color: AppColors.textSecondary, fontSize: 11),
                         ),
                       ],
                     ),
@@ -313,11 +324,13 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2),
                         )
                       : const Text(
                           'Save Changes',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),

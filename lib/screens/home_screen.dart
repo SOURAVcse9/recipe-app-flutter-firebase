@@ -41,8 +41,9 @@ class HomeScreen extends StatelessWidget {
                     'Find a recipe, scale the servings, and get cooking.',
                     style: TextStyle(
                       fontSize: 13.5,
-                      color: theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
-                          AppColors.textSecondary,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                              AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 18),
@@ -138,7 +139,8 @@ class _RecipeGridSliver extends StatelessWidget {
       );
     }
 
-    final isDefaultState = provider.selectedCategory == 'All' && provider.searchQuery.trim().isEmpty;
+    final isDefaultState = provider.selectedCategory == 'All' &&
+        provider.searchQuery.trim().isEmpty;
 
     if (isDefaultState) {
       // Feature 10: Dynamic discovery sections
@@ -273,7 +275,8 @@ class _HorizontalRecipeList extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('See All', style: TextStyle(color: AppColors.primary)),
+                child: const Text('See All',
+                    style: TextStyle(color: AppColors.primary)),
               ),
             ],
           ),

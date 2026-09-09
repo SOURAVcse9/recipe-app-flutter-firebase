@@ -47,13 +47,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final provider = context.read<AuthProvider>();
-    
+
     // SECURITY COMPLIANCE NOTE:
     // To protect against email enumeration attacks and maintain production security standards,
     // we call the generic Firebase password reset API directly without querying Firestore to check
     // if the email exists. The Firebase Spark plan does not provide a secure, server-side method
     // to check emailVerified or registration status without exposing user data to anonymous clients.
-    final success = await provider.sendPasswordReset(_emailController.text.trim());
+    final success =
+        await provider.sendPasswordReset(_emailController.text.trim());
 
     if (success && mounted) {
       setState(() {
@@ -105,7 +106,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                              AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -115,13 +118,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                     decoration: const InputDecoration(
                       labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
+                      prefixIcon:
+                          Icon(Icons.email_outlined, color: AppColors.primary),
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return 'Email cannot be empty.';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(val.trim())) {
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(val.trim())) {
                         return 'Please enter a valid email address.';
                       }
                       return null;
@@ -132,27 +137,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Text(
                       provider.error!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: AppColors.error,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                   ],
                   ElevatedButton(
-                    onPressed: provider.loading || _cooldownSeconds > 0 ? null : _submit,
+                    onPressed: provider.loading || _cooldownSeconds > 0
+                        ? null
+                        : _submit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.pill)),
                     ),
                     child: provider.loading
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                            child: CircularProgressIndicator(
+                                color: Colors.white, strokeWidth: 2.5),
                           )
                         : Text(
-                            _cooldownSeconds > 0 ? 'Send Link (${_cooldownSeconds}s)' : 'Send Reset Link',
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                            _cooldownSeconds > 0
+                                ? 'Send Link (${_cooldownSeconds}s)'
+                                : 'Send Reset Link',
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                   ),
                 ] else ...[
@@ -171,15 +186,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     text: TextSpan(
                       style: TextStyle(
                         fontSize: 14,
-                        color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                        color:
+                            theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                                AppColors.textSecondary,
                       ),
                       children: [
                         const TextSpan(text: 'If an account exists for '),
                         TextSpan(
                           text: _emailController.text.trim(),
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary),
                         ),
-                        const TextSpan(text: ', we\'ve sent a password reset link.'),
+                        const TextSpan(
+                            text: ', we\'ve sent a password reset link.'),
                       ],
                     ),
                   ),
@@ -189,21 +209,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,
-                      color: theme.textTheme.bodyMedium?.color?.withAlpha(128) ?? AppColors.textSecondary,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withAlpha(128) ??
+                              AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 36),
                   OutlinedButton(
-                    onPressed: provider.loading || _cooldownSeconds > 0 ? null : _submit,
+                    onPressed: provider.loading || _cooldownSeconds > 0
+                        ? null
+                        : _submit,
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(color: AppColors.primary),
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.pill)),
                     ),
                     child: Text(
-                      _cooldownSeconds > 0 ? 'Resend Link (${_cooldownSeconds}s)' : 'Resend Link',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      _cooldownSeconds > 0
+                          ? 'Resend Link (${_cooldownSeconds}s)'
+                          : 'Resend Link',
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

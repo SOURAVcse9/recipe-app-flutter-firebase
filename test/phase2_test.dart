@@ -94,8 +94,10 @@ void main() {
   group('Rating Calculation & Duplicate Review Prevention Logic Tests', () {
     test('Aggregate Rating calculation', () {
       final reviews = [
-        const Review(id: '1', userId: 'u1', userName: 'A', rating: 5.0, reviewText: ''),
-        const Review(id: '2', userId: 'u2', userName: 'B', rating: 4.0, reviewText: ''),
+        const Review(
+            id: '1', userId: 'u1', userName: 'A', rating: 5.0, reviewText: ''),
+        const Review(
+            id: '2', userId: 'u2', userName: 'B', rating: 4.0, reviewText: ''),
       ];
 
       final count = reviews.length;
@@ -105,8 +107,18 @@ void main() {
 
     test('Prevent duplicates logic (finding existing user review in list)', () {
       final reviews = [
-        const Review(id: '1', userId: 'user_123', userName: 'A', rating: 5.0, reviewText: ''),
-        const Review(id: '2', userId: 'other_user', userName: 'B', rating: 4.0, reviewText: ''),
+        const Review(
+            id: '1',
+            userId: 'user_123',
+            userName: 'A',
+            rating: 5.0,
+            reviewText: ''),
+        const Review(
+            id: '2',
+            userId: 'other_user',
+            userName: 'B',
+            rating: 4.0,
+            reviewText: ''),
       ];
 
       const targetUserId = 'user_123';
@@ -141,7 +153,8 @@ void main() {
     test('RecentlyViewed ordering (sorted by viewedAt)', () {
       final now = DateTime.now();
       final list = [
-        RecentlyViewed(recipeId: 'r1', viewedAt: now.subtract(const Duration(minutes: 5))),
+        RecentlyViewed(
+            recipeId: 'r1', viewedAt: now.subtract(const Duration(minutes: 5))),
         RecentlyViewed(recipeId: 'r2', viewedAt: now),
       ];
 

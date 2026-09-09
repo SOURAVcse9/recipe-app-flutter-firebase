@@ -38,8 +38,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       if (mounted) {
         context.read<RecipeProvider>().resetQuantity(widget.recipeId);
         // Record recently viewed and increment viewCount
-        context.read<RecentlyViewedProvider>().addRecipeToRecentlyViewed(widget.recipeId);
-        context.read<RecipeProvider>().incrementRecipeViewCount(widget.recipeId);
+        context
+            .read<RecentlyViewedProvider>()
+            .addRecipeToRecentlyViewed(widget.recipeId);
+        context
+            .read<RecipeProvider>()
+            .incrementRecipeViewCount(widget.recipeId);
         // Stream reviews
         context.read<ReviewProvider>().watchReviews(widget.recipeId);
       }
@@ -117,8 +121,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   Text(
                     recipe.category,
                     style: TextStyle(
-                      color: theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
-                          AppColors.textSecondary,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                              AppColors.textSecondary,
                       fontSize: 13,
                     ),
                   ),
@@ -196,9 +201,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       'recipe — showing what we can safely match.',
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: theme.textTheme.bodyMedium?.color
-                                ?.withAlpha(204) ??
-                            AppColors.textSecondary,
+                        color:
+                            theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                                AppColors.textSecondary,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -208,9 +213,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     Text(
                       'No ingredients listed for this recipe yet.',
                       style: TextStyle(
-                        color: theme.textTheme.bodyMedium?.color
-                                ?.withAlpha(204) ??
-                            AppColors.textSecondary,
+                        color:
+                            theme.textTheme.bodyMedium?.color?.withAlpha(204) ??
+                                AppColors.textSecondary,
                       ),
                     )
                   else
@@ -284,7 +289,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             final dynamicAmounts = <String>[];
-                            for (int i = 0; i < recipe.safeIngredientCount; i++) {
+                            for (int i = 0;
+                                i < recipe.safeIngredientCount;
+                                i++) {
                               dynamicAmounts.add(
                                 IngredientScaler.scale(
                                   recipe.ingredientAmount[i],
@@ -292,14 +299,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                 ),
                               );
                             }
-                            context.read<ShoppingListProvider>().addIngredientsToShoppingList(
-                              recipeId: recipe.id,
-                              recipeName: recipe.name,
-                              names: recipe.ingredientName,
-                              amounts: dynamicAmounts,
-                            );
+                            context
+                                .read<ShoppingListProvider>()
+                                .addIngredientsToShoppingList(
+                                  recipeId: recipe.id,
+                                  recipeName: recipe.name,
+                                  names: recipe.ingredientName,
+                                  amounts: dynamicAmounts,
+                                );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Added ingredients to shopping list!')),
+                              const SnackBar(
+                                  content: Text(
+                                      'Added ingredients to shopping list!')),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -307,10 +318,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             foregroundColor: AppColors.primary,
                             side: const BorderSide(color: AppColors.primary),
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.md)),
                           ),
                           icon: const Icon(Iconsax.shopping_bag),
-                          label: const Text('Add to Shopping List', style: TextStyle(fontWeight: FontWeight.bold)),
+                          label: const Text('Add to Shopping List',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -327,7 +341,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('This recipe has no cooking time listed.')),
+                                const SnackBar(
+                                    content: Text(
+                                        'This recipe has no cooking time listed.')),
                               );
                             }
                           },
@@ -335,10 +351,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.md)),
                           ),
                           icon: const Icon(Iconsax.timer_1),
-                          label: const Text('Start Cooking', style: TextStyle(fontWeight: FontWeight.bold)),
+                          label: const Text('Start Cooking',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -370,7 +389,8 @@ class _ReviewsSectionHeader extends StatelessWidget {
     final reviewProvider = context.watch<ReviewProvider>();
     final count = reviewProvider.reviews.length;
     final avg = count > 0
-        ? reviewProvider.reviews.map((r) => r.rating).reduce((a, b) => a + b) / count
+        ? reviewProvider.reviews.map((r) => r.rating).reduce((a, b) => a + b) /
+            count
         : 0.0;
 
     return Row(
@@ -430,7 +450,8 @@ class _ReviewsList extends StatelessWidget {
         child: Text(
           'No reviews yet. Be the first to review this recipe!',
           style: TextStyle(
-            color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+            color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                AppColors.textSecondary,
             fontStyle: FontStyle.italic,
           ),
         ),
@@ -469,8 +490,10 @@ class _ReviewsList extends StatelessWidget {
                     ),
                     if (isOwner)
                       IconButton(
-                        icon: const Icon(Iconsax.trash, size: 16, color: AppColors.error),
-                        onPressed: () => provider.deleteReview(recipeId, review.id),
+                        icon: const Icon(Iconsax.trash,
+                            size: 16, color: AppColors.error),
+                        onPressed: () =>
+                            provider.deleteReview(recipeId, review.id),
                       ),
                   ],
                 ),
@@ -528,7 +551,8 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
 
     final existingReview = provider.reviews.firstWhere(
       (r) => r.userId == currentUserId,
-      orElse: () => const Review(id: '', userId: '', userName: '', rating: 0, reviewText: ''),
+      orElse: () => const Review(
+          id: '', userId: '', userName: '', rating: 0, reviewText: ''),
     );
 
     final isEditing = existingReview.id.isNotEmpty;
@@ -577,7 +601,8 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
           controller: _textController,
           decoration: InputDecoration(
             hintText: 'Share your experience with this recipe...',
-            hintStyle: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+            hintStyle: TextStyle(
+                color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
             fillColor: theme.cardColor,
             filled: true,
           ),
@@ -591,7 +616,8 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
             onPressed: () {
               if (_textController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please write a review comment.')),
+                  const SnackBar(
+                      content: Text('Please write a review comment.')),
                 );
                 return;
               }
@@ -607,14 +633,17 @@ class _WriteReviewSectionState extends State<_WriteReviewSection> {
                 });
               }
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(isEditing ? 'Review updated!' : 'Review submitted!')),
+                SnackBar(
+                    content: Text(
+                        isEditing ? 'Review updated!' : 'Review submitted!')),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md)),
             ),
             child: Text(
               isEditing ? 'Update Review' : 'Submit Review',
@@ -678,7 +707,8 @@ class _RoundBackButton extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: IconButton(
-          icon: Icon(Iconsax.arrow_left_2, color: theme.textTheme.bodyLarge?.color),
+          icon: Icon(Iconsax.arrow_left_2,
+              color: theme.textTheme.bodyLarge?.color),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
       ),

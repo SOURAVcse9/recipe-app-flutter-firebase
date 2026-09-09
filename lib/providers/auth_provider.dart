@@ -33,7 +33,8 @@ class AuthExceptionMapper {
         case 'sign_in_canceled':
           return 'Google sign-in was canceled.';
         default:
-          return exception.message ?? 'An unexpected authentication error occurred.';
+          return exception.message ??
+              'An unexpected authentication error occurred.';
       }
     }
     return exception.toString();

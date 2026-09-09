@@ -54,12 +54,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
     if (mounted) {
       if (provider.currentUser?.emailVerified ?? false) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email verified successfully! Welcome to the app.')),
+          const SnackBar(
+              content:
+                  Text('Email verified successfully! Welcome to the app.')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Your email is not verified yet. Please check your inbox and spam folder.'),
+            content: Text(
+                'Your email is not verified yet. Please check your inbox and spam folder.'),
           ),
         );
       }
@@ -74,7 +77,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification email resent successfully!')),
+        const SnackBar(
+            content: Text('Verification email resent successfully!')),
       );
       _startCooldown();
     }
@@ -112,7 +116,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                  color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                      AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 6),
@@ -130,7 +135,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 Text(
                   provider.error!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: AppColors.error,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -140,29 +148,37 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md)),
                 ),
                 icon: provider.loading
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                            color: Colors.white, strokeWidth: 2),
                       )
                     : const Icon(Iconsax.tick_circle),
-                label: const Text("I've Verified My Email", style: TextStyle(fontWeight: FontWeight.bold)),
+                label: const Text("I've Verified My Email",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
-                onPressed: provider.loading || _cooldownSeconds > 0 ? null : _resendEmail,
+                onPressed: provider.loading || _cooldownSeconds > 0
+                    ? null
+                    : _resendEmail,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.primary),
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md)),
                 ),
                 icon: const Icon(Iconsax.send_2),
                 label: Text(
-                  _cooldownSeconds > 0 ? 'Resend Email (${_cooldownSeconds}s)' : 'Resend Email',
+                  _cooldownSeconds > 0
+                      ? 'Resend Email (${_cooldownSeconds}s)'
+                      : 'Resend Email',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -174,7 +190,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 icon: const Icon(Iconsax.logout, size: 18),
-                label: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: const Text('Logout',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ],
           ),

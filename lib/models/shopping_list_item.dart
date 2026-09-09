@@ -19,7 +19,8 @@ class ShoppingListItem {
     this.createdAt,
   });
 
-  factory ShoppingListItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory ShoppingListItem.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? <String, dynamic>{};
     final createdVal = data['createdAt'];
 
@@ -41,7 +42,9 @@ class ShoppingListItem {
       'recipeId': recipeId,
       'recipeName': recipeName,
       'completed': completed,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 }

@@ -133,7 +133,8 @@ class StorageService {
   /// Optional helper to delete old Storage file if it starts with Firebase Storage schema.
   Future<void> deleteStorageFile(String fileUrl) async {
     try {
-      if (fileUrl.startsWith('gs://') || fileUrl.contains('firebasestorage.googleapis.com')) {
+      if (fileUrl.startsWith('gs://') ||
+          fileUrl.contains('firebasestorage.googleapis.com')) {
         final ref = _storage.refFromURL(fileUrl);
         await ref.delete();
       }

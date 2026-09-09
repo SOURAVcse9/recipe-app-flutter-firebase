@@ -14,6 +14,7 @@ import 'package:recipe_app/screens/profile_screen.dart';
 import 'package:recipe_app/providers/auth_provider.dart';
 import 'package:recipe_app/repositories/auth_repository.dart';
 import 'package:recipe_app/services/notification_service.dart';
+
 class FakeFirebaseFirestore implements FirebaseFirestore {
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
@@ -86,7 +87,8 @@ class FakePreferencesRepository extends PreferencesRepository {
   }
 
   @override
-  Stream<AppPreferences> watchPreferences(String uid) => _prefsController.stream;
+  Stream<AppPreferences> watchPreferences(String uid) =>
+      _prefsController.stream;
 
   @override
   Future<void> updatePreferences(String uid, AppPreferences preferences) async {
@@ -115,10 +117,10 @@ void main() {
     setUp(() {
       mockAuth = FakeFirebaseAuth(initialUser: FakeUser());
       mockRepo = FakePreferencesRepository();
-      prefsProvider =
-          PreferencesProvider(repository: mockRepo, auth: mockAuth);
+      prefsProvider = PreferencesProvider(repository: mockRepo, auth: mockAuth);
       authProvider = AuthProvider(
-        repository: AuthRepository(auth: mockAuth, firestore: FakeFirebaseFirestore()),
+        repository:
+            AuthRepository(auth: mockAuth, firestore: FakeFirebaseFirestore()),
       );
 
       mockRepo.emitPreferences(const AppPreferences(
@@ -141,7 +143,8 @@ void main() {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
-            ChangeNotifierProvider<PreferencesProvider>.value(value: prefsProvider),
+            ChangeNotifierProvider<PreferencesProvider>.value(
+                value: prefsProvider),
             ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
           ],
           child: const MaterialApp(

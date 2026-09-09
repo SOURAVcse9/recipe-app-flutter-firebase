@@ -10,12 +10,11 @@ class PreferencesRepository {
 
   final FirebaseFirestore _firestore;
 
-  DocumentReference<Map<String, dynamic>> _settingsDoc(String uid) =>
-      _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('preferences')
-          .doc('settings');
+  DocumentReference<Map<String, dynamic>> _settingsDoc(String uid) => _firestore
+      .collection('users')
+      .doc(uid)
+      .collection('preferences')
+      .doc('settings');
 
   /// Streams preferences for the given user, returning default values if
   /// the document is absent.

@@ -49,15 +49,18 @@ class NotificationService {
 
     try {
       // Set background handler.
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
 
       // Listen to foreground messages.
-      _onMessageSub = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _onMessageSub =
+          FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         _showForegroundNotification(message);
       });
 
       // Listen to taps when app is in background.
-      _onMessageOpenedAppSub = FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _onMessageOpenedAppSub =
+          FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         _handleNotificationClick(message.data);
       });
 
@@ -122,7 +125,9 @@ class NotificationService {
 
       // VAPID key is only needed for Web.
       final String? token = await _messaging.getToken(
-        vapidKey: kIsWeb ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com' : null,
+        vapidKey: kIsWeb
+            ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com'
+            : null,
       );
 
       if (token == null) return;
@@ -143,7 +148,8 @@ class NotificationService {
 
   /// Helper to record token registration details under users/{uid}/notification_tokens.
   Future<void> _registerTokenInFirestore(String uid, String token) async {
-    final deviceId = token.hashCode.toString(); // Deterministic token document ID.
+    final deviceId =
+        token.hashCode.toString(); // Deterministic token document ID.
     final tokenRef = _firestore
         .collection('users')
         .doc(uid)
@@ -168,7 +174,9 @@ class NotificationService {
 
     try {
       final token = await _messaging.getToken(
-        vapidKey: kIsWeb ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com' : null,
+        vapidKey: kIsWeb
+            ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com'
+            : null,
       );
 
       if (token != null) {
@@ -195,7 +203,9 @@ class NotificationService {
     final type = data['type'];
     final recipeId = data['recipeId'];
 
-    if (type == 'recipe' && recipeId != null && recipeId.toString().isNotEmpty) {
+    if (type == 'recipe' &&
+        recipeId != null &&
+        recipeId.toString().isNotEmpty) {
       final context = RecipeApp.navigatorKey.currentContext;
       if (context != null) {
         Navigator.push(
@@ -218,11 +228,14 @@ class NotificationService {
     if (context == null) return;
 
     final type = data['notificationType'];
-    final prefs = Provider.of<PreferencesProvider>(context, listen: false).current;
+    final prefs =
+        Provider.of<PreferencesProvider>(context, listen: false).current;
 
     bool enabled = true;
     if (type == 'new_recipe' && !prefs.newRecipes) enabled = false;
-    if (type == 'recommendation' && !prefs.recipeRecommendations) enabled = false;
+    if (type == 'recommendation' && !prefs.recipeRecommendations) {
+      enabled = false;
+    }
     if (type == 'reminder' && !prefs.cookingReminders) enabled = false;
 
     if (!enabled) return;
@@ -233,8 +246,10 @@ class NotificationService {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(notification.title ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(notification.body ?? '', style: const TextStyle(fontSize: 12.5)),
+            Text(notification.title ?? '',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(notification.body ?? '',
+                style: const TextStyle(fontSize: 12.5)),
           ],
         ),
         duration: const Duration(seconds: 6),

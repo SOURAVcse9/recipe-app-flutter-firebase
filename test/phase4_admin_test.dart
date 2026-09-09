@@ -6,7 +6,9 @@ import 'package:recipe_app/services/storage_service.dart';
 
 void main() {
   group('Phase 4: Admin & Role-Based Model Serialization Tests', () {
-    test('Recipe model parses legacy parallel arrays into structured IngredientItems', () {
+    test(
+        'Recipe model parses legacy parallel arrays into structured IngredientItems',
+        () {
       const recipe = Recipe(
         id: 'legacy_recipe_1',
         name: 'Classic Pancakes',
@@ -19,10 +21,19 @@ void main() {
         isFavorite: false,
         isPublished: true,
         ingredients: [
-          IngredientItem(name: 'Flour', amount: '200 g', image: 'https://example.com/flour.jpg'),
-          IngredientItem(name: 'Milk', amount: '1 cup', image: 'https://example.com/milk.jpg'),
+          IngredientItem(
+              name: 'Flour',
+              amount: '200 g',
+              image: 'https://example.com/flour.jpg'),
+          IngredientItem(
+              name: 'Milk',
+              amount: '1 cup',
+              image: 'https://example.com/milk.jpg'),
         ],
-        ingredientImage: ['https://example.com/flour.jpg', 'https://example.com/milk.jpg'],
+        ingredientImage: [
+          'https://example.com/flour.jpg',
+          'https://example.com/milk.jpg'
+        ],
         ingredientName: ['Flour', 'Milk'],
         ingredientAmount: ['200 g', '1 cup'],
         instructions: ['Mix flour and milk', 'Pour onto pan', 'Flip and serve'],
@@ -46,7 +57,8 @@ void main() {
       expect(recipe.isPublished, isTrue);
     });
 
-    test('FoodCategory model defaults isActive to true and sets searchName', () {
+    test('FoodCategory model defaults isActive to true and sets searchName',
+        () {
       const category = FoodCategory(
         id: 'dessert',
         name: 'Dessert',
@@ -64,7 +76,8 @@ void main() {
   group('Phase 4: StorageService Validation Tests', () {
     test('Allows valid image extensions (jpg, jpeg, png, webp)', () {
       final validFile = XFile('test/path/photo.png');
-      final error = StorageService.validateImageFile(validFile, 1024 * 1024); // 1 MB
+      final error =
+          StorageService.validateImageFile(validFile, 1024 * 1024); // 1 MB
       expect(error, isNull);
     });
 
@@ -77,7 +90,8 @@ void main() {
 
     test('Rejects files exceeding 5 MB limit', () {
       final largeFile = XFile('test/path/large_image.jpg');
-      final error = StorageService.validateImageFile(largeFile, 6 * 1024 * 1024); // 6 MB
+      final error =
+          StorageService.validateImageFile(largeFile, 6 * 1024 * 1024); // 6 MB
       expect(error, isNotNull);
       expect(error!.contains('exceeds the 5 MB limit'), isTrue);
     });

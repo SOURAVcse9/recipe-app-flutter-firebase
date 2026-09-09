@@ -70,7 +70,8 @@ class _TimerWidgetState extends State<TimerWidget> {
         ),
         content: Text(
           'Cooking time completed for ${widget.recipeName}!',
-          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+          style:
+              TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
         ),
         actions: [
           TextButton(
@@ -99,7 +100,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     final theme = Theme.of(context);
     return Dialog(
       backgroundColor: theme.cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg)),
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -119,7 +121,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               'Cooking Timer',
               style: TextStyle(
                 fontSize: 12,
-                color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                    AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 24),
@@ -141,8 +144,10 @@ class _TimerWidgetState extends State<TimerWidget> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md)),
                   ),
                   icon: Icon(_isRunning ? Iconsax.pause : Iconsax.play),
                   label: Text(_isRunning ? 'Pause' : 'Start'),
@@ -153,8 +158,10 @@ class _TimerWidgetState extends State<TimerWidget> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: theme.textTheme.bodyLarge?.color,
                     side: BorderSide(color: theme.dividerColor),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md)),
                   ),
                   icon: const Icon(Iconsax.refresh, size: 18),
                   label: const Text('Reset'),

@@ -55,7 +55,8 @@ class ShoppingListScreen extends StatelessWidget {
     }
 
     if (provider.status == ShoppingListStatus.error) {
-      return ErrorView(message: provider.errorMessage ?? 'Failed to load shopping list.');
+      return ErrorView(
+          message: provider.errorMessage ?? 'Failed to load shopping list.');
     }
 
     final items = provider.items;
@@ -102,7 +103,8 @@ class ShoppingListScreen extends StatelessWidget {
               '${item.amount} • From ${item.recipeName}',
               style: TextStyle(
                 fontSize: 12,
-                color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                    AppColors.textSecondary,
               ),
             ),
             trailing: IconButton(

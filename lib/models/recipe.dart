@@ -127,7 +127,8 @@ class Recipe {
 
     // Build structured ingredients from structured list or fallback to parallel arrays
     final structuredList = <IngredientItem>[];
-    if (data['ingredients'] is List && (data['ingredients'] as List).isNotEmpty) {
+    if (data['ingredients'] is List &&
+        (data['ingredients'] as List).isNotEmpty) {
       for (final item in data['ingredients'] as List) {
         if (item is Map<String, dynamic>) {
           structuredList.add(IngredientItem.fromMap(item));
@@ -168,13 +169,15 @@ class Recipe {
       name: rawName,
       calorie: _asString(data['calorie'], fallback: '0'),
       category: rawCategory,
-      categoryId: _asString(data['categoryId'], fallback: rawCategory.toLowerCase()),
+      categoryId:
+          _asString(data['categoryId'], fallback: rawCategory.toLowerCase()),
       image: _asString(data['image']),
       rating: _asDouble(data['rating']),
       review: _asInt(data['review']),
       time: _asInt(data['time']),
       isFavorite: data['isFavorite'] == true,
-      isPublished: data['isPublished'] is bool ? data['isPublished'] as bool : true,
+      isPublished:
+          data['isPublished'] is bool ? data['isPublished'] as bool : true,
       ingredients: structuredList,
       ingredientImage: images,
       ingredientName: names,
@@ -189,7 +192,8 @@ class Recipe {
           ? (data['updatedAt'] as Timestamp).toDate()
           : null,
       createdBy: data['createdBy'] as String?,
-      searchName: _asString(data['searchName'], fallback: rawName.toLowerCase()),
+      searchName:
+          _asString(data['searchName'], fallback: rawName.toLowerCase()),
     );
   }
 

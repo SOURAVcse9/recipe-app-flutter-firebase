@@ -69,7 +69,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully registered your account! Please verify your email.')),
+        const SnackBar(
+            content: Text(
+                'Successfully registered your account! Please verify your email.')),
       );
       Navigator.of(context).pop();
     }
@@ -106,7 +108,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           Text(
             'Password Strength: $label',
-            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 11.5, fontWeight: FontWeight.bold, color: color),
           ),
           const SizedBox(height: 4),
           LinearProgressIndicator(
@@ -125,7 +128,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final provider = context.watch<AuthProvider>();
-    final isWindows = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+    final isWindows =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -162,7 +166,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
-                      color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                              AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -171,7 +177,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                     decoration: const InputDecoration(
                       labelText: 'Full Name',
-                      prefixIcon: Icon(Icons.person_outline, color: AppColors.primary),
+                      prefixIcon:
+                          Icon(Icons.person_outline, color: AppColors.primary),
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
@@ -190,13 +197,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                     decoration: const InputDecoration(
                       labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
+                      prefixIcon:
+                          Icon(Icons.email_outlined, color: AppColors.primary),
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return 'Email cannot be empty.';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(val.trim())) {
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(val.trim())) {
                         return 'Please enter a valid email address.';
                       }
                       return null;
@@ -209,7 +218,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primary),
+                      prefixIcon: const Icon(Icons.lock_outline,
+                          color: AppColors.primary),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Iconsax.eye_slash : Iconsax.eye,
@@ -249,10 +259,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      prefixIcon: const Icon(Icons.lock_clock_outlined, color: AppColors.primary),
+                      prefixIcon: const Icon(Icons.lock_clock_outlined,
+                          color: AppColors.primary),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirmPassword ? Iconsax.eye_slash : Iconsax.eye,
+                          _obscureConfirmPassword
+                              ? Iconsax.eye_slash
+                              : Iconsax.eye,
                           color: AppColors.primary,
                         ),
                         onPressed: () {
@@ -277,7 +290,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       provider.error!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          color: AppColors.error,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                   const SizedBox(height: 24),
@@ -287,7 +303,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.pill)),
                       elevation: 2,
                     ),
                     child: provider.loading
@@ -301,7 +318,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )
                         : const Text(
                             'Create Account',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                   ),
                   if (!isWindows) ...[
@@ -313,7 +331,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'OR',
-                            style: TextStyle(color: theme.textTheme.bodyMedium?.color?.withAlpha(128)),
+                            style: TextStyle(
+                                color: theme.textTheme.bodyMedium?.color
+                                    ?.withAlpha(128)),
                           ),
                         ),
                         const Expanded(child: Divider()),
@@ -326,10 +346,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         foregroundColor: theme.textTheme.bodyLarge?.color,
                         side: BorderSide(color: theme.dividerColor),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppRadius.pill)),
                       ),
-                      icon: const Text('G', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 18)),
-                      label: const Text('Continue with Google', style: TextStyle(fontWeight: FontWeight.bold)),
+                      icon: const Text('G',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                              fontSize: 18)),
+                      label: const Text('Continue with Google',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                   const SizedBox(height: 24),
@@ -338,7 +365,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         'Already have an account? ',
-                        style: TextStyle(color: theme.textTheme.bodyMedium?.color),
+                        style:
+                            TextStyle(color: theme.textTheme.bodyMedium?.color),
                       ),
                       GestureDetector(
                         onTap: () {

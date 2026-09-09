@@ -55,10 +55,14 @@ void main() {
       }
 
       expect(calculatePasswordStrength(''), equals(0.0));
-      expect(calculatePasswordStrength('123'), equals(0.25)); // only lowercase/numbers but too short
-      expect(calculatePasswordStrength('abcdefgh'), equals(0.5)); // length + lowercase
-      expect(calculatePasswordStrength('Abcdefgh'), equals(0.75)); // length + lowercase + uppercase
-      expect(calculatePasswordStrength('Abcdefg1'), equals(1.0)); // length + lowercase + uppercase + digit
+      expect(calculatePasswordStrength('123'),
+          equals(0.25)); // only lowercase/numbers but too short
+      expect(calculatePasswordStrength('abcdefgh'),
+          equals(0.5)); // length + lowercase
+      expect(calculatePasswordStrength('Abcdefgh'),
+          equals(0.75)); // length + lowercase + uppercase
+      expect(calculatePasswordStrength('Abcdefg1'),
+          equals(1.0)); // length + lowercase + uppercase + digit
     });
 
     test('Centralized AuthExceptionMapper error parsing', () {
@@ -74,10 +78,14 @@ void main() {
 
       expect(toMsg('wrong-password'), equals('Incorrect email or password.'));
       expect(toMsg('user-not-found'), equals('Incorrect email or password.'));
-      expect(toMsg('invalid-email'), equals('Please enter a valid email address.'));
-      expect(toMsg('email-already-in-use'), equals('An account already exists with this email.'));
-      expect(toMsg('too-many-requests'), equals('Too many login attempts. Please try again later.'));
-      expect(toMsg('network-request-failed'), equals('Please check your internet connection and try again.'));
+      expect(toMsg('invalid-email'),
+          equals('Please enter a valid email address.'));
+      expect(toMsg('email-already-in-use'),
+          equals('An account already exists with this email.'));
+      expect(toMsg('too-many-requests'),
+          equals('Too many login attempts. Please try again later.'));
+      expect(toMsg('network-request-failed'),
+          equals('Please check your internet connection and try again.'));
       expect(toMsg('sign_in_canceled'), equals('Google sign-in was canceled.'));
     });
 
@@ -213,7 +221,7 @@ void main() {
         'notificationType': 'new_recipe',
         'recipeId': 'rec_123',
       };
-      
+
       expect(payload['type'], equals('recipe'));
       expect(payload['notificationType'], equals('new_recipe'));
       expect(payload['recipeId'], equals('rec_123'));

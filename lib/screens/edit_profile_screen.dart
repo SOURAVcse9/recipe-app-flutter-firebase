@@ -18,7 +18,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     final profile = context.read<AuthProvider>().userProfile;
-    final currentName = profile?['name'] ?? context.read<AuthProvider>().currentUser?.displayName ?? '';
+    final currentName = profile?['name'] ??
+        context.read<AuthProvider>().currentUser?.displayName ??
+        '';
     _nameController = TextEditingController(text: currentName);
   }
 
@@ -32,7 +34,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final provider = context.read<AuthProvider>();
-    final success = await provider.updateDisplayName(_nameController.text.trim());
+    final success =
+        await provider.updateDisplayName(_nameController.text.trim());
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -50,7 +53,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Edit Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text('Edit Profile',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(
         child: Padding(
@@ -65,7 +69,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                   decoration: const InputDecoration(
                     labelText: 'Full Name',
-                    prefixIcon: Icon(Icons.person_outline, color: AppColors.primary),
+                    prefixIcon:
+                        Icon(Icons.person_outline, color: AppColors.primary),
                   ),
                   validator: (val) {
                     if (val == null || val.trim().isEmpty) {
@@ -82,7 +87,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Text(
                     provider.error!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -92,15 +100,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.pill)),
                   ),
                   child: provider.loading
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2.5),
                         )
-                      : const Text('Save Changes', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      : const Text('Save Changes',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

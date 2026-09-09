@@ -74,7 +74,8 @@ class FakeFirebaseAuth implements FirebaseAuth {
 
 class MockRecipeRepository extends RecipeRepository {
   final _recipesController = StreamController<List<Recipe>>.broadcast();
-  final _categoriesController = StreamController<List<FoodCategory>>.broadcast();
+  final _categoriesController =
+      StreamController<List<FoodCategory>>.broadcast();
   final _favoritesController = StreamController<Set<String>>.broadcast();
 
   MockRecipeRepository()
@@ -95,13 +96,16 @@ class MockRecipeRepository extends RecipeRepository {
   Stream<List<FoodCategory>> watchCategories() => _categoriesController.stream;
 
   @override
-  Stream<List<FoodCategory>> watchActiveCategories() => _categoriesController.stream;
+  Stream<List<FoodCategory>> watchActiveCategories() =>
+      _categoriesController.stream;
 
   @override
-  Stream<List<FoodCategory>> watchAllCategories() => _categoriesController.stream;
+  Stream<List<FoodCategory>> watchAllCategories() =>
+      _categoriesController.stream;
 
   @override
-  Stream<Set<String>> watchFavoriteIds(String uid) => _favoritesController.stream;
+  Stream<Set<String>> watchFavoriteIds(String uid) =>
+      _favoritesController.stream;
 
   @override
   Future<void> addFavorite(String uid, String recipeId) async {

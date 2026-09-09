@@ -76,8 +76,8 @@ class AppPreferencesScreen extends StatelessWidget {
                     ),
                     DropdownMenuItem(
                       value: 'System Default',
-                      child:
-                          Text('System Default', style: TextStyle(fontSize: 14)),
+                      child: Text('System Default',
+                          style: TextStyle(fontSize: 14)),
                     ),
                   ],
                 ),
@@ -204,12 +204,9 @@ class AppPreferencesScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w700,
-          color: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.color
-                  ?.withAlpha(178) ??
-              AppColors.textSecondary,
+          color:
+              Theme.of(context).textTheme.bodyMedium?.color?.withAlpha(178) ??
+                  AppColors.textSecondary,
           letterSpacing: 1.0,
         ),
       ),

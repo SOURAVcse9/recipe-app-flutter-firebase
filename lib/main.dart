@@ -46,7 +46,8 @@ Future<void> main() async {
 class RecipeApp extends StatelessWidget {
   const RecipeApp({super.key});
 
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,8 @@ class AuthWrapper extends StatelessWidget {
       }
 
       final user = authProvider.currentUser;
-      final isGoogle = user?.providerData.any((p) => p.providerId == 'google.com') ?? false;
+      final isGoogle =
+          user?.providerData.any((p) => p.providerId == 'google.com') ?? false;
       if (isGoogle || (user?.emailVerified ?? false)) {
         return const MainNavigation();
       }

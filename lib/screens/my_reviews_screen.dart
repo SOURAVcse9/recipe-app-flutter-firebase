@@ -90,7 +90,8 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
-                  color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                  color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                      AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -101,10 +102,13 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.pill)),
                 ),
-                child: const Text('Browse Recipes', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text('Browse Recipes',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -122,10 +126,12 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
         final rating = (reviewMap['rating'] ?? 0.0) as double;
         final reviewText = reviewMap['reviewText'] ?? '';
         final createdVal = reviewMap['createdAt'];
-        final createdAt = createdVal is Timestamp ? createdVal.toDate() : DateTime.now();
+        final createdAt =
+            createdVal is Timestamp ? createdVal.toDate() : DateTime.now();
 
         final recipe = recipeProvider.recipeById(recipeId);
-        final recipeName = recipe.name.isNotEmpty ? recipe.name : 'Unknown Recipe';
+        final recipeName =
+            recipe.name.isNotEmpty ? recipe.name : 'Unknown Recipe';
 
         return Card(
           color: theme.cardColor,
@@ -157,19 +163,24 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
                         if (value == 'view') {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => RecipeDetailScreen(recipeId: recipeId),
+                              builder: (_) =>
+                                  RecipeDetailScreen(recipeId: recipeId),
                             ),
                           );
                         } else if (value == 'edit') {
-                          _showEditReviewDialog(context, recipeId, rating, reviewText);
+                          _showEditReviewDialog(
+                              context, recipeId, rating, reviewText);
                         } else if (value == 'delete') {
                           reviewProvider.deleteReview(recipeId, reviewId);
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'view', child: Text('View Recipe')),
-                        const PopupMenuItem(value: 'edit', child: Text('Edit Review')),
-                        const PopupMenuItem(value: 'delete', child: Text('Delete Review')),
+                        const PopupMenuItem(
+                            value: 'view', child: Text('View Recipe')),
+                        const PopupMenuItem(
+                            value: 'edit', child: Text('Edit Review')),
+                        const PopupMenuItem(
+                            value: 'delete', child: Text('Delete Review')),
                       ],
                     ),
                   ],
@@ -197,7 +208,8 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
                   '${createdAt.year}-${createdAt.month.toString().padLeft(2, '0')}-${createdAt.day.toString().padLeft(2, '0')}',
                   style: TextStyle(
                     fontSize: 11.5,
-                    color: theme.textTheme.bodyMedium?.color?.withAlpha(150) ?? AppColors.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color?.withAlpha(150) ??
+                        AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -260,11 +272,13 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
           ),
           actions: [
             TextButton(
-              child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+              child: const Text('Cancel',
+                  style: TextStyle(color: AppColors.textSecondary)),
               onPressed: () => Navigator.of(context).pop(),
             ),
             TextButton(
-              child: const Text('Save', style: TextStyle(color: AppColors.primary)),
+              child: const Text('Save',
+                  style: TextStyle(color: AppColors.primary)),
               onPressed: () {
                 context.read<ReviewProvider>().submitReview(
                       recipeId: recipeId,

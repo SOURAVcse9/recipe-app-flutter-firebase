@@ -67,14 +67,17 @@ class ReviewRepository {
 
         newReviewCount = currentReviewCount;
         newRating = currentReviewCount > 0
-            ? ((currentRating * currentReviewCount) - oldRating + rating) / currentReviewCount
+            ? ((currentRating * currentReviewCount) - oldRating + rating) /
+                currentReviewCount
             : rating;
       } else {
         newReviewCount = currentReviewCount + 1;
-        newRating = ((currentRating * currentReviewCount) + rating) / newReviewCount;
+        newRating =
+            ((currentRating * currentReviewCount) + rating) / newReviewCount;
       }
 
-      final dynamic oldCreatedAt = hasExisting ? userReviewQuery.docs.first.data()['createdAt'] : null;
+      final dynamic oldCreatedAt =
+          hasExisting ? userReviewQuery.docs.first.data()['createdAt'] : null;
       final dynamic timestampVal = oldCreatedAt ?? FieldValue.serverTimestamp();
 
       transaction.set(reviewRef, {
@@ -108,7 +111,8 @@ class ReviewRepository {
     });
   }
 
-  Future<void> deleteReview(String recipeId, String reviewId, String userId) async {
+  Future<void> deleteReview(
+      String recipeId, String reviewId, String userId) async {
     final recipeRef = _firestore.collection('recipes').doc(recipeId);
     final reviewRef = recipeRef.collection('reviews').doc(reviewId);
 
@@ -117,7 +121,9 @@ class ReviewRepository {
       if (!reviewSnap.exists) return;
 
       final reviewData = reviewSnap.data() ?? {};
-      if (reviewData['userId'] != userId) throw Exception('Unauthorized deletion');
+      if (reviewData['userId'] != userId) {
+        throw Exception('Unauthorized deletion');
+      }
       final double reviewRating = _asDouble(reviewData['rating']);
 
       final recipeSnap = await transaction.get(recipeRef);
@@ -129,7 +135,8 @@ class ReviewRepository {
 
       final newReviewCount = currentReviewCount - 1;
       final newRating = newReviewCount > 0
-          ? ((currentRating * currentReviewCount) - reviewRating) / newReviewCount
+          ? ((currentRating * currentReviewCount) - reviewRating) /
+              newReviewCount
           : 0.0;
 
       transaction.delete(reviewRef);

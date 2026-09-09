@@ -80,7 +80,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
   Future<void> _pickRecipeImage() async {
     final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final file =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
     if (file != null) {
       setState(() => _recipeImageFile = file);
     }
@@ -88,7 +89,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
   Future<void> _pickIngredientImage(int index) async {
     final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    final file =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (file != null) {
       setState(() {
         _ingredientEntries[index].localImageFile = file;
@@ -129,7 +131,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
     if (_selectedCategory == null || _selectedCategory!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category.'), backgroundColor: Colors.redAccent),
+        const SnackBar(
+            content: Text('Please select a category.'),
+            backgroundColor: Colors.redAccent),
       );
       return;
     }
@@ -146,13 +150,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
     // Validate ingredients
     final validIngredients = _ingredientEntries
-        .where((e) => e.nameController.text.trim().isNotEmpty && e.amountController.text.trim().isNotEmpty)
+        .where((e) =>
+            e.nameController.text.trim().isNotEmpty &&
+            e.amountController.text.trim().isNotEmpty)
         .toList();
 
     if (_isPublished && validIngredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please add at least one valid ingredient (name & amount required).'),
+          content: Text(
+              'Please add at least one valid ingredient (name & amount required).'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -171,8 +178,10 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
     try {
       final recipeName = _nameController.text.trim();
-      final sanitizedName = recipeName.toLowerCase().replaceAll(RegExp(r'\s+'), '_');
-      final recipeId = '${sanitizedName}_${DateTime.now().millisecondsSinceEpoch}';
+      final sanitizedName =
+          recipeName.toLowerCase().replaceAll(RegExp(r'\s+'), '_');
+      final recipeId =
+          '${sanitizedName}_${DateTime.now().millisecondsSinceEpoch}';
 
       // 1. Upload Main Recipe Image
       String recipeImageUrl = '';
@@ -199,14 +208,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         if (entry.localImageFile != null) {
           if (mounted) {
             setState(() {
-              _uploadStatusMessage = 'Uploading ingredient ${i + 1} of $totalIng...';
+              _uploadStatusMessage =
+                  'Uploading ingredient ${i + 1} of $totalIng...';
             });
           }
           ingImageUrl = await _storageService.uploadIngredientImage(
             file: entry.localImageFile!,
             onProgress: (progress) {
               if (mounted) {
-                setState(() => _uploadProgress = 0.5 + ((i + progress) / totalIng) * 0.5);
+                setState(() =>
+                    _uploadProgress = 0.5 + ((i + progress) / totalIng) * 0.5);
               }
             },
           );
@@ -266,7 +277,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(recipeProvider.errorMessage ?? 'Failed to create recipe.'),
+            content:
+                Text(recipeProvider.errorMessage ?? 'Failed to create recipe.'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -287,7 +299,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final recipeProvider = context.watch<RecipeProvider>();
-    final categories = recipeProvider.categories.where((c) => c.isActive).toList();
+    final categories =
+        recipeProvider.categories.where((c) => c.isActive).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -338,7 +351,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                 bottom: 8,
                                 right: 8,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
                                     color: Colors.black87,
                                     borderRadius: BorderRadius.circular(8),
@@ -346,9 +360,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Iconsax.edit, size: 14, color: Colors.white),
+                                      Icon(Iconsax.edit,
+                                          size: 14, color: Colors.white),
                                       SizedBox(width: 4),
-                                      Text('Change', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                      Text('Change',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12)),
                                     ],
                                   ),
                                 ),
@@ -359,11 +377,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       : const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Iconsax.image, size: 44, color: AppColors.primary),
+                            Icon(Iconsax.image,
+                                size: 44, color: AppColors.primary),
                             SizedBox(height: 8),
-                            Text('Upload Recipe Photo', style: TextStyle(fontWeight: FontWeight.w600)),
+                            Text('Upload Recipe Photo',
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                             SizedBox(height: 4),
-                            Text('JPG, PNG, WEBP • Max 5 MB', style: TextStyle(color: Colors.white38, fontSize: 11)),
+                            Text('JPG, PNG, WEBP • Max 5 MB',
+                                style: TextStyle(
+                                    color: Colors.white38, fontSize: 11)),
                           ],
                         ),
                 ),
@@ -380,7 +402,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(_uploadStatusMessage, style: const TextStyle(fontSize: 12, color: AppColors.primary)),
+                Text(_uploadStatusMessage,
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.primary)),
               ],
 
               const SizedBox(height: 24),
@@ -396,9 +420,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   hintText: 'e.g. Creamy Garlic Butter Salmon',
                   filled: true,
                   fillColor: theme.cardColor,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Title is required' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Title is required'
+                    : null,
               ),
               const SizedBox(height: 14),
 
@@ -409,13 +437,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   labelText: 'Category *',
                   filled: true,
                   fillColor: theme.cardColor,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
                 items: categories.map((cat) {
-                  return DropdownMenuItem(value: cat.name, child: Text(cat.name));
+                  return DropdownMenuItem(
+                      value: cat.name, child: Text(cat.name));
                 }).toList(),
                 onChanged: (val) => setState(() => _selectedCategory = val),
-                validator: (val) => val == null ? 'Please select a category' : null,
+                validator: (val) =>
+                    val == null ? 'Please select a category' : null,
               ),
               const SizedBox(height: 14),
 
@@ -429,7 +461,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         labelText: 'Calories (kcal)',
                         filled: true,
                         fillColor: theme.cardColor,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                     ),
                   ),
@@ -442,10 +476,14 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         labelText: 'Time (minutes) *',
                         filled: true,
                         fillColor: theme.cardColor,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (val) {
-                        if (val == null || int.tryParse(val.trim()) == null || int.parse(val.trim()) <= 0) {
+                        if (val == null ||
+                            int.tryParse(val.trim()) == null ||
+                            int.parse(val.trim()) <= 0) {
                           return 'Positive integer';
                         }
                         return null;
@@ -461,12 +499,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _ratingController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         labelText: 'Initial Rating (0–5)',
                         filled: true,
                         fillColor: theme.cardColor,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (val) {
                         final d = double.tryParse(val ?? '');
@@ -484,7 +525,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         labelText: 'Review Count',
                         filled: true,
                         fillColor: theme.cardColor,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                     ),
                   ),
@@ -497,9 +540,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildSectionTitle('Ingredients (${_ingredientEntries.length})'),
+                  _buildSectionTitle(
+                      'Ingredients (${_ingredientEntries.length})'),
                   TextButton.icon(
-                    style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+                    style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primary),
                     icon: const Icon(Iconsax.add_circle, size: 18),
                     label: const Text('Add Ingredient'),
                     onPressed: _addIngredient,
@@ -536,10 +581,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   child: Image.network(
                                     entry.localImageFile!.path,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(Iconsax.image, size: 20),
+                                    errorBuilder: (_, __, ___) =>
+                                        const Icon(Iconsax.image, size: 20),
                                   ),
                                 )
-                              : const Icon(Iconsax.gallery_add, size: 20, color: Colors.white60),
+                              : const Icon(Iconsax.gallery_add,
+                                  size: 20, color: Colors.white60),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -574,7 +621,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       // Delete
                       if (_ingredientEntries.length > 1)
                         IconButton(
-                          icon: const Icon(Iconsax.trash, size: 18, color: Colors.redAccent),
+                          icon: const Icon(Iconsax.trash,
+                              size: 18, color: Colors.redAccent),
                           onPressed: () => _removeIngredient(index),
                         ),
                     ],
@@ -588,9 +636,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildSectionTitle('Cooking Steps (${_instructionControllers.length})'),
+                  _buildSectionTitle(
+                      'Cooking Steps (${_instructionControllers.length})'),
                   TextButton.icon(
-                    style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+                    style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primary),
                     icon: const Icon(Iconsax.add_circle, size: 18),
                     label: const Text('Add Step'),
                     onPressed: _addInstruction,
@@ -609,7 +659,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       CircleAvatar(
                         radius: 14,
                         backgroundColor: AppColors.primary,
-                        child: Text('${index + 1}', style: const TextStyle(fontSize: 12, color: Colors.white)),
+                        child: Text('${index + 1}',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white)),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
@@ -617,16 +669,20 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                           controller: ctrl,
                           maxLines: 2,
                           decoration: InputDecoration(
-                            hintText: 'Step ${index + 1} instruction description...',
+                            hintText:
+                                'Step ${index + 1} instruction description...',
                             filled: true,
                             fillColor: theme.cardColor,
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none),
                           ),
                         ),
                       ),
                       if (_instructionControllers.length > 1)
                         IconButton(
-                          icon: const Icon(Iconsax.trash, size: 18, color: Colors.redAccent),
+                          icon: const Icon(Iconsax.trash,
+                              size: 18, color: Colors.redAccent),
                           onPressed: () => _removeInstruction(index),
                         ),
                     ],
@@ -638,7 +694,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
               // Published Status Switch
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
@@ -649,9 +706,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Publish Recipe Immediately', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        Text('Publish Recipe Immediately',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14)),
                         SizedBox(height: 2),
-                        Text('Unpublished recipes are saved as drafts', style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                        Text('Unpublished recipes are saved as drafts',
+                            style: TextStyle(
+                                color: AppColors.textSecondary, fontSize: 11)),
                       ],
                     ),
                     Switch(
@@ -673,18 +734,23 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: _isLoading ? null : _saveRecipe,
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2),
                         )
                       : Text(
-                          _isPublished ? 'Create & Publish Recipe' : 'Save as Draft',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          _isPublished
+                              ? 'Create & Publish Recipe'
+                              : 'Save as Draft',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),

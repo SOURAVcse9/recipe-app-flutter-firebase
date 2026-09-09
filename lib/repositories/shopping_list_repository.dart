@@ -30,7 +30,8 @@ class ShoppingListRepository {
     await batch.commit();
   }
 
-  Future<void> updateItemCompleted(String uid, String itemId, bool completed) async {
+  Future<void> updateItemCompleted(
+      String uid, String itemId, bool completed) async {
     await _shoppingListRef(uid).doc(itemId).update({'completed': completed});
   }
 
@@ -39,9 +40,8 @@ class ShoppingListRepository {
   }
 
   Future<void> clearCompleted(String uid) async {
-    final completedItems = await _shoppingListRef(uid)
-        .where('completed', isEqualTo: true)
-        .get();
+    final completedItems =
+        await _shoppingListRef(uid).where('completed', isEqualTo: true).get();
     final batch = _firestore.batch();
     for (final doc in completedItems.docs) {
       batch.delete(doc.reference);

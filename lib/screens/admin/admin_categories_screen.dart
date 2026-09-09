@@ -63,7 +63,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                     : null,
                 filled: true,
                 fillColor: theme.cardColor,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -80,22 +81,28 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Iconsax.folder_cross, size: 48, color: Colors.white24),
+                        const Icon(Iconsax.folder_cross,
+                            size: 48, color: Colors.white24),
                         const SizedBox(height: 12),
                         Text(
-                          _search.isEmpty ? 'No categories found.' : 'No matching categories.',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          _search.isEmpty
+                              ? 'No categories found.'
+                              : 'No matching categories.',
+                          style:
+                              const TextStyle(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: filtered.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final category = filtered[index];
-                      return _buildCategoryItem(context, category, recipeProvider);
+                      return _buildCategoryItem(
+                          context, category, recipeProvider);
                     },
                   ),
           ),
@@ -126,7 +133,9 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: category.isActive ? Colors.white10 : Colors.redAccent.withAlpha(51),
+          color: category.isActive
+              ? Colors.white10
+              : Colors.redAccent.withAlpha(51),
         ),
       ),
       child: ListTile(
@@ -143,7 +152,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                   )
                 : Container(
                     color: AppColors.primary.withAlpha(38),
-                    child: const Icon(Iconsax.category, color: AppColors.primary, size: 22),
+                    child: const Icon(Iconsax.category,
+                        color: AppColors.primary, size: 22),
                   ),
           ),
         ),
@@ -152,7 +162,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
             Expanded(
               child: Text(
                 category.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
             Container(
@@ -168,7 +179,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: category.isActive ? Colors.greenAccent : Colors.redAccent,
+                  color:
+                      category.isActive ? Colors.greenAccent : Colors.redAccent,
                 ),
               ),
             ),
@@ -182,7 +194,8 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
               final count = snapshot.data ?? 0;
               return Text(
                 '$count recipe${count == 1 ? '' : 's'} linked',
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: const TextStyle(
+                    fontSize: 12, color: AppColors.textSecondary),
               );
             },
           ),
@@ -206,15 +219,20 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
               icon: Icon(
                 category.isActive ? Iconsax.eye_slash : Iconsax.eye,
                 size: 18,
-                color: category.isActive ? Colors.orangeAccent : Colors.greenAccent,
+                color: category.isActive
+                    ? Colors.orangeAccent
+                    : Colors.greenAccent,
               ),
               tooltip: category.isActive ? 'Deactivate' : 'Activate',
-              onPressed: () => _toggleActiveStatus(context, category, recipeProvider),
+              onPressed: () =>
+                  _toggleActiveStatus(context, category, recipeProvider),
             ),
             IconButton(
-              icon: const Icon(Iconsax.trash, size: 18, color: Colors.redAccent),
+              icon:
+                  const Icon(Iconsax.trash, size: 18, color: Colors.redAccent),
               tooltip: 'Delete Category',
-              onPressed: () => _confirmDeleteCategory(context, category, recipeProvider),
+              onPressed: () =>
+                  _confirmDeleteCategory(context, category, recipeProvider),
             ),
           ],
         ),
@@ -275,17 +293,20 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
               child: const Text('Deactivate Instead'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () async {
                 Navigator.pop(ctx);
                 await recipeProvider.deleteCategory(category.id);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Deleted category ${category.name}.')),
+                    SnackBar(
+                        content: Text('Deleted category ${category.name}.')),
                   );
                 }
               },
-              child: const Text('Delete Anyway', style: TextStyle(color: Colors.white)),
+              child: const Text('Delete Anyway',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -303,17 +324,20 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () async {
                 Navigator.pop(ctx);
                 await recipeProvider.deleteCategory(category.id);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Deleted category ${category.name}.')),
+                    SnackBar(
+                        content: Text('Deleted category ${category.name}.')),
                   );
                 }
               },
-              child: const Text('Delete', style: TextStyle(color: Colors.white)),
+              child:
+                  const Text('Delete', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

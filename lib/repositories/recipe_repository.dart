@@ -107,9 +107,8 @@ class RecipeRepository {
 
   /// Creates a new recipe with server timestamps and audit UID.
   Future<void> createRecipe(Recipe recipe, String uid) async {
-    final docRef = recipe.id.isNotEmpty
-        ? _recipesRef.doc(recipe.id)
-        : _recipesRef.doc();
+    final docRef =
+        recipe.id.isNotEmpty ? _recipesRef.doc(recipe.id) : _recipesRef.doc();
 
     final data = recipe.toMap();
     data['id'] = docRef.id;
@@ -150,7 +149,8 @@ class RecipeRepository {
     final snapshot = await _categoriesRef.get();
     for (final doc in snapshot.docs) {
       if (excludeId != null && doc.id == excludeId) continue;
-      final docName = (doc.data()['name'] ?? '').toString().trim().toLowerCase();
+      final docName =
+          (doc.data()['name'] ?? '').toString().trim().toLowerCase();
       if (docName == normalized) return true;
     }
     return false;
@@ -193,9 +193,8 @@ class RecipeRepository {
 
   /// Counts how many recipes belong to a given category name.
   Future<int> countRecipesInCategory(String categoryName) async {
-    final snapshot = await _recipesRef
-        .where('category', isEqualTo: categoryName)
-        .get();
+    final snapshot =
+        await _recipesRef.where('category', isEqualTo: categoryName).get();
     return snapshot.size;
   }
 

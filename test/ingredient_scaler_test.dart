@@ -20,11 +20,13 @@ void main() {
     });
 
     test('Preserves text units and complex names', () {
-      expect(IngredientScaler.scale('1 large onion', 2), equals('2 large onion'));
+      expect(
+          IngredientScaler.scale('1 large onion', 2), equals('2 large onion'));
     });
 
     test('Preserves unparseable text without crashing', () {
-      expect(IngredientScaler.scale('Salt to taste', 2), equals('Salt to taste'));
+      expect(
+          IngredientScaler.scale('Salt to taste', 2), equals('Salt to taste'));
       expect(IngredientScaler.scale('as needed', 5), equals('as needed'));
       expect(IngredientScaler.scale('', 2), equals(''));
     });

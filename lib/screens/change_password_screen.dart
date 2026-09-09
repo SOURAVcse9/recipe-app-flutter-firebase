@@ -48,13 +48,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     // 1. Google Provider check
     final providerType = provider.userProfile?['provider'] ??
-        (provider.currentUser?.providerData.any((p) => p.providerId == 'google.com') == true ? 'google' : 'password');
+        (provider.currentUser?.providerData
+                    .any((p) => p.providerId == 'google.com') ==
+                true
+            ? 'google'
+            : 'password');
 
     if (providerType == 'google') {
       return Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: const Text('Change Password',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         body: SafeArea(
           child: Padding(
@@ -63,7 +68,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(Icons.g_mobiledata, size: 72, color: AppColors.primary),
+                const Icon(Icons.g_mobiledata,
+                    size: 72, color: AppColors.primary),
                 const SizedBox(height: 24),
                 Text(
                   'Google Authentication',
@@ -80,7 +86,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                        AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -96,7 +103,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          title: const Text('Change Password',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         body: SafeArea(
           child: Padding(
@@ -105,7 +113,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(Icons.warning_amber_rounded, size: 72, color: Colors.orange),
+                const Icon(Icons.warning_amber_rounded,
+                    size: 72, color: Colors.orange),
                 const SizedBox(height: 24),
                 Text(
                   'Email Verification Required',
@@ -122,7 +131,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ?? AppColors.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color?.withAlpha(178) ??
+                        AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -135,7 +145,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text('Change Password',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -151,7 +162,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                   decoration: const InputDecoration(
                     labelText: 'Current Password',
-                    prefixIcon: Icon(Icons.lock_outline, color: AppColors.primary),
+                    prefixIcon:
+                        Icon(Icons.lock_outline, color: AppColors.primary),
                   ),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -167,7 +179,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                   decoration: const InputDecoration(
                     labelText: 'New Password',
-                    prefixIcon: Icon(Icons.lock_reset, color: AppColors.primary),
+                    prefixIcon:
+                        Icon(Icons.lock_reset, color: AppColors.primary),
                   ),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -195,7 +208,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                   decoration: const InputDecoration(
                     labelText: 'Confirm New Password',
-                    prefixIcon: Icon(Icons.lock_outline, color: AppColors.primary),
+                    prefixIcon:
+                        Icon(Icons.lock_outline, color: AppColors.primary),
                   ),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -212,7 +226,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Text(
                     provider.error!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.error, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -222,15 +239,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.pill)),
                   ),
                   child: provider.loading
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2.5),
                         )
-                      : const Text('Update Password', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      : const Text('Update Password',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

@@ -110,7 +110,9 @@ class RecipeProvider extends ChangeNotifier {
   List<Recipe> get popularRecipes {
     final sorted = List<Recipe>.from(_allRecipes)
       ..sort((a, b) => b.viewCount.compareTo(a.viewCount));
-    return sorted.map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id))).toList();
+    return sorted
+        .map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id)))
+        .toList();
   }
 
   /// Top rated recipes ordered by rating and review count desc.
@@ -121,7 +123,9 @@ class RecipeProvider extends ChangeNotifier {
         if (ratingCmp != 0) return ratingCmp;
         return b.review.compareTo(a.review);
       });
-    return sorted.map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id))).toList();
+    return sorted
+        .map((r) => r.copyWith(isFavorite: _favoriteIds.contains(r.id)))
+        .toList();
   }
 
   /// User's favorite recipes list.
@@ -152,10 +156,15 @@ class RecipeProvider extends ChangeNotifier {
   }
 
   void incrementQuantity(String recipeId, {int defaultQuantity = 1}) =>
-      setQuantity(recipeId, quantityFor(recipeId, defaultQuantity: defaultQuantity) + 1);
+      setQuantity(recipeId,
+          quantityFor(recipeId, defaultQuantity: defaultQuantity) + 1);
 
-  void decrementQuantity(String recipeId, {int defaultQuantity = 1}) =>
-      setQuantity(recipeId, (quantityFor(recipeId, defaultQuantity: defaultQuantity) - 1).clamp(1, 999));
+  void decrementQuantity(String recipeId,
+          {int defaultQuantity = 1}) =>
+      setQuantity(
+          recipeId,
+          (quantityFor(recipeId, defaultQuantity: defaultQuantity) - 1)
+              .clamp(1, 999));
 
   void setSearchQuery(String query) {
     if (_searchQuery == query) return;

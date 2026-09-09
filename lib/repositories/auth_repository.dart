@@ -14,9 +14,12 @@ class AuthRepository {
     GoogleSignIn? googleSignIn,
   })  : _auth = auth ?? FirebaseAuth.instance,
         _firestore = firestore ?? FirebaseFirestore.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn(
-          clientId: kIsWeb ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com' : null,
-        );
+        _googleSignIn = googleSignIn ??
+            GoogleSignIn(
+              clientId: kIsWeb
+                  ? '425044932718-n8fr95f1s7tupn790g764ddv9furao6g.apps.googleusercontent.com'
+                  : null,
+            );
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -78,7 +81,8 @@ class AuthRepository {
         );
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -222,4 +226,3 @@ class AuthRepository {
     }
   }
 }
-

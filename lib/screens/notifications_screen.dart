@@ -65,7 +65,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           child: SizedBox(
             width: 24,
             height: 24,
-            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
+            child: CircularProgressIndicator(
+                strokeWidth: 2, color: AppColors.primary),
           ),
         ),
       );
@@ -109,12 +110,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         child: const Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 22),
+            Icon(Icons.warning_amber_rounded,
+                color: Colors.redAccent, size: 22),
             SizedBox(width: 10),
             Expanded(
               child: Text(
                 'Notifications are blocked. Please enable them in your browser or device system settings to receive recipe updates.',
-                style: TextStyle(fontSize: 13, color: Colors.redAccent, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.redAccent,
+                    fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -156,9 +161,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.sm)),
               ),
-              child: const Text('Enable Push Notifications', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text('Enable Push Notifications',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -180,7 +187,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Expanded(
             child: Text(
               'Push Notifications: Enabled',
-              style: TextStyle(fontSize: 13.5, color: Colors.green, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 13.5,
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600),
             ),
           ),
         ],

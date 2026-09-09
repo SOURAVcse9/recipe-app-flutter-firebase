@@ -25,8 +25,8 @@ class SearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: secondaryColor),
-        prefixIcon: Icon(Iconsax.search_normal_1,
-            size: 20, color: secondaryColor),
+        prefixIcon:
+            Icon(Iconsax.search_normal_1, size: 20, color: secondaryColor),
       ),
     );
   }

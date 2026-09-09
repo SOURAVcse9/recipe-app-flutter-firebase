@@ -111,7 +111,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(recipeProvider.errorMessage ?? 'Failed to save category.'),
+            content:
+                Text(recipeProvider.errorMessage ?? 'Failed to save category.'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -162,7 +163,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   decoration: BoxDecoration(
                     color: theme.cardColor,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white24, style: BorderStyle.solid),
+                    border: Border.all(
+                        color: Colors.white24, style: BorderStyle.solid),
                   ),
                   child: _selectedImageFile != null
                       ? ClipRRect(
@@ -181,7 +183,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                 bottom: 8,
                                 right: 8,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
                                     color: Colors.black87,
                                     borderRadius: BorderRadius.circular(8),
@@ -189,9 +192,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Iconsax.edit, size: 14, color: Colors.white),
+                                      Icon(Iconsax.edit,
+                                          size: 14, color: Colors.white),
                                       SizedBox(width: 4),
-                                      Text('Change', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                      Text('Change',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12)),
                                     ],
                                   ),
                                 ),
@@ -202,16 +209,19 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       : const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Iconsax.image, size: 40, color: AppColors.primary),
+                            Icon(Iconsax.image,
+                                size: 40, color: AppColors.primary),
                             SizedBox(height: 8),
                             Text(
                               'Tap to upload category image',
-                              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                              style: TextStyle(
+                                  color: AppColors.textSecondary, fontSize: 14),
                             ),
                             SizedBox(height: 4),
                             Text(
                               'JPG, PNG, WEBP • Max 5 MB',
-                              style: TextStyle(color: Colors.white38, fontSize: 11),
+                              style: TextStyle(
+                                  color: Colors.white38, fontSize: 11),
                             ),
                           ],
                         ),
@@ -262,7 +272,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
 
               // Active Switch
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
@@ -275,12 +286,14 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       children: [
                         Text(
                           'Category Active Status',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         SizedBox(height: 2),
                         Text(
                           'Active categories are visible to audience users',
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                          style: TextStyle(
+                              color: AppColors.textSecondary, fontSize: 11),
                         ),
                       ],
                     ),
@@ -312,11 +325,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2),
                         )
                       : const Text(
                           'Create Category',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),

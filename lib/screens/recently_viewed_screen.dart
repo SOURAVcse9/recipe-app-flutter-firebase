@@ -39,7 +39,8 @@ class RecentlyViewedScreen extends StatelessWidget {
 
     if (recentlyViewedProvider.status == RecentlyViewedStatus.error) {
       return ErrorView(
-        message: recentlyViewedProvider.errorMessage ?? 'Failed to load recently viewed history.',
+        message: recentlyViewedProvider.errorMessage ??
+            'Failed to load recently viewed history.',
       );
     }
 
