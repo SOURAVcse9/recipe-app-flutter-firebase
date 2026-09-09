@@ -12,7 +12,7 @@
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/></a>
   <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
   <img src="https://img.shields.io/badge/Platforms-Android%20|%20Web%20|%20Windows-4CAF50?style=for-the-badge" alt="Platforms"/>
-  <img src="https://img.shields.io/badge/Tests-44%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/Tests-54%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
   <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange?style=for-the-badge&logo=android&logoColor=white" alt="Release"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/></a>
 </p>
