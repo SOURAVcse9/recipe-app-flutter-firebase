@@ -28,9 +28,15 @@
 
 The compiled production APK is ready for direct installation on Android devices:
 
+<p align="center">
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk">
+    <img src="https://img.shields.io/badge/⬇️_Direct_Download-app--release.apk-2ea44f?style=for-the-badge&logo=android&logoColor=white" alt="Direct Download APK"/>
+  </a>
+</p>
+
 | Release | Target | File | Size | Direct Download |
 | :--- | :--- | :--- | :--- | :--- |
-| **v1.0.0 (Production Release)** | Android (ARM64 / ARMv7 / x86_64) | `app-release.apk` | ~52.5 MB | [⬇️ **Download APK**](release/app-release.apk) |
+| **v1.0.0 (Production Release)** | Android (ARM64 / ARMv7 / x86_64) | `app-release.apk` | ~52.5 MB | [⬇️ **Direct Download APK**](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk) |
 
 > 📦 **GitHub Releases**: You can also download the asset directly from the [GitHub Releases Page](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases/tag/v1.0.0).  
 > 💡 **Android Installation Note**: If prompted, allow **"Install unknown apps"** in your Android device settings.
