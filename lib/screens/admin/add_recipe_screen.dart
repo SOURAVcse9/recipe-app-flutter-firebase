@@ -6,6 +6,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/image_url_validator.dart';
 import '../../widgets/safe_network_image.dart';
 
 class AddRecipeScreen extends StatefulWidget {
@@ -85,14 +86,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       inst.dispose();
     }
     super.dispose();
-  }
-
-  bool _isValidUrl(String? url) {
-    if (url == null || url.trim().isEmpty) return true;
-    final uri = Uri.tryParse(url.trim());
-    return uri != null &&
-        uri.hasScheme &&
-        (uri.scheme == 'https' || uri.scheme == 'http');
   }
 
   void _addIngredient() {
@@ -288,7 +281,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   border: Border.all(
                       color: Colors.white24, style: BorderStyle.solid),
                 ),
-                child: previewUrl.isNotEmpty && _isValidUrl(previewUrl)
+                child: ImageUrlValidator.isValidHttpsImageUrl(previewUrl)
                     ? SafeNetworkImage(
                         imageUrl: previewUrl,
                         fit: BoxFit.cover,
@@ -344,17 +337,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                validator: (val) {
-                  if (_isPublished && (val == null || val.trim().isEmpty)) {
-                    return 'Image URL is required for published recipes';
-                  }
-                  if (val != null &&
-                      val.trim().isNotEmpty &&
-                      !_isValidUrl(val)) {
-                    return 'Please enter a valid HTTP/HTTPS URL';
-                  }
-                  return null;
-                },
+                validator: (val) => ImageUrlValidator.validate(
+                  val,
+                  isRequired: _isPublished,
+                  fieldName: 'Recipe Image URL',
+                ),
               ),
 
               const SizedBox(height: 24),
@@ -562,6 +549,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                           isDense: true,
                           prefixIcon: Icon(Iconsax.image, size: 16),
                           border: UnderlineInputBorder(),
+                        ),
+                        validator: (val) => ImageUrlValidator.validate(
+                          val,
+                          isRequired: false,
+                          fieldName: 'Ingredient Image URL',
                         ),
                       ),
                     ],

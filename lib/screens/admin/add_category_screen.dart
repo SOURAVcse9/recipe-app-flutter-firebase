@@ -6,6 +6,7 @@ import '../../models/food_category.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/image_url_validator.dart';
 import '../../widgets/safe_network_image.dart';
 
 class AddCategoryScreen extends StatefulWidget {
@@ -36,14 +37,6 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     _nameController.dispose();
     _imageController.dispose();
     super.dispose();
-  }
-
-  bool _isValidUrl(String? url) {
-    if (url == null || url.trim().isEmpty) return true;
-    final uri = Uri.tryParse(url.trim());
-    return uri != null &&
-        uri.hasScheme &&
-        (uri.scheme == 'https' || uri.scheme == 'http');
   }
 
   Future<void> _saveCategory() async {
@@ -154,7 +147,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   border: Border.all(
                       color: Colors.white24, style: BorderStyle.solid),
                 ),
-                child: previewUrl.isNotEmpty && _isValidUrl(previewUrl)
+                child: ImageUrlValidator.isValidHttpsImageUrl(previewUrl)
                     ? SafeNetworkImage(
                         imageUrl: previewUrl,
                         fit: BoxFit.cover,
@@ -213,14 +206,11 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                validator: (val) {
-                  if (val != null &&
-                      val.trim().isNotEmpty &&
-                      !_isValidUrl(val)) {
-                    return 'Please enter a valid HTTP/HTTPS URL';
-                  }
-                  return null;
-                },
+                validator: (val) => ImageUrlValidator.validate(
+                  val,
+                  isRequired: false,
+                  fieldName: 'Category Image URL',
+                ),
               ),
 
               const SizedBox(height: 24),
