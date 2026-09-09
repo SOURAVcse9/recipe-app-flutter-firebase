@@ -52,7 +52,7 @@ The compiled production APK is ready for direct installation on Android devices:
   * **Quick Actions**: Direct navigation to create recipes, manage categories, and audit content.
 * **Comprehensive Admin Recipe Management**:
   * **Dynamic Ingredient & Step Builders**: Add/remove/reorder ingredients with fractional amounts and step-by-step instructions.
-  * **Firebase Storage Image Upload**: Validated image uploader with format restrictions (JPG, PNG, WEBP) and 5MB size limits.
+  * **HTTPS Image URL Support**: Live image preview with placeholder fallbacks and error handling (100% Spark Plan compatible, zero Storage fees).
   * **Draft & Publish Controls**: Toggle publication state instantly or save drafts without exposing them to audience feeds.
   * **Safety Checks**: Deletion confirmations and search/filtering across drafts & published recipes.
 * **Category Management**:
@@ -93,9 +93,8 @@ The compiled production APK is ready for direct installation on Android devices:
 
 ---
 
-### 🔔 5. Push Notifications & Event Triggers
-* **Cloud Functions (`functions/`)**: Event-driven Firebase Functions listening to Firestore `onCreate` events to dispatch FCM alerts when new recipes or categories are published.
-* **Invalid Token Self-Cleaning**: Automatically prunes stale/invalid FCM device tokens on failure (`messaging/invalid-registration-token`, `messaging/registration-token-not-registered`).
+### 🔔 5. Notifications & User Preferences
+* **Multi-Device Token Synchronization**: Automatic registration of device FCM tokens under `users/{uid}/notification_tokens/`.
 * **User-Managed Notification Preferences**: Real-time Firestore-persisted toggles for recipe recommendations, new recipe alerts, and cooking reminders.
 
 ---
@@ -147,14 +146,13 @@ lib/
 │   └── admin/                      # Role-Gated Admin Portal Screens
 │       ├── admin_dashboard_screen.dart   # Analytics overview & quick navigation
 │       ├── admin_recipes_screen.dart     # Recipe management, search & filters
-│       ├── add_recipe_screen.dart        # Recipe creator with dynamic builders & storage upload
+│       ├── add_recipe_screen.dart        # Recipe creator with dynamic builders & HTTPS image preview
 │       ├── edit_recipe_screen.dart       # Recipe editor
 │       ├── admin_categories_screen.dart  # Category list & status toggles
 │       ├── add_category_screen.dart      # Category creator with duplicate check
 │       └── edit_category_screen.dart     # Category editor
 ├── services/
-│   ├── notification_service.dart   # Centralized FCM setup, tokens, permissions & routing
-│   └── storage_service.dart        # Firebase Storage image uploads (5MB limit, format checks)
+│   └── notification_service.dart   # Centralized FCM setup, tokens, permissions & routing
 ├── utils/
 │   ├── app_theme.dart              # Custom color palette, typography & ThemeData
 │   └── ingredient_scaler.dart      # Fraction & unit parsing mathematical scaler
@@ -167,10 +165,6 @@ lib/
     ├── timer_widget.dart           # Interactive cooking timer
     ├── rating_widget.dart          # Star rating & review counter
     └── favorite_button.dart        # Animated favorite heart toggle
-
-functions/                          # Cloud Functions for FCM event triggers
-├── index.js                        # OnCreate triggers for recipes & categories
-└── package.json                    # Firebase Admin & Functions dependencies
 
 sample_data/
 ├── seed.js                         # Initial 25-recipe database seed script

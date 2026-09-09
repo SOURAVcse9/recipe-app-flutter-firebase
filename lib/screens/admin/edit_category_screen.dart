@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/food_category.dart';
 import '../../providers/recipe_provider.dart';
-import '../../services/storage_service.dart';
 import '../../utils/app_theme.dart';
 import '../../widgets/safe_network_image.dart';
 
@@ -21,43 +19,44 @@ class EditCategoryScreen extends StatefulWidget {
 class _EditCategoryScreenState extends State<EditCategoryScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  final _storageService = StorageService();
+  late TextEditingController _imageController;
 
   late bool _isActive;
   bool _isLoading = false;
-  double _uploadProgress = 0.0;
-  XFile? _newImageFile;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.category.name);
+    _imageController = TextEditingController(text: widget.category.image ?? '');
     _isActive = widget.category.isActive;
+    _imageController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _imageController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (file != null) {
-      setState(() {
-        _newImageFile = file;
-      });
-    }
+  bool _isValidUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return true;
+    final uri = Uri.tryParse(url.trim());
+    return uri != null &&
+        uri.hasScheme &&
+        (uri.scheme == 'https' || uri.scheme == 'http');
   }
 
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
     final name = _nameController.text.trim();
+    final imageUrl = _imageController.text.trim().isEmpty
+        ? null
+        : _imageController.text.trim();
     final recipeProvider = context.read<RecipeProvider>();
 
     setState(() => _isLoading = true);
@@ -80,17 +79,6 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
     }
 
     try {
-      String? imageUrl = widget.category.image;
-      if (_newImageFile != null) {
-        imageUrl = await _storageService.uploadCategoryImage(
-          categoryId: widget.category.id,
-          file: _newImageFile!,
-          onProgress: (progress) {
-            if (mounted) setState(() => _uploadProgress = progress);
-          },
-        );
-      }
-
       final updatedCategory = widget.category.copyWith(
         name: name,
         image: imageUrl,
@@ -134,6 +122,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final previewUrl = _imageController.text.trim();
 
     return Scaffold(
       appBar: AppBar(
@@ -146,91 +135,94 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Section
+              // Image Preview Card
               Text(
-                'Category Image',
+                'Category Image Preview',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   color: theme.textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 10),
 
-              GestureDetector(
-                onTap: _isLoading ? null : _pickImage,
-                child: Container(
-                  width: double.infinity,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white24),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        if (_newImageFile != null)
-                          Image.network(
-                            _newImageFile!.path,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const Center(
-                              child: Icon(Iconsax.image, size: 40),
-                            ),
-                          )
-                        else if (widget.category.image != null &&
-                            widget.category.image!.isNotEmpty)
-                          SafeNetworkImage(
-                            imageUrl: widget.category.image!,
-                            fit: BoxFit.cover,
-                          )
-                        else
-                          const Center(
-                            child: Icon(Iconsax.image,
-                                size: 40, color: AppColors.primary),
-                          ),
-                        Positioned(
-                          bottom: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.black87,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Iconsax.edit,
-                                    size: 14, color: Colors.white),
-                                SizedBox(width: 4),
-                                Text('Change',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              Container(
+                width: double.infinity,
+                height: 160,
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: Colors.white24, style: BorderStyle.solid),
                 ),
+                child: previewUrl.isNotEmpty && _isValidUrl(previewUrl)
+                    ? SafeNetworkImage(
+                        imageUrl: previewUrl,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(16),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Iconsax.image,
+                              size: 40, color: AppColors.primary),
+                          SizedBox(height: 8),
+                          Text(
+                            'Enter HTTPS Image URL Below',
+                            style: TextStyle(
+                                color: AppColors.textSecondary, fontSize: 14),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Live image preview will render here',
+                            style:
+                                TextStyle(color: Colors.white38, fontSize: 11),
+                          ),
+                        ],
+                      ),
               ),
 
-              if (_uploadProgress > 0 && _uploadProgress < 1.0) ...[
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: _uploadProgress,
-                    backgroundColor: Colors.white12,
-                    valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+              const SizedBox(height: 16),
+
+              // Image URL Field
+              Text(
+                'Image URL (HTTPS)',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _imageController,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  hintText: 'https://images.unsplash.com/...',
+                  prefixIcon: const Icon(Iconsax.link, size: 18),
+                  suffixIcon: previewUrl.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () => _imageController.clear(),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: theme.cardColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-              ],
+                validator: (val) {
+                  if (val != null &&
+                      val.trim().isNotEmpty &&
+                      !_isValidUrl(val)) {
+                    return 'Please enter a valid HTTP/HTTPS URL';
+                  }
+                  return null;
+                },
+              ),
 
               const SizedBox(height: 24),
 

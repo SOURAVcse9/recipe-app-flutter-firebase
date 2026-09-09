@@ -120,7 +120,7 @@ class RecipeRepository {
   }
 
   /// Updates an existing recipe document.
-  Future<void> updateRecipe(Recipe recipe, String uid) async {
+  Future<void> updateRecipe(Recipe recipe, [String uid = '']) async {
     final data = recipe.toMap();
     data['updatedAt'] = FieldValue.serverTimestamp();
     await _recipesRef.doc(recipe.id).update(data);

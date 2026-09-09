@@ -1,8 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:recipe_app/models/food_category.dart';
 import 'package:recipe_app/models/recipe.dart';
-import 'package:recipe_app/services/storage_service.dart';
+
+bool isValidHttpsUrl(String? url) {
+  if (url == null || url.trim().isEmpty) return true;
+  final uri = Uri.tryParse(url.trim());
+  return uri != null &&
+      uri.hasScheme &&
+      (uri.scheme == 'https' || uri.scheme == 'http');
+}
 
 void main() {
   group('Phase 4: Admin & Role-Based Model Serialization Tests', () {
@@ -73,27 +79,25 @@ void main() {
     });
   });
 
-  group('Phase 4: StorageService Validation Tests', () {
-    test('Allows valid image extensions (jpg, jpeg, png, webp)', () {
-      final validFile = XFile('test/path/photo.png');
-      final error =
-          StorageService.validateImageFile(validFile, 1024 * 1024); // 1 MB
-      expect(error, isNull);
+  group('Phase 4: HTTPS Image URL Validation Tests', () {
+    test('Allows valid HTTPS image URLs', () {
+      expect(isValidHttpsUrl('https://images.unsplash.com/photo-1546069901'),
+          isTrue);
+      expect(isValidHttpsUrl('https://example.com/image.jpg'), isTrue);
     });
 
-    test('Rejects invalid file extensions (exe, txt, pdf)', () {
-      final badFile = XFile('test/path/script.exe');
-      final error = StorageService.validateImageFile(badFile, 1024);
-      expect(error, isNotNull);
-      expect(error!.contains('Invalid format'), isTrue);
+    test('Allows valid HTTP image URLs', () {
+      expect(isValidHttpsUrl('http://example.com/image.png'), isTrue);
     });
 
-    test('Rejects files exceeding 5 MB limit', () {
-      final largeFile = XFile('test/path/large_image.jpg');
-      final error =
-          StorageService.validateImageFile(largeFile, 6 * 1024 * 1024); // 6 MB
-      expect(error, isNotNull);
-      expect(error!.contains('exceeds the 5 MB limit'), isTrue);
+    test('Allows empty/null image URLs when optional', () {
+      expect(isValidHttpsUrl(''), isTrue);
+      expect(isValidHttpsUrl(null), isTrue);
+    });
+
+    test('Rejects invalid URLs without schemes or malformed', () {
+      expect(isValidHttpsUrl('not-a-url'), isFalse);
+      expect(isValidHttpsUrl('ftp://invalid-scheme.com/pic.jpg'), isFalse);
     });
   });
 

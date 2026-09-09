@@ -331,7 +331,7 @@ class RecipeProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateRecipe(Recipe recipe, String uid) async {
+  Future<bool> updateRecipe(Recipe recipe, [String uid = '']) async {
     try {
       await _repository.updateRecipe(recipe, uid);
       return true;

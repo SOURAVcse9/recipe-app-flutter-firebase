@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/food_category.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
-import '../../services/storage_service.dart';
 import '../../utils/app_theme.dart';
+import '../../widgets/safe_network_image.dart';
 
 class AddCategoryScreen extends StatefulWidget {
   const AddCategoryScreen({super.key});
@@ -19,37 +18,41 @@ class AddCategoryScreen extends StatefulWidget {
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _storageService = StorageService();
+  final _imageController = TextEditingController();
 
   bool _isActive = true;
   bool _isLoading = false;
-  double _uploadProgress = 0.0;
-  String? _uploadedImageUrl;
-  XFile? _selectedImageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _imageController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (file != null) {
-      setState(() {
-        _selectedImageFile = file;
-      });
-    }
+  bool _isValidUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return true;
+    final uri = Uri.tryParse(url.trim());
+    return uri != null &&
+        uri.hasScheme &&
+        (uri.scheme == 'https' || uri.scheme == 'http');
   }
 
   Future<void> _saveCategory() async {
     if (!_formKey.currentState!.validate()) return;
 
     final name = _nameController.text.trim();
+    final imageUrl = _imageController.text.trim().isEmpty
+        ? null
+        : _imageController.text.trim();
     final recipeProvider = context.read<RecipeProvider>();
     final authProvider = context.read<AuthProvider>();
 
@@ -70,20 +73,6 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     }
 
     try {
-      // 2. Upload image if selected
-      String? imageUrl = _uploadedImageUrl;
-      if (_selectedImageFile != null) {
-        final categoryId = name.toLowerCase().replaceAll(RegExp(r'\s+'), '_');
-        imageUrl = await _storageService.uploadCategoryImage(
-          categoryId: categoryId,
-          file: _selectedImageFile!,
-          onProgress: (progress) {
-            if (mounted) setState(() => _uploadProgress = progress);
-          },
-        );
-      }
-
-      // 3. Create model and save to Firestore
       final categoryId = name.toLowerCase().replaceAll(RegExp(r'\s+'), '_');
       final newCategory = FoodCategory(
         id: categoryId,
@@ -132,6 +121,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final previewUrl = _imageController.text.trim();
 
     return Scaffold(
       appBar: AppBar(
@@ -144,94 +134,94 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Picker Section
+              // Image Preview Card
               Text(
-                'Category Image',
+                'Category Image Preview',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   color: theme.textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 10),
 
-              GestureDetector(
-                onTap: _isLoading ? null : _pickImage,
-                child: Container(
-                  width: double.infinity,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                        color: Colors.white24, style: BorderStyle.solid),
-                  ),
-                  child: _selectedImageFile != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Image.network(
-                                _selectedImageFile!.path,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Center(
-                                  child: Icon(Iconsax.image, size: 40),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 8,
-                                right: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black87,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Iconsax.edit,
-                                          size: 14, color: Colors.white),
-                                      SizedBox(width: 4),
-                                      Text('Change',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Iconsax.image,
-                                size: 40, color: AppColors.primary),
-                            SizedBox(height: 8),
-                            Text(
-                              'Tap to upload category image',
-                              style: TextStyle(
-                                  color: AppColors.textSecondary, fontSize: 14),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'JPG, PNG, WEBP • Max 5 MB',
-                              style: TextStyle(
-                                  color: Colors.white38, fontSize: 11),
-                            ),
-                          ],
-                        ),
+              Container(
+                width: double.infinity,
+                height: 160,
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: Colors.white24, style: BorderStyle.solid),
                 ),
+                child: previewUrl.isNotEmpty && _isValidUrl(previewUrl)
+                    ? SafeNetworkImage(
+                        imageUrl: previewUrl,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(16),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Iconsax.image,
+                              size: 40, color: AppColors.primary),
+                          SizedBox(height: 8),
+                          Text(
+                            'Enter HTTPS Image URL Below',
+                            style: TextStyle(
+                                color: AppColors.textSecondary, fontSize: 14),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Live image preview will render here',
+                            style:
+                                TextStyle(color: Colors.white38, fontSize: 11),
+                          ),
+                        ],
+                      ),
               ),
 
-              if (_uploadProgress > 0 && _uploadProgress < 1.0) ...[
-                const SizedBox(height: 8),
-                LinearProgressProgressIndicator(value: _uploadProgress),
-              ],
+              const SizedBox(height: 16),
+
+              // Image URL Field
+              Text(
+                'Image URL (HTTPS)',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _imageController,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  hintText: 'https://images.unsplash.com/...',
+                  prefixIcon: const Icon(Iconsax.link, size: 18),
+                  suffixIcon: previewUrl.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () => _imageController.clear(),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: theme.cardColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                validator: (val) {
+                  if (val != null &&
+                      val.trim().isNotEmpty &&
+                      !_isValidUrl(val)) {
+                    return 'Please enter a valid HTTP/HTTPS URL';
+                  }
+                  return null;
+                },
+              ),
 
               const SizedBox(height: 24),
 
@@ -339,33 +329,6 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class LinearProgressProgressIndicator extends StatelessWidget {
-  final double value;
-  const LinearProgressProgressIndicator({super.key, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: value,
-            backgroundColor: Colors.white12,
-            valueColor: const AlwaysStoppedAnimation(AppColors.primary),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '${(value * 100).toInt()}%',
-          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-        ),
-      ],
     );
   }
 }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/recipe.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
-import '../../services/storage_service.dart';
 import '../../utils/app_theme.dart';
 import '../../widgets/safe_network_image.dart';
 
@@ -22,19 +19,20 @@ class EditRecipeScreen extends StatefulWidget {
 class _EditIngredientFormEntry {
   final TextEditingController nameController;
   final TextEditingController amountController;
-  String imageUrl;
-  XFile? localImageFile;
+  final TextEditingController imageController;
 
   _EditIngredientFormEntry({
     required String name,
     required String amount,
-    this.imageUrl = '',
+    String imageUrl = '',
   })  : nameController = TextEditingController(text: name),
-        amountController = TextEditingController(text: amount);
+        amountController = TextEditingController(text: amount),
+        imageController = TextEditingController(text: imageUrl);
 
   void dispose() {
     nameController.dispose();
     amountController.dispose();
+    imageController.dispose();
   }
 }
 
@@ -42,6 +40,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameController;
+  late TextEditingController _imageController;
   late TextEditingController _calorieController;
   late TextEditingController _timeController;
   late TextEditingController _ratingController;
@@ -50,11 +49,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   late String _selectedCategory;
   late bool _isPublished;
   bool _isLoading = false;
-  double _uploadProgress = 0.0;
-  String _uploadStatusMessage = '';
-
-  XFile? _newRecipeImageFile;
-  final _storageService = StorageService();
 
   late List<_EditIngredientFormEntry> _ingredientEntries;
   late List<TextEditingController> _instructionControllers;
@@ -64,12 +58,17 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     super.initState();
     final r = widget.recipe;
     _nameController = TextEditingController(text: r.name);
+    _imageController = TextEditingController(text: r.image);
     _calorieController = TextEditingController(text: r.calorie);
     _timeController = TextEditingController(text: r.time.toString());
     _ratingController = TextEditingController(text: r.rating.toString());
     _reviewsController = TextEditingController(text: r.review.toString());
     _selectedCategory = r.category;
     _isPublished = r.isPublished;
+
+    _imageController.addListener(() {
+      setState(() {});
+    });
 
     // Initialize ingredients
     if (r.ingredients.isNotEmpty) {
@@ -94,6 +93,10 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       _ingredientEntries.add(_EditIngredientFormEntry(name: '', amount: ''));
     }
 
+    for (var entry in _ingredientEntries) {
+      entry.imageController.addListener(() => setState(() {}));
+    }
+
     // Initialize instructions
     if (r.instructions.isNotEmpty) {
       _instructionControllers = r.instructions
@@ -107,6 +110,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _imageController.dispose();
     _calorieController.dispose();
     _timeController.dispose();
     _ratingController.dispose();
@@ -120,29 +124,19 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     super.dispose();
   }
 
-  Future<void> _pickRecipeImage() async {
-    final picker = ImagePicker();
-    final file =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
-    if (file != null) {
-      setState(() => _newRecipeImageFile = file);
-    }
-  }
-
-  Future<void> _pickIngredientImage(int index) async {
-    final picker = ImagePicker();
-    final file =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (file != null) {
-      setState(() {
-        _ingredientEntries[index].localImageFile = file;
-      });
-    }
+  bool _isValidUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return true;
+    final uri = Uri.tryParse(url.trim());
+    return uri != null &&
+        uri.hasScheme &&
+        (uri.scheme == 'https' || uri.scheme == 'http');
   }
 
   void _addIngredient() {
     setState(() {
-      _ingredientEntries.add(_EditIngredientFormEntry(name: '', amount: ''));
+      final entry = _EditIngredientFormEntry(name: '', amount: '');
+      entry.imageController.addListener(() => setState(() {}));
+      _ingredientEntries.add(entry);
     });
   }
 
@@ -171,6 +165,17 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   Future<void> _updateRecipe() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final recipeImageUrl = _imageController.text.trim();
+    if (_isPublished && recipeImageUrl.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A published recipe must have an image URL provided.'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     final validIngredients = _ingredientEntries
         .where((e) =>
             e.nameController.text.trim().isNotEmpty &&
@@ -189,69 +194,25 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     }
 
     final recipeProvider = context.read<RecipeProvider>();
-    final authProvider = context.read<AuthProvider>();
-    final uid = authProvider.currentUser?.uid ?? '';
 
-    setState(() {
-      _isLoading = true;
-      _uploadProgress = 0.0;
-      _uploadStatusMessage = 'Updating recipe...';
-    });
+    setState(() => _isLoading = true);
 
     try {
-      // 1. Upload new Recipe Image if changed
-      String recipeImageUrl = widget.recipe.image;
-      if (_newRecipeImageFile != null) {
-        recipeImageUrl = await _storageService.uploadRecipeImage(
-          recipeId: widget.recipe.id,
-          file: _newRecipeImageFile!,
-          onProgress: (progress) {
-            if (mounted) setState(() => _uploadProgress = progress * 0.5);
-          },
+      final finalIngredients = validIngredients.map((entry) {
+        return IngredientItem(
+          name: entry.nameController.text.trim(),
+          amount: entry.amountController.text.trim(),
+          image: entry.imageController.text.trim(),
         );
-      }
+      }).toList();
 
-      // 2. Upload Ingredient Images if changed
-      final finalIngredients = <IngredientItem>[];
-      final totalIng = validIngredients.length;
-
-      for (var i = 0; i < totalIng; i++) {
-        final entry = validIngredients[i];
-        String ingImageUrl = entry.imageUrl;
-
-        if (entry.localImageFile != null) {
-          if (mounted) {
-            setState(() {
-              _uploadStatusMessage =
-                  'Uploading ingredient ${i + 1} of $totalIng...';
-            });
-          }
-          ingImageUrl = await _storageService.uploadIngredientImage(
-            file: entry.localImageFile!,
-            onProgress: (progress) {
-              if (mounted) {
-                setState(() =>
-                    _uploadProgress = 0.5 + ((i + progress) / totalIng) * 0.5);
-              }
-            },
-          );
-        }
-
-        finalIngredients.add(
-          IngredientItem(
-            name: entry.nameController.text.trim(),
-            amount: entry.amountController.text.trim(),
-            image: ingImageUrl,
-          ),
-        );
-      }
-
-      // 3. Build Instructions list
+      // Build Instructions list
       final instructions = _instructionControllers
           .map((c) => c.text.trim())
           .where((t) => t.isNotEmpty)
           .toList();
 
+      // Update Recipe object
       final updatedRecipe = widget.recipe.copyWith(
         name: _nameController.text.trim(),
         calorie: _calorieController.text.trim(),
@@ -272,17 +233,15 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         searchName: _nameController.text.trim().toLowerCase(),
       );
 
-      setState(() => _uploadStatusMessage = 'Saving updates to Firestore...');
-      final success = await recipeProvider.updateRecipe(updatedRecipe, uid);
+      final success = await recipeProvider.updateRecipe(updatedRecipe);
 
       if (!mounted) return;
       setState(() => _isLoading = false);
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('Recipe "${updatedRecipe.name}" updated successfully!'),
+          const SnackBar(
+            content: Text('Recipe updated successfully!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -314,6 +273,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     final recipeProvider = context.watch<RecipeProvider>();
     final categories =
         recipeProvider.categories.where((c) => c.isActive).toList();
+    final previewUrl = _imageController.text.trim();
 
     return Scaffold(
       appBar: AppBar(
@@ -326,94 +286,94 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Main Image
+              // Main Image Preview Card
               Text(
-                'Recipe Image *',
+                'Recipe Image Preview',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   color: theme.textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 8),
 
-              GestureDetector(
-                onTap: _isLoading ? null : _pickRecipeImage,
-                child: Container(
-                  width: double.infinity,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white24),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        if (_newRecipeImageFile != null)
-                          Image.network(
-                            _newRecipeImageFile!.path,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const Center(
-                              child: Icon(Iconsax.image, size: 40),
-                            ),
-                          )
-                        else if (widget.recipe.image.isNotEmpty)
-                          SafeNetworkImage(
-                            imageUrl: widget.recipe.image,
-                            fit: BoxFit.cover,
-                          )
-                        else
-                          const Center(
-                            child: Icon(Iconsax.image,
-                                size: 44, color: AppColors.primary),
-                          ),
-                        Positioned(
-                          bottom: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.black87,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Iconsax.edit,
-                                    size: 14, color: Colors.white),
-                                SizedBox(width: 4),
-                                Text('Change',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              Container(
+                width: double.infinity,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: Colors.white24, style: BorderStyle.solid),
                 ),
+                child: previewUrl.isNotEmpty && _isValidUrl(previewUrl)
+                    ? SafeNetworkImage(
+                        imageUrl: previewUrl,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(16),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Iconsax.image,
+                              size: 44, color: AppColors.primary),
+                          SizedBox(height: 8),
+                          Text('Enter Recipe Image URL Below',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textSecondary)),
+                          SizedBox(height: 4),
+                          Text('HTTPS image preview will display here',
+                              style: TextStyle(
+                                  color: Colors.white38, fontSize: 11)),
+                        ],
+                      ),
               ),
 
-              if (_uploadProgress > 0 && _uploadProgress < 1.0) ...[
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: _uploadProgress,
-                    backgroundColor: Colors.white12,
-                    valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+              const SizedBox(height: 14),
+
+              // Image URL Field
+              Text(
+                'Recipe Image URL (HTTPS) *',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              TextFormField(
+                controller: _imageController,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  hintText: 'https://images.unsplash.com/...',
+                  prefixIcon: const Icon(Iconsax.link, size: 18),
+                  suffixIcon: previewUrl.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () => _imageController.clear(),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: theme.cardColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(_uploadStatusMessage,
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.primary)),
-              ],
+                validator: (val) {
+                  if (_isPublished && (val == null || val.trim().isEmpty)) {
+                    return 'Image URL is required for published recipes';
+                  }
+                  if (val != null &&
+                      val.trim().isNotEmpty &&
+                      !_isValidUrl(val)) {
+                    return 'Please enter a valid HTTP/HTTPS URL';
+                  }
+                  return null;
+                },
+              ),
 
               const SizedBox(height: 24),
 
@@ -437,10 +397,11 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
               ),
               const SizedBox(height: 14),
 
+              // Category Dropdown
               DropdownButtonFormField<String>(
                 initialValue: categories.any((c) => c.name == _selectedCategory)
                     ? _selectedCategory
-                    : null,
+                    : (categories.isNotEmpty ? categories.first.name : null),
                 decoration: InputDecoration(
                   labelText: 'Category *',
                   filled: true,
@@ -546,7 +507,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
 
               const SizedBox(height: 28),
 
-              // Ingredients Section
+              // Ingredients Builder Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -573,68 +534,57 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.white10),
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () => _pickIngredientImage(index),
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white10,
-                            borderRadius: BorderRadius.circular(8),
+                      Row(
+                        children: [
+                          // Name Field
+                          Expanded(
+                            flex: 3,
+                            child: TextFormField(
+                              controller: entry.nameController,
+                              decoration: const InputDecoration(
+                                hintText: 'Name (e.g. Onion)',
+                                isDense: true,
+                                border: UnderlineInputBorder(),
+                              ),
+                            ),
                           ),
-                          child: entry.localImageFile != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    entry.localImageFile!.path,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) =>
-                                        const Icon(Iconsax.image, size: 20),
-                                  ),
-                                )
-                              : (entry.imageUrl.isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: SafeNetworkImage(
-                                          imageUrl: entry.imageUrl,
-                                          fit: BoxFit.cover),
-                                    )
-                                  : const Icon(Iconsax.gallery_add,
-                                      size: 20, color: Colors.white60)),
+                          const SizedBox(width: 8),
+
+                          // Amount Field
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              controller: entry.amountController,
+                              decoration: const InputDecoration(
+                                hintText: 'Amount (e.g. 2 pcs)',
+                                isDense: true,
+                                border: UnderlineInputBorder(),
+                              ),
+                            ),
+                          ),
+
+                          // Delete
+                          if (_ingredientEntries.length > 1)
+                            IconButton(
+                              icon: const Icon(Iconsax.trash,
+                                  size: 18, color: Colors.redAccent),
+                              onPressed: () => _removeIngredient(index),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      TextFormField(
+                        controller: entry.imageController,
+                        keyboardType: TextInputType.url,
+                        decoration: const InputDecoration(
+                          hintText: 'Optional Ingredient Image URL (HTTPS)',
+                          isDense: true,
+                          prefixIcon: Icon(Iconsax.image, size: 16),
+                          border: UnderlineInputBorder(),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 3,
-                        child: TextFormField(
-                          controller: entry.nameController,
-                          decoration: const InputDecoration(
-                            hintText: 'Name',
-                            isDense: true,
-                            border: UnderlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          controller: entry.amountController,
-                          decoration: const InputDecoration(
-                            hintText: 'Amount',
-                            isDense: true,
-                            border: UnderlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      if (_ingredientEntries.length > 1)
-                        IconButton(
-                          icon: const Icon(Iconsax.trash,
-                              size: 18, color: Colors.redAccent),
-                          onPressed: () => _removeIngredient(index),
-                        ),
                     ],
                   ),
                 );
@@ -642,7 +592,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
 
               const SizedBox(height: 28),
 
-              // Instructions Section
+              // Instructions Builder Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -679,7 +629,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                           controller: ctrl,
                           maxLines: 2,
                           decoration: InputDecoration(
-                            hintText: 'Step ${index + 1} instruction...',
+                            hintText:
+                                'Step ${index + 1} instruction description...',
                             filled: true,
                             fillColor: theme.cardColor,
                             border: OutlineInputBorder(
@@ -701,7 +652,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
 
               const SizedBox(height: 24),
 
-              // Publish Status Switch
+              // Published Status Switch
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -719,7 +670,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 14)),
                         SizedBox(height: 2),
-                        Text('Published recipes are visible to audience users',
+                        Text('Drafts are hidden from audience users',
                             style: TextStyle(
                                 color: AppColors.textSecondary, fontSize: 11)),
                       ],
@@ -755,7 +706,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                               color: Colors.white, strokeWidth: 2),
                         )
                       : const Text(
-                          'Save Recipe Changes',
+                          'Save Changes',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
