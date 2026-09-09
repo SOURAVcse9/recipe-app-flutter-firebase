@@ -1,7 +1,7 @@
 # 🍳 Flutter + Firebase Recipe App
 
 <p align="center">
-  <img src="assets/icons/app_icon.png" alt="Recipe App Logo" width="120" onerror="this.style.display='none'"/>
+  <img src="assets/icons/app_icon.png" alt="Recipe App Logo" width="130"/>
 </p>
 
 <p align="center">
@@ -9,63 +9,68 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/>
-  <img src="https://img.shields.io/badge/Firebase-Spark_Plan-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/></a>
+  <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
   <img src="https://img.shields.io/badge/Platforms-Android%20|%20Web%20|%20Windows-4CAF50?style=for-the-badge" alt="Platforms"/>
   <img src="https://img.shields.io/badge/Tests-36%20Passing-brightgreen?style=for-the-badge" alt="Tests"/>
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange?style=for-the-badge&logo=android&logoColor=white" alt="Release"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/></a>
 </p>
 
 ---
 
-## 📥 Download Release APK
+## 📥 Download Production Release APK
 
-The latest production release APK is built and ready for Android devices:
+The compiled production APK is ready for direct installation on Android devices:
 
-| Version | Target | File | Size | Link |
+| Release | Target | File | Size | Direct Download |
 | :--- | :--- | :--- | :--- | :--- |
-| **v1.0.0 (Release)** | Android (ARM64 / ARMv7 / x86_64) | `app-release.apk` | ~52 MB | [⬇️ Download Direct APK](release/app-release.apk) |
+| **v1.0.0 (Production Release)** | Android (ARM64 / ARMv7 / x86_64) | `app-release.apk` | ~52.5 MB | [⬇️ **Download APK**](release/app-release.apk) |
 
-> 💡 **Installation Note**: Enable **"Install from unknown sources"** on your Android device settings if prompted when opening the downloaded `.apk` file.
+> 📦 **GitHub Releases**: You can also download the asset directly from the [GitHub Releases Page](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases/tag/v1.0.0).  
+> 💡 **Android Installation Note**: If prompted, allow **"Install unknown apps"** in your Android device settings.
 
 ---
 
-## ✨ Key Features
+## ✨ Key Features & Capabilities
 
 ### 🔐 1. Production-Grade Firebase Authentication
-* **Email/Password**: Signup, login, real-time validation, and password strength indicators.
-* **Email Verification**: Built-in verification flow with a 60-second resend cooldown timer and reactive state refresh.
-* **Enumeration-Safe Password Recovery**: Protects against account enumeration attacks.
+* **Email & Password Authentication**: Complete signup, sign-in, and real-time form validation with password strength scoring.
+* **Email Verification**: Verification banner with a 60-second rate-limited resend cooldown timer and reactive state refresh.
+* **Enumeration-Safe Password Recovery**: Sanitized password reset flow that prevents account enumeration attacks.
 * **Cross-Platform Google Sign-In**:
-  * **Web (Chrome / Edge)**: Employs native Firebase Web popup authentication (`signInWithPopup(GoogleAuthProvider())`) that works seamlessly without client-side Client ID origin mismatches on `localhost`.
+  * **Web (Chrome / Edge)**: Uses native Firebase Web popup authentication (`signInWithPopup(GoogleAuthProvider())`) which avoids client-side Client ID origin mismatches and port issues on `localhost`.
   * **Android**: Uses native Google Sign-In SDK with Firebase credential authentication.
-* **Clean Session Isolation**: Automatic FCM token synchronization on login and complete token revocation/cache clearing on logout or account switching.
+* **Session Lifecycle & Security**: Automatic FCM token synchronization on login, and complete token revocation and cache cleanup on logout or account switching.
 
 ---
 
 ### 🍲 2. Dynamic 25-Recipe Catalog
-* **25 Recipes** across **5 Categories** (Breakfast, Dessert, Dinner, Lunch, Vegetables).
-* **Multi-Parameter Search & Filtering**: Real-time search across recipe names, ingredients, and categories.
-* **Curated Discovery Feeds**: "Popular Recipes" (ordered by dynamic view counts) and "Top Rated" feeds.
-* **Fail-Safe Image Loading**: All network images render through `SafeNetworkImage` featuring loading animations, placeholder fallbacks (`Iconsax.reserve`), and error boundary recovery.
+* **25 Recipes across 5 Categories** (Breakfast, Dessert, Dinner, Lunch, Vegetables).
+* **Multi-Parameter Search & Filtering**: Fast, case-insensitive search by recipe name or ingredient, combined with interactive category filter chips.
+* **Curated Feeds**: Dynamic "Popular Recipes" (ordered by real-time view counts) and "Top Rated" feeds.
+* **Fail-Safe Image Loading**: All images render through `SafeNetworkImage` featuring loading animations, placeholder fallbacks (`Iconsax.reserve`), and error boundary recovery.
 
 ---
 
 ### 📖 3. Interactive Detail View & Cooking Companion
-* **Step-by-Step Cooking Instructions**: Numbered instruction cards formatted to the dark/orange theme. Sections hide automatically if instructions are unavailable.
+* **Step-by-Step Cooking Instructions**: Numbered badge instruction cards formatted to the dark/orange theme. Automatically hides if instructions are unavailable.
 * **Dynamic Serving Scaler**: Multiplies integer, decimal, and fractional ingredient amounts dynamically while preserving units.
-* **Built-in Cooking Timer**: Countdown timer configured directly to each recipe's cooking duration.
-* **Reviews & Ratings System**: User review submissions, real-time aggregate score recalculation, and duplicate review prevention.
-* **Integrated Shopping List**: Add ingredients directly to a personalized shopping list with one-tap completion checkboxes.
+* **Integrated Cooking Timer**: Built-in interactive countdown timer tailored to each recipe's cooking duration.
+* **Reviews & Ratings System**: User review submissions, aggregate rating calculation, and duplicate review prevention.
+* **Shopping List Integration**: Add ingredients directly to a personalized shopping list with one-tap completion checkboxes.
 * **Recently Viewed History**: Tracks viewed recipes with chronological timestamp ordering.
 
 ---
 
-### 🔔 4. Firebase Cloud Messaging (FCM)
+### 🔔 4. Firebase Cloud Messaging (FCM) Push Notifications
 * **Android & Web Push Notifications**: Service worker integration (`web/firebase-messaging-sw.js`) for background push alerts.
-* **User-Managed Notification Preferences**: Persisted toggles for Recommendations, New Recipes, and Cooking Reminders.
-* **In-App Foreground Alerts**: SnackBars with deep-linking directly into recipe detail screens.
-* **Permission Status Indicators**: Dynamic UI cards showing permission status (Granted, Denied, Prompt, or Windows Desktop fallback).
+* **User-Managed Notification Preferences**: Real-time Firestore-persisted toggles for:
+  * 💡 Recipe Recommendations
+  * 🍳 New Recipe Alerts
+  * ⏰ Cooking Reminders
+* **In-App Foreground Alerts**: SnackBars with deep-linking directly into the target recipe detail screens.
+* **Permission Status Indicators**: Dynamic UI cards displaying permission states (Granted, Denied, Prompt, or Windows Desktop fallback).
 
 ---
 
@@ -158,7 +163,7 @@ users/ {uid}                        # Private user profile document
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/recipe-app-flutter-firebase.git
+git clone https://github.com/SOURAVcse9/recipe-app-flutter-firebase.git
 cd recipe-app-flutter-firebase
 ```
 
@@ -206,7 +211,7 @@ flutter run -d windows
 
 ## 🧪 Automated Testing & Verification
 
-The project includes a test suite with 36 unit, widget, and programmatic schema validation tests:
+The project includes a comprehensive test suite with 36 unit, widget, and programmatic schema validation tests:
 
 ```bash
 # Run static analysis
@@ -224,7 +229,7 @@ flutter build apk --release --no-tree-shake-icons
 
 ## 🔒 Security & Privacy Notice
 
-* **No Hardcoded Credentials**: API secrets, private keystores, and service account JSONs (`serviceAccountKey.json`) are excluded via `.gitignore`.
+* **No Hardcoded Credentials**: API secrets, private keystores, and service account JSONs (`serviceAccountKey.json`) are strictly excluded via `.gitignore`.
 * **Database Isolation**: Granular Firestore rules enforce strict user-level data segregation under `users/{uid}`.
 * **Spark Plan Compatible**: Operates entirely within the free Firebase Spark tier without requiring paid Cloud Functions or external APIs.
 
