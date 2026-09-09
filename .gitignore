@@ -15,14 +15,17 @@ Thumbs.db
 desktop.ini
 *.swp
 *.swo
+*~
 *.class
 *.log
 *.pyc
+*.bak
+*.tmp
 
 # ------------------------------------------------------------------------------
 # 2. IDE & Editor Specific Configs
 # ------------------------------------------------------------------------------
-# Visual Studio Code (preserves team recommended extensions & launch configs)
+# Visual Studio Code (preserves team recommended configs if desired)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -67,6 +70,7 @@ android/app/debug/
 android/app/profile/
 android/app/release/
 android/key.properties
+android/.idea/
 
 # ------------------------------------------------------------------------------
 # 5. iOS & macOS Build Files
@@ -87,12 +91,16 @@ ios/DerivedData/
 *.perspectivev3
 
 # ------------------------------------------------------------------------------
-# 6. Windows Desktop Ephemeral Files
+# 6. Desktop & Web Build Ephemerals
 # ------------------------------------------------------------------------------
 windows/flutter/ephemeral/
 windows/.gradle/
+linux/flutter/ephemeral/
+macos/Flutter/ephemeral/
 *.dll
 *.obj
+*.so
+*.dylib
 
 # ------------------------------------------------------------------------------
 # 7. CRITICAL: Security, Private Keys & Credentials (NEVER PUBLISH)
@@ -113,11 +121,12 @@ secrets/
 credentials/
 private_keys/
 
-# Firebase Admin SDK & Server Keys (Do not leak in public repositories)
+# Firebase Admin SDK & Server Keys (Never leak in public repositories)
 **/serviceAccountKey.json
 **/serviceAccountKey.json.local
 **/firebase-adminsdk-*.json
 sample_data/serviceAccountKey.json
+*.serviceAccount.json
 
 # ------------------------------------------------------------------------------
 # 8. Node.js & Tooling (Seed script)
@@ -126,3 +135,11 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
+
+# ------------------------------------------------------------------------------
+# 9. AI Assistant & Local Workspace Caches
+# ------------------------------------------------------------------------------
+.gemini/
+.system_generated/
+scratch/
