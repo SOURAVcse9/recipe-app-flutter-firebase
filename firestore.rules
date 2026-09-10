@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // SECURITY ARCHITECTURE:
-// - Recipes & Categories: Audience can read only published recipes & active categories; Admins (custom claim admin == true) have full read/write.
+// - Recipes & Categories: Public read for recipes & categories; Admins (custom claim admin == true) have full read/write.
 // - Authenticated users can modify ONLY the aggregate rating/review count/viewCount fields on recipes.
 // - Users can read and write ONLY their own profile, favorites, settings, shopping list, reviews index, and viewed history under users/{uid}.
 // - Reviews can be read by anyone, but created/updated/deleted only by their respective owner or admin.
@@ -15,7 +15,7 @@ service cloud.firestore {
 
     // Shared recipe collection
     match /recipes/{recipeId} {
-      allow read: if resource == null || resource.data.isPublished != false || isAdmin();
+      allow read: if true;
       allow create, delete: if isAdmin();
       allow update: if isAdmin() || (
         request.auth != null &&
@@ -33,7 +33,7 @@ service cloud.firestore {
 
     // Shared category collection
     match /categories/{categoryId} {
-      allow read: if resource == null || resource.data.isActive != false || isAdmin();
+      allow read: if true;
       allow write: if isAdmin();
     }
 

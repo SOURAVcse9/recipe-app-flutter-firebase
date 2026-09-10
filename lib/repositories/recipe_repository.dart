@@ -44,7 +44,7 @@ class RecipeRepository {
 
   /// Real-time stream of active categories for audience users.
   Stream<List<FoodCategory>> watchActiveCategories() {
-    return _categoriesRef.orderBy('name').snapshots().map((snapshot) {
+    return _categoriesRef.snapshots().map((snapshot) {
       final categories = <FoodCategory>[];
       for (final doc in snapshot.docs) {
         try {
@@ -56,6 +56,8 @@ class RecipeRepository {
           continue;
         }
       }
+      categories
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       return categories;
     });
   }
@@ -81,7 +83,7 @@ class RecipeRepository {
 
   /// Real-time stream of ALL categories (Active + Inactive) for admin management.
   Stream<List<FoodCategory>> watchAllCategories() {
-    return _categoriesRef.orderBy('name').snapshots().map((snapshot) {
+    return _categoriesRef.snapshots().map((snapshot) {
       final categories = <FoodCategory>[];
       for (final doc in snapshot.docs) {
         try {
@@ -90,6 +92,8 @@ class RecipeRepository {
           continue;
         }
       }
+      categories
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       return categories;
     });
   }
