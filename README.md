@@ -47,6 +47,28 @@ Get the compiled Android release package ready for direct installation:
 
 ---
 
+## 📱 Visual Walkthrough & Screenshots Guide
+
+Experience the complete application flow with our comprehensive visual guide:
+
+<div align="center">
+
+  <a href="docs/Recipe_App_Screenshots_and_Walkthrough.pdf">
+    <img src="https://img.shields.io/badge/📖_Open_Visual_Screenshots_Walkthrough-PDF_Guide-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Open PDF"/>
+  </a>
+
+</div>
+
+<br/>
+
+> 📄 **Included in the Walkthrough PDF ([Recipe_App_Screenshots_and_Walkthrough.pdf](docs/Recipe_App_Screenshots_and_Walkthrough.pdf))**:
+> 1. **Authentication & Admin Operations**: Secure auth, Admin KPI dashboard, Add Category with live HTTPS preview, Add Recipe multi-field builder.
+> 2. **Audience Discovery & Categories**: Top rated & popular recipe feeds, real-time category filtering (Breakfast, Vegetables, Desserts, etc.).
+> 3. **Recipe Details & Dynamic Scaler**: Serving quantity multiplier, cooking step timers, shopping list integration, and interactive user reviews.
+> 4. **User Tools & Productivity**: Cloud-synced favorites, dark/light theme switcher, recently viewed history, and push notification controls.
+
+---
+
 ## 🌟 Overview
 
 **Recipe App** is a production-grade Flutter mobile and web application engineered for food lovers, home cooks, and recipe publishers. It bridges the gap between engaging culinary discovery and robust content management.
