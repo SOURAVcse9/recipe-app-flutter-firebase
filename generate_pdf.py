@@ -31,22 +31,22 @@ class NumberedCanvas(canvas.Canvas):
         
         # Header (pages > 1)
         if self._pageNumber > 1:
-            self.drawString(36, A4[1] - 24, 'Flutter Recipe App — System Architecture & Visual Walkthrough')
-            self.drawRightString(A4[0] - 36, A4[1] - 24, 'Production Documentation')
+            self.drawString(36, A4[1] - 22, 'Flutter Recipe App — App Screenshots & Feature Walkthrough')
+            self.drawRightString(A4[0] - 36, A4[1] - 22, 'Visual Documentation')
             self.setStrokeColor(colors.HexColor('#CBD5E0'))
-            self.setLineWidth(0.6)
-            self.line(36, A4[1] - 28, A4[0] - 36, A4[1] - 28)
+            self.setLineWidth(0.5)
+            self.line(36, A4[1] - 26, A4[0] - 36, A4[1] - 26)
         
         # Footer
         self.setStrokeColor(colors.HexColor('#CBD5E0'))
-        self.setLineWidth(0.6)
-        self.line(36, 28, A4[0] - 36, 28)
+        self.setLineWidth(0.5)
+        self.line(36, 26, A4[0] - 36, 26)
         
-        self.drawString(36, 16, 'GitHub: SOURAVcse9/recipe-app-flutter-firebase | Flutter 3.22+ & Firebase')
-        self.drawRightString(A4[0] - 36, 16, f'Page {self._pageNumber} of {page_count}')
+        self.drawString(36, 14, 'GitHub: SOURAVcse9/recipe-app-flutter-firebase | Flutter 3.22+ & Firebase')
+        self.drawRightString(A4[0] - 36, 14, f'Page {self._pageNumber} of {page_count}')
         self.restoreState()
 
-def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf'):
+def create_pdf(filename='docs/Recipe_App_Screenshots_and_Walkthrough.pdf'):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     
     doc = SimpleDocTemplate(
@@ -54,8 +54,8 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         pagesize=A4,
         leftMargin=36,
         rightMargin=36,
-        topMargin=34,
-        bottomMargin=34
+        topMargin=30,
+        bottomMargin=30
     )
     
     styles = getSampleStyleSheet()
@@ -71,8 +71,8 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         'CoverTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=18,
-        leading=21,
+        fontSize=16,
+        leading=19,
         textColor=c_dark
     )
     
@@ -80,8 +80,8 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         'CoverSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=12,
+        fontSize=8.5,
+        leading=11,
         textColor=c_gray
     )
     
@@ -89,19 +89,19 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         'SectionH1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=12,
-        leading=14,
+        fontSize=11,
+        leading=13,
         textColor=c_dark,
-        spaceBefore=2,
-        spaceAfter=2
+        spaceBefore=1,
+        spaceAfter=1
     )
     
     figure_title_style = ParagraphStyle(
         'FigTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8.5,
-        leading=10.5,
+        fontSize=8,
+        leading=10,
         textColor=c_primary
     )
     
@@ -109,8 +109,8 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         'FigDesc',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=7.2,
-        leading=9.5,
+        fontSize=7,
+        leading=9,
         textColor=c_slate
     )
     
@@ -118,43 +118,23 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         'BodyDark',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=7.8,
-        leading=10.8,
-        textColor=c_slate
-    )
-    
-    table_text_bold = ParagraphStyle(
-        'TableBold',
-        parent=styles['Normal'],
-        fontName='Helvetica-Bold',
         fontSize=7.5,
-        leading=9.5,
-        textColor=c_dark
-    )
-    
-    table_text_normal = ParagraphStyle(
-        'TableNormal',
-        parent=styles['Normal'],
-        fontName='Helvetica',
-        fontSize=7,
-        leading=9,
+        leading=10,
         textColor=c_slate
     )
 
     story = []
     page_w = A4[0] - 72 # 523.27 pt
     
-    # -------------------------------------------------------------
-    # PAGE 1: HERO & ARCHITECTURE OVERVIEW
-    # -------------------------------------------------------------
+    # Hero Header (Page 1 only)
     header_table_data = [
         [
             Paragraph('<b>Flutter + Firebase Recipe App</b>', title_style),
-            Paragraph('<font color="#FF5A36"><b>v1.0.0 Production</b></font><br/><font size=7 color="#718096">Spark Tier Architecture</font>', ParagraphStyle('RightH', parent=styles['Normal'], alignment=2, leading=9.5))
+            Paragraph('<font color="#FF5A36"><b>Visual Walkthrough</b></font><br/><font size=6.5 color="#718096">Real App Screenshots</font>', ParagraphStyle('RightH', parent=styles['Normal'], alignment=2, leading=9))
         ],
         [
-            Paragraph('System Architecture, Admin Cloud Mechanics & Audience Visual Walkthrough', subtitle_style),
-            Paragraph('<font size=7 color="#4A5568">Author: <b>SOURAV DEBNATH</b><br/>Repo: <b>SOURAVcse9/recipe-app-flutter-firebase</b></font>', ParagraphStyle('RightM', parent=styles['Normal'], alignment=2, leading=9))
+            Paragraph('Step-by-Step Feature Walkthrough: Admin Management & Audience Experience', subtitle_style),
+            Paragraph('<font size=6.5 color="#4A5568">Author: <b>SOURAV DEBNATH</b><br/>Repo: <b>SOURAVcse9/recipe-app-flutter-firebase</b></font>', ParagraphStyle('RightM', parent=styles['Normal'], alignment=2, leading=8.5))
         ]
     ]
     header_table = Table(header_table_data, colWidths=[page_w * 0.65, page_w * 0.35])
@@ -166,280 +146,263 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         ('RIGHTPADDING', (0,0), (-1,-1), 0),
     ]))
     story.append(header_table)
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
     
     summary_html = (
-        '<b>Executive Overview:</b> A production-grade, cross-platform mobile recipe discovery and meal management application '
-        'built with <b>Flutter 3.22+</b>, <b>Firebase Cloud Firestore</b>, and <b>Provider</b> state management. '
-        'Engineered strictly for Firebase Spark Plan efficiency without Firebase Storage or Cloud Functions dependencies, '
-        'featuring real-time reactive streams, external HTTPS image delivery, role-based admin controls, and dynamic local state engines.'
+        '<b>About This Document:</b> This visual walkthrough presents the actual user interfaces and workflows of the Recipe App. '
+        'Organized into <b>Admin Management</b> (catalog operations, statistics, HTTPS URL integration) followed by the <b>Audience Experience</b> '
+        '(discovery, live category filtering, dynamic scaling, cloud favorites, shopping list, and reviews).'
     )
     summary_box = Table([[Paragraph(summary_html, body_style)]], colWidths=[page_w])
     summary_box.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), c_light_bg),
-        ('BOX', (0,0), (-1,-1), 0.8, c_border),
-        ('LEFTPADDING', (0,0), (-1,-1), 8),
-        ('RIGHTPADDING', (0,0), (-1,-1), 8),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('BOX', (0,0), (-1,-1), 0.6, c_border),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
     ]))
     story.append(summary_box)
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 4))
     
-    def make_image_card(img_path, width, height, fig_num, fig_title, fig_desc):
-        img_flowable = RLImage(img_path, width=width, height=height)
-        caption = [
-            Paragraph(f'<b>Figure {fig_num}: {fig_title}</b>', figure_title_style),
+    # Helper for dual screenshot cards
+    def make_dual_shot_card(img1_path, title1, desc1, fig1_num, img2_path, title2, desc2, fig2_num, w=130, h=275):
+        i1 = RLImage(img1_path, width=w, height=h)
+        i2 = RLImage(img2_path, width=w, height=h)
+        
+        cap1 = [
+            Paragraph(f'<b>Figure {fig1_num}: {title1}</b>', figure_title_style),
             Spacer(1, 1),
-            Paragraph(fig_desc, figure_desc_style)
+            Paragraph(desc1, figure_desc_style)
         ]
-        card_table = Table([[img_flowable], [caption]], colWidths=[width + 8])
-        card_table.setStyle(TableStyle([
+        cap2 = [
+            Paragraph(f'<b>Figure {fig2_num}: {title2}</b>', figure_title_style),
+            Spacer(1, 1),
+            Paragraph(desc2, figure_desc_style)
+        ]
+        
+        col_w = (page_w - 10) / 2
+        
+        card1 = Table([[i1], [cap1]], colWidths=[col_w])
+        card1.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.white),
-            ('BOX', (0,0), (-1,-1), 0.6, c_border),
+            ('BOX', (0,0), (-1,-1), 0.5, c_border),
             ('LEFTPADDING', (0,0), (-1,-1), 4),
             ('RIGHTPADDING', (0,0), (-1,-1), 4),
             ('TOPPADDING', (0,0), (-1,-1), 3),
             ('BOTTOMPADDING', (0,0), (-1,-1), 3),
             ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ]))
-        return card_table
-
-    def make_dual_image_card(img1_path, img2_path, w, h, fig_num, fig_title, fig_desc):
-        img1 = RLImage(img1_path, width=w, height=h)
-        img2 = RLImage(img2_path, width=w, height=h)
-        inner_table = Table([[img1, img2]], colWidths=[w, w])
-        inner_table.setStyle(TableStyle([
-            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('LEFTPADDING', (0,0), (-1,-1), 2),
-            ('RIGHTPADDING', (0,0), (-1,-1), 2),
-            ('TOPPADDING', (0,0), (-1,-1), 0),
-            ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ]))
         
-        caption = [
-            Paragraph(f'<b>Figure {fig_num}: {fig_title}</b>', figure_title_style),
-            Spacer(1, 1),
-            Paragraph(fig_desc, figure_desc_style)
-        ]
-        
-        card_table = Table([[inner_table], [caption]], colWidths=[page_w])
-        card_table.setStyle(TableStyle([
+        card2 = Table([[i2], [cap2]], colWidths=[col_w])
+        card2.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.white),
-            ('BOX', (0,0), (-1,-1), 0.6, c_border),
-            ('LEFTPADDING', (0,0), (-1,-1), 6),
-            ('RIGHTPADDING', (0,0), (-1,-1), 6),
+            ('BOX', (0,0), (-1,-1), 0.5, c_border),
+            ('LEFTPADDING', (0,0), (-1,-1), 4),
+            ('RIGHTPADDING', (0,0), (-1,-1), 4),
             ('TOPPADDING', (0,0), (-1,-1), 3),
             ('BOTTOMPADDING', (0,0), (-1,-1), 3),
             ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ]))
-        return card_table
+        
+        outer = Table([[card1, card2]], colWidths=[col_w, col_w])
+        outer.setStyle(TableStyle([
+            ('LEFTPADDING', (0,0), (-1,-1), 0),
+            ('RIGHTPADDING', (0,0), (-1,-1), 0),
+            ('TOPPADDING', (0,0), (-1,-1), 0),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ]))
+        return outer
 
-    # 1. ARCHITECTURE & ADMIN BACKEND
-    story.append(Paragraph('1. System Architecture & Admin Cloud Backend', section_h1))
-    story.append(HRFlowable(width='100%', thickness=1.2, color=c_primary, spaceAfter=4, spaceBefore=1))
+    # -------------------------------------------------------------
+    # PAGE 1: ADMIN - AUTH & CREATION (Figures 1 to 4)
+    # -------------------------------------------------------------
+    story.append(Paragraph('1. Authentication & Admin Operations', section_h1))
+    story.append(HRFlowable(width='100%', thickness=1.0, color=c_primary, spaceAfter=4, spaceBefore=1))
     
-    # Figure 1
-    fig1 = make_image_card(
-        'docs/images/slide_page_1.png',
-        width=page_w - 10,
-        height=(page_w - 10) / 1.82,
-        fig_num='1',
-        fig_title='Full-Stack System Design & State Propagation Flow',
-        fig_desc='Architectural blueprint showing Cloud Firestore collections, Provider state hydration, and reactive UI binding in Flutter.'
-    )
-    story.append(fig1)
-    story.append(Spacer(1, 6))
+    # Figures 1 & 2
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-37-48.jpg',
+        'Authentication & Login Screen',
+        'Secure Firebase Auth supporting email/password and Google Sign-In.',
+        '1',
+        'images/photo_2026-09-10_22-38-14.jpg',
+        'Admin Dashboard & Statistics',
+        'Overview of published recipes, active categories, and quick management actions.',
+        '2',
+        w=125, h=255
+    ))
+    story.append(Spacer(1, 4))
     
-    # Figure 2
-    fig2 = make_dual_image_card(
-        'docs/images/admin_firestore_database.png',
-        'docs/images/admin_firestore_schema.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.84,
-        fig_num='2',
-        fig_title='Cloud Firestore Database Hierarchy & Document Schemas',
-        fig_desc='Live Firestore structure showing normalized collections (/categories, /recipes, /users) and structured recipe documents with validated HTTPS URLs.'
-    )
-    story.append(fig2)
+    # Figures 3 & 4
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-38-18.jpg',
+        'Add Category (HTTPS URL)',
+        'Category creator with live HTTPS image URL preview and visibility toggle.',
+        '3',
+        'images/photo_2026-09-10_22-38-23.jpg',
+        'Add Recipe (Multi-Field Form)',
+        'Recipe editor with HTTPS image, calories, time, ingredients, and steps.',
+        '4',
+        w=125, h=255
+    ))
     
     story.append(PageBreak())
     
     # -------------------------------------------------------------
-    # PAGE 2: INFRASTRUCTURE, SCHEMA & ADMIN LOOP
+    # PAGE 2: ADMIN PROFILE & AUDIENCE DISCOVERY (Figures 5 to 8)
     # -------------------------------------------------------------
-    # Figure 3
-    fig3 = make_dual_image_card(
-        'docs/images/slide_page_3.png',
-        'docs/images/slide_page_4.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.79,
-        fig_num='3',
-        fig_title='Core Infrastructure Matrix & Dependency Node Tree',
-        fig_desc='Left: Division of responsibilities across UI rendering (Flutter), Persistence (Firestore), and State Management (Provider). Right: Minimalist package architecture avoiding bloat.'
-    )
-    story.append(fig3)
-    story.append(Spacer(1, 6))
+    story.append(Paragraph('2. Admin Shortcut & Audience Home Discovery', section_h1))
+    story.append(HRFlowable(width='100%', thickness=1.0, color=c_primary, spaceAfter=4, spaceBefore=1))
     
-    # Figure 4
-    fig4 = make_dual_image_card(
-        'docs/images/slide_page_5.png',
-        'docs/images/slide_page_6.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.79,
-        fig_num='4',
-        fig_title='Recipe Document Schema & Parallel Array Mapping',
-        fig_desc='Left: Structured NoSQL document fields enforcing schema consistency. Right: Parallel array mapping linking ingredient names, quantities, and external image URLs by strict index positions.'
-    )
-    story.append(fig4)
-    story.append(Spacer(1, 6))
+    # Figures 5 & 6
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-38-28.jpg',
+        'Admin Profile & Shortcut Banner',
+        'Profile with special top banner shortcut to access Admin Dashboard.',
+        '5',
+        'images/photo_2026-09-10_22-38-31.jpg',
+        'Home — Top Rated & Popular',
+        'Discovery feed with curated carousels for Top Rated and Popular recipes.',
+        '6',
+        w=128, h=270
+    ))
+    story.append(Spacer(1, 5))
     
-    # Figure 5
-    fig5 = make_dual_image_card(
-        'docs/images/slide_page_9.png',
-        'docs/images/slide_page_10.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.79,
-        fig_num='5',
-        fig_title='Admin Real-Time Hydration & State Persistence Cycle',
-        fig_desc='Left: Instant backend-to-frontend synchronization where catalog updates reflect immediately on all client devices. Right: Closed-loop architecture for user actions and remote sync.'
-    )
-    story.append(fig5)
+    # Figures 7 & 8
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-38-35.jpg',
+        'Breakfast Category Feed',
+        'Real-time Firestore stream filtered by Breakfast category.',
+        '7',
+        'images/photo_2026-09-10_22-38-43.jpg',
+        'Vegetables Category Feed',
+        'Category filtering showcasing healthy meals with calorie and time indicators.',
+        '8',
+        w=128, h=270
+    ))
     
     story.append(PageBreak())
     
     # -------------------------------------------------------------
-    # PAGE 3: AUDIENCE USER EXPERIENCE
+    # PAGE 3: FAVORITES, PROFILE & RECIPE DETAILS (Figures 9 to 12)
     # -------------------------------------------------------------
-    story.append(Paragraph('2. Audience User Experience & Visual Interface', section_h1))
-    story.append(HRFlowable(width='100%', thickness=1.2, color=c_primary, spaceAfter=4, spaceBefore=1))
+    story.append(Paragraph('3. User Favorites, Profile Hub & Recipe Detail View', section_h1))
+    story.append(HRFlowable(width='100%', thickness=1.0, color=c_primary, spaceAfter=4, spaceBefore=1))
     
-    # Figure 6: Light vs Dark Home Screen
-    fig6 = make_dual_image_card(
-        'docs/images/audience_home_light.png',
-        'docs/images/audience_home_dark.png',
-        w=145,
-        h=145 / 0.64,
-        fig_num='6',
-        fig_title='Interactive Home Discovery Screen (Adaptive Light & Dark Themes)',
-        fig_desc='Audience discovery screen showcasing search bar, dynamic category chips, real-time recipe cards with calories, prep time, star ratings, and one-tap favorite toggling.'
-    )
-    story.append(fig6)
-    story.append(Spacer(1, 6))
+    # Figures 9 & 10
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-38-47.jpg',
+        'Synchronized Favorites Screen',
+        'Cloud-synced bookmarks allowing users to access favorite recipes anywhere.',
+        '9',
+        'images/photo_2026-09-10_22-38-50.jpg',
+        'Audience User Profile Hub',
+        'Standard user profile displaying Google verification badge and settings.',
+        '10',
+        w=128, h=270
+    ))
+    story.append(Spacer(1, 5))
     
-    # Figure 7: Category Filtering & Finished Experience
-    fig7 = make_dual_image_card(
-        'docs/images/audience_category_filter.png',
-        'docs/images/slide_page_2.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.25,
-        fig_num='7',
-        fig_title='Dynamic Category Filtering & Finished Application Experience',
-        fig_desc='Left: Instant category selection filtering live recipe streams. Right: Complete cross-screen interaction model spanning Home, Detail View, and User Favorites.'
-    )
-    story.append(fig7)
+    # Figures 11 & 12
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-38-55.jpg',
+        'Recipe Detail & Serving Scaler',
+        'Nutritional info, rating, and dynamic +/- serving multiplier algorithm.',
+        '11',
+        'images/photo_2026-09-10_22-38-58.jpg',
+        'Cooking Steps, Timer & Reviews',
+        'Step-by-step instructions, Shopping list button, timer, and review form.',
+        '12',
+        w=128, h=270
+    ))
     
     story.append(PageBreak())
     
     # -------------------------------------------------------------
-    # PAGE 4: SCALING, FAVORITES & USER DASHBOARD
+    # PAGE 4: PREFERENCES & PRODUCTIVITY TOOLS (Figures 13 to 16)
     # -------------------------------------------------------------
-    # Figure 8: Dynamic Serving Scaling & Persistence
-    fig8 = make_dual_image_card(
-        'docs/images/slide_page_7.png',
-        'docs/images/slide_page_8.png',
-        w=(page_w - 18) / 2,
-        h=((page_w - 18) / 2) / 1.79,
-        fig_num='8',
-        fig_title='Dynamic Serving Multiplier Algorithm & State Persistence',
-        fig_desc='Left: Mathematical scaling engine adjusting ingredient amounts in real-time when servings change. Right: Cloud-persisted state ensuring favorite meals survive app restarts.'
-    )
-    story.append(fig8)
-    story.append(Spacer(1, 6))
+    story.append(Paragraph('4. App Preferences, Profile Editing & User Productivity', section_h1))
+    story.append(HRFlowable(width='100%', thickness=1.0, color=c_primary, spaceAfter=4, spaceBefore=1))
     
-    # Figure 9: Favorites & Verified User Profile
-    fig9 = make_dual_image_card(
-        'docs/images/audience_favorites_dark.png',
-        'docs/images/audience_profile_verified.png',
-        w=135,
-        h=135 / 0.54,
-        fig_num='9',
-        fig_title='Synchronized Favorites & Verified User Profile Dashboard',
-        fig_desc='Left: Real-time user favorites feed. Right: Complete profile management hub displaying verified Google Account status, navigation shortcuts for reviews, shopping lists, and preferences.'
-    )
-    story.append(fig9)
-    story.append(Spacer(1, 6))
+    # Figures 13 & 14
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-39-03.jpg',
+        'App Preferences & Themes',
+        'Theme Mode selection (Light/Dark/System) and default serving configuration.',
+        '13',
+        'images/photo_2026-09-10_22-39-06.jpg',
+        'Edit User Profile Screen',
+        'User display name customization persisted directly to Cloud Firestore.',
+        '14',
+        w=128, h=270
+    ))
+    story.append(Spacer(1, 5))
     
-    # Figure 10: Dark Profile & About App
-    fig10 = make_dual_image_card(
-        'docs/images/audience_profile_dark.png',
-        'docs/images/audience_about_app.png',
-        w=135,
-        h=135 / 0.63,
-        fig_num='10',
-        fig_title='Dark Mode Profile Navigation & About Application Specifications',
-        fig_desc='Left: Minimalist dark profile options. Right: In-app technical specifications, feature summary, and version metadata.'
-    )
-    story.append(fig10)
+    # Figures 15 & 16
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-39-10.jpg',
+        'Recently Viewed History',
+        'Local history tracker recording recently inspected recipes.',
+        '15',
+        'images/photo_2026-09-10_22-39-14.jpg',
+        'Smart Shopping List Checklist',
+        'Interactive grocery checklist populated from recipes with delete actions.',
+        '16',
+        w=128, h=270
+    ))
     
     story.append(PageBreak())
     
     # -------------------------------------------------------------
-    # PAGE 5: SPECIFICATIONS & QUALITY AUDIT MATRIX
+    # PAGE 5: NOTIFICATIONS, REVIEWS & PROJECT SUMMARY (Figures 17 to 18)
     # -------------------------------------------------------------
-    story.append(Paragraph('3. Technical Specifications & Quality Audit Matrix', section_h1))
-    story.append(HRFlowable(width='100%', thickness=1.2, color=c_primary, spaceAfter=4, spaceBefore=1))
+    story.append(Paragraph('5. Notifications, User Reviews & Technical Summary', section_h1))
+    story.append(HRFlowable(width='100%', thickness=1.0, color=c_primary, spaceAfter=4, spaceBefore=1))
     
+    # Figures 17 & 18
+    story.append(make_dual_shot_card(
+        'images/photo_2026-09-10_22-39-18.jpg',
+        'Push Notifications Settings',
+        'Notification preference toggles for recommendations, new recipes, and reminders.',
+        '17',
+        'images/photo_2026-09-10_22-39-21.jpg',
+        'My Reviews & Ratings History',
+        'Personal reviews management hub showing all user-submitted ratings.',
+        '18',
+        w=130, h=280
+    ))
+    story.append(Spacer(1, 10))
+    
+    # Technical Architecture Table
     spec_table_data = [
-        [Paragraph('<b>Component / Area</b>', table_text_bold), Paragraph('<b>Production Implementation Details</b>', table_text_bold), Paragraph('<b>Status</b>', table_text_bold)],
+        [Paragraph('<b>Feature / Component</b>', ParagraphStyle('TH', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=7.5, textColor=c_dark)),
+         Paragraph('<b>Implementation Detail</b>', ParagraphStyle('TH', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=7.5, textColor=c_dark)),
+         Paragraph('<b>Status</b>', ParagraphStyle('TH', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=7.5, textColor=c_dark))],
         [
-            Paragraph('<b>Framework & SDK</b>', table_text_normal),
-            Paragraph('Flutter 3.22+ with Dart 3 null-safety; responsive Android/Web/Windows layout', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
+            Paragraph('<b>Role-Based Access</b>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('Admin (Custom Claims) can create/edit; Audience has public read access', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('<font color="green"><b>VERIFIED</b></font>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7))
         ],
         [
-            Paragraph('<b>State Management</b>', table_text_normal),
-            Paragraph('Provider with decoupled RecipeProvider, AuthProvider, PreferencesProvider', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
+            Paragraph('<b>Cloud Persistence</b>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('Firebase Cloud Firestore with real-time snapshot streams & offline cache', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('<font color="green"><b>VERIFIED</b></font>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7))
         ],
         [
-            Paragraph('<b>Cloud Database</b>', table_text_normal),
-            Paragraph('Cloud Firestore real-time streams with offline cache enabled (Spark Plan compatible)', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
+            Paragraph('<b>Image Delivery</b>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('External HTTPS URL validation with zero Firebase Storage cost (Spark Plan)', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('<font color="green"><b>VERIFIED</b></font>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7))
         ],
         [
-            Paragraph('<b>Image Architecture</b>', table_text_normal),
-            Paragraph('Validated external HTTPS URLs; zero Firebase Storage dependency; zero cost', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
-        ],
-        [
-            Paragraph('<b>Security & Roles</b>', table_text_normal),
-            Paragraph('Public recipe reading for audience; Admin custom claim required for write operations', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
-        ],
-        [
-            Paragraph('<b>User Data Isolation</b>', table_text_normal),
-            Paragraph('Subcollections (/users/{uid}/*) strictly isolated to authenticated user ID', table_text_normal),
-            Paragraph('<font color="green"><b>VERIFIED</b></font>', table_text_normal)
-        ],
-        [
-            Paragraph('<b>Automated Tests</b>', table_text_normal),
-            Paragraph('54 unit and widget tests passing across models, providers, and navigation', table_text_normal),
-            Paragraph('<font color="green"><b>54 / 54 PASS</b></font>', table_text_normal)
-        ],
-        [
-            Paragraph('<b>Static Code Analysis</b>', table_text_normal),
-            Paragraph('flutter analyze reports zero errors, zero warnings, and zero linter issues', table_text_normal),
-            Paragraph('<font color="green"><b>0 ISSUES</b></font>', table_text_normal)
-        ],
-        [
-            Paragraph('<b>Release Artifact</b>', table_text_normal),
-            Paragraph('Android release APK compiled and available in release/app-release.apk (52.3 MB)', table_text_normal),
-            Paragraph('<font color="green"><b>READY</b></font>', table_text_normal)
+            Paragraph('<b>Automated Tests</b>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('54 automated unit, model, and navigation widget tests passing', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7, textColor=c_slate)),
+            Paragraph('<font color="green"><b>54 / 54 PASS</b></font>', ParagraphStyle('TB', parent=styles['Normal'], fontName='Helvetica', fontSize=7))
         ],
     ]
-    
     spec_table = Table(spec_table_data, colWidths=[page_w * 0.25, page_w * 0.57, page_w * 0.18])
     spec_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#EDF2F7')),
@@ -451,33 +414,21 @@ def create_pdf(filename='docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf
         ('RIGHTPADDING', (0,0), (-1,-1), 5),
     ]))
     story.append(spec_table)
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 8))
     
-    # Figure 11: Architecture Synthesis
-    fig11 = make_image_card(
-        'docs/images/slide_page_11.png',
-        width=page_w - 10,
-        height=(page_w - 10) / 1.82,
-        fig_num='11',
-        fig_title='System Engineering Synthesis — Building Systems, Not Just Screens',
-        fig_desc='Summary of system mechanics: schema-driven UI structure, Provider computational engine, and Cloud Firestore persistence delivering an enterprise-ready recipe platform.'
-    )
-    story.append(fig11)
-    story.append(Spacer(1, 6))
-    
-    # Footer Box with Links
+    # Project Links Box
     links_html = (
-        '<b>Repository & Distribution:</b><br/>'
+        '<b>Distribution & Source:</b><br/>'
         '• <b>GitHub Repository:</b> <font color="#3182CE">https://github.com/SOURAVcse9/recipe-app-flutter-firebase</font><br/>'
-        '• <b>Production Release APK:</b> <font color="#3182CE">release/app-release.apk</font><br/>'
-        '• <b>License:</b> MIT License | Created by <b>Sourav Debnath</b>'
+        '• <b>Production Release APK:</b> <font color="#3182CE">release/app-release.apk (52.3 MB)</font><br/>'
+        '• <b>Author:</b> Sourav Debnath (SOURAVcse9) | License: MIT'
     )
     links_box = Table([[Paragraph(links_html, body_style)]], colWidths=[page_w])
     links_box.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), c_light_bg),
-        ('BOX', (0,0), (-1,-1), 0.8, c_border),
-        ('LEFTPADDING', (0,0), (-1,-1), 8),
-        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+        ('BOX', (0,0), (-1,-1), 0.6, c_border),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
         ('TOPPADDING', (0,0), (-1,-1), 4),
         ('BOTTOMPADDING', (0,0), (-1,-1), 4),
     ]))

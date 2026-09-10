@@ -13,7 +13,7 @@
     <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"/></a>
     <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
     <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/actions"><img src="https://img.shields.io/badge/Tests-54%20Passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Tests"/></a>
-    <a href="docs/Recipe_App_Architecture_and_Visual_Walkthrough.pdf"><img src="https://img.shields.io/badge/📄_Architecture_PDF-Visual_Walkthrough-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Architecture Walkthrough PDF"/></a>
+    <a href="docs/Recipe_App_Screenshots_and_Walkthrough.pdf"><img src="https://img.shields.io/badge/📱_Screenshots_PDF-Visual_Walkthrough-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="App Screenshots Walkthrough PDF"/></a>
   </p>
 
   <p align="center">
