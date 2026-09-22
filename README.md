@@ -13,7 +13,7 @@
     <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"/></a>
     <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
     <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/actions"><img src="https://img.shields.io/badge/Tests-54%20Passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Tests"/></a>
-    <a href="docs/Recipe_App_Screenshots_and_Walkthrough.pdf"><img src="https://img.shields.io/badge/📱_Screenshots_PDF-Visual_Walkthrough-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="App Screenshots Walkthrough PDF"/></a>
+    <a href="docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf"><img src="https://img.shields.io/badge/📱_Screenshots_PDF-Visual_Walkthrough-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="App Screenshots Walkthrough PDF"/></a>
   </p>
 
   <p align="center">
@@ -53,7 +53,7 @@ Experience the complete application flow with our comprehensive visual guide:
 
 <div align="center">
 
-  <a href="docs/Recipe_App_Screenshots_and_Walkthrough.pdf">
+  <a href="docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf">
     <img src="https://img.shields.io/badge/📖_Open_Visual_Screenshots_Walkthrough-PDF_Guide-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Open PDF"/>
   </a>
 
@@ -61,7 +61,7 @@ Experience the complete application flow with our comprehensive visual guide:
 
 <br/>
 
-> 📄 **Included in the Walkthrough PDF ([Recipe_App_Screenshots_and_Walkthrough.pdf](docs/Recipe_App_Screenshots_and_Walkthrough.pdf))**:
+> 📄 **Included in the Walkthrough PDF ([22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf](docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf))**:
 > 1. **Authentication & Admin Operations**: Secure auth, Admin KPI dashboard, Add Category with live HTTPS preview, Add Recipe multi-field builder.
 > 2. **Audience Discovery & Categories**: Top rated & popular recipe feeds, real-time category filtering (Breakfast, Vegetables, Desserts, etc.).
 > 3. **Recipe Details & Dynamic Scaler**: Serving quantity multiplier, cooking step timers, shopping list integration, and interactive user reviews.
