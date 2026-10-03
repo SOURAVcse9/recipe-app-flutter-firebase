@@ -1,277 +1,219 @@
 <div align="center">
 
-  <img src="assets/icons/app_icon.png" alt="Recipe App Logo" width="120" style="border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);"/>
+# 🍳 Flutter & Firebase Recipe App
+**A Cloud-Synced, Production-Grade Recipe Discovery & Meal Planning Platform**
 
-  # 🍳 Recipe Discovery & Culinary Companion
-
-  <p align="center">
-    <b>A modern, cross-platform recipe discovery, cooking companion, and role-based management application built with Flutter & Firebase.</b>
-  </p>
-
-  <p align="center">
-    <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter"/></a>
-    <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart"/></a>
-    <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Spark_Free_Tier-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase"/></a>
-    <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/actions"><img src="https://img.shields.io/badge/Tests-54%20Passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Tests"/></a>
-    <a href="docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf"><img src="https://img.shields.io/badge/📱_Screenshots_PDF-Visual_Walkthrough-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="App Screenshots Walkthrough PDF"/></a>
-  </p>
-
-  <p align="center">
-    <img src="https://komarev.com/ghpvc/?username=SOURAVcse9&repo=recipe-app-flutter-firebase&color=007ec6&style=for-the-badge&label=REPO%20VISITORS" alt="Visitors"/>
-    <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases"><img src="https://img.shields.io/github/downloads/SOURAVcse9/recipe-app-flutter-firebase/total?style=for-the-badge&logo=android&logoColor=white&color=2ea44f&label=APK%20DOWNLOADS" alt="APK Downloads"/></a>
-  </p>
-
-</div>
-
----
-
-## 📥 Production Release APK
-
-Get the compiled Android release package ready for direct installation:
-
-<div align="center">
-
-  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk">
-    <img src="https://img.shields.io/badge/⬇️_Download_Production_APK-v1.0.0-2ea44f?style=for-the-badge&logo=android&logoColor=white" alt="Download APK"/>
-  </a>
-
-</div>
+[![Flutter](https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![Firebase](https://img.shields.io/badge/Firebase-Backend-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Provider](https://img.shields.io/badge/State_Management-Provider-68B984?style=for-the-badge&logo=dart&logoColor=white)](https://pub.dev/packages/provider)
+[![Tests](https://img.shields.io/badge/Tests-54%2F54%20Passing-2ECC71?style=for-the-badge&logo=checkmarx&logoColor=white)](test/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 <br/>
 
-| Release Target | Binary File | File Size | Direct Download | GitHub Release |
-| :--- | :--- | :--- | :--- | :--- |
-| **Android (Universal)** | `app-release.apk` | `~52.3 MB` | [⬇️ **Download APK**](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk) | [📦 **v1.0.0 Asset**](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases/tag/v1.0.0) |
+> **Modern, reactive cross-platform mobile application powered by Flutter and Firebase. Engineered with a strict 3-tier clean architecture, dynamic serving scaler, atomic multi-user reviews, role-based access control, and 100% Firebase Spark Plan (Free Tier) compliance.**
 
-> 💡 **Android Installation Note**: If prompted on your device, enable **"Install unknown apps"** in your device settings.
+[Explore Features](#-core-features) • [Architecture](#-architecture) • [Quick Start](#-quick-start) • [Security & RBAC](#-security--access-control) • [Tech Stack](#-technology-stack)
 
 ---
-
-## 📱 Visual Walkthrough & Screenshots Guide
-
-Experience the complete application flow with our comprehensive visual guide:
-
-<div align="center">
-
-  <a href="docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf">
-    <img src="https://img.shields.io/badge/📖_Open_Visual_Screenshots_Walkthrough-PDF_Guide-FF5A36?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Open PDF"/>
-  </a>
 
 </div>
 
-<br/>
+## ✨ Key Highlights at a Glance
 
-> 📄 **Included in the Walkthrough PDF ([22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf](docs/22CSE009_Recipe_App_Screenshots_and_Walkthrough.pdf))**:
-> 1. **Authentication & Admin Operations**: Secure auth, Admin KPI dashboard, Add Category with live HTTPS preview, Add Recipe multi-field builder.
-> 2. **Audience Discovery & Categories**: Top rated & popular recipe feeds, real-time category filtering (Breakfast, Vegetables, Desserts, etc.).
-> 3. **Recipe Details & Dynamic Scaler**: Serving quantity multiplier, cooking step timers, shopping list integration, and interactive user reviews.
-> 4. **User Tools & Productivity**: Cloud-synced favorites, dark/light theme switcher, recently viewed history, and push notification controls.
-
----
-
-## 🌟 Overview
-
-**Recipe App** is a production-grade Flutter mobile and web application engineered for food lovers, home cooks, and recipe publishers. It bridges the gap between engaging culinary discovery and robust content management.
-
-Whether exploring curated categories, dynamically scaling ingredient quantities for dinner parties, utilizing the integrated step-by-step cooking timer, or curating recipes through an administrative dashboard, the app provides a responsive experience across all screen sizes.
-
-Designed with cost-efficiency in mind, the backend operates entirely within the **Firebase Spark (Free) Plan**, utilizing Firestore real-time streams and external HTTPS media delivery without requiring cloud storage costs or server-side functions.
-
----
-
-## ✨ Feature Highlights
-
-### 🍳 Interactive Cooking & Discovery
-* **Smart Search & Filter**: Real-time keyword search across titles and ingredients with category filter chips.
-* **Dynamic Serving Scaler**: Multiplies fractional, decimal, and whole ingredient quantities on the fly while preserving culinary units.
-* **Integrated Step Timer**: Built-in interactive countdown timers tailored to each recipe's cooking time.
-* **Curated Channels**: Dynamic "Popular Recipes" based on live view counts and "Top Rated" feeds.
-
-### 👤 Audience Personalization
-* **Favorites & Collections**: One-tap bookmarking synced directly to personal user profiles.
-* **Interactive Reviews**: Star ratings and user review submissions with duplicate prevention.
-* **Smart Shopping List**: Direct ingredient-to-cart additions with completion checkboxes.
-* **Cooking History**: Chronologically tracked recently viewed recipes.
-
-### 🛠️ Role-Based Admin Studio
-* **KPI Analytics Dashboard**: Live metrics for total recipes, published count, drafts, and active categories.
-* **Dynamic Content Builders**: Multi-row ingredient and step-by-step cooking instruction builders.
-* **Live HTTPS Media Preview**: Real-time URL validation and image previews powered by `SafeNetworkImage`.
-* **Drafts & Publishing Flow**: Toggle recipe visibility or save in-progress drafts safely.
-* **Dependency Protection**: Deletion prevention for categories containing active recipes.
-
-### 🔐 Security & Production Auth
-* **Custom Claims RBAC**: Admin privileges gated securely via Firebase Auth token claims (`admin == true`).
-* **Multi-Provider Auth**: Email/password authentication and cross-platform native Google Sign-In.
-* **Account Safety**: Real-time password strength analyzer and enumeration-safe password reset flows.
-* **Data Isolation**: Strict user-level Firestore security rules ensuring total privacy for user documents.
+<table>
+  <tr>
+    <td width="50%">
+      <h3>👤 For Culinary Audiences</h3>
+      <ul>
+        <li><b>Dynamic Servings Scaler:</b> Real-time portion multiplier recalculating fractional & decimal ingredients.</li>
+        <li><b>Smart Grocery Checklist:</b> One-tap ingredient batch addition with toggle completion.</li>
+        <li><b>Atomic Review & Rating:</b> Multi-user rolling average computation with zero race conditions.</li>
+        <li><b>Interactive Cooking Timer:</b> Built-in step timer with pause/resume countdown.</li>
+        <li><b>Offline-First Preferences:</b> Dual-sync caching with SharedPreferences & Firestore.</li>
+      </ul>
+    </td>
+    <td width="50%">
+      <h3>🛠️ For Content Admins</h3>
+      <ul>
+        <li><b>Role-Based Studio:</b> Custom Claims gatekeeper (<code>token.admin == true</code>).</li>
+        <li><b>Zero-Storage Media Delivery:</b> High-speed validated HTTPS image engine with fail-safe caching.</li>
+        <li><b>Full Content CRUD:</b> Create, update, toggle publishing visibility, and manage taxonomy.</li>
+        <li><b>Live Metric Analytics:</b> Real-time counters for active recipes, drafts, and categories.</li>
+        <li><b>Instant Sync:</b> Cloud Firestore reactive streams updating all connected clients.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## 🏗️ Architecture
 
+The application strictly follows a **3-Tier Clean Layered Architecture** with unidirectional reactive data flow:
+
 ```mermaid
 graph TD
-    subgraph Client ["📱 Flutter Cross-Platform Client"]
-        UI["UI Layer (Screens & Widgets)"]
-        PV["Provider State Management"]
-        VAL["ImageUrlValidator & SafeNetworkImage"]
+    subgraph UI ["📱 Presentation Layer"]
+        Screens["Screens (Audience & Admin)"]
+        Widgets["Widgets & SafeNetworkImage"]
     end
 
-    subgraph Firebase ["🔥 Firebase Spark Backend"]
-        AUTH["Firebase Authentication\n(Custom Claims: admin=true)"]
-        FS["Cloud Firestore\n(Real-Time Streams & Queries)"]
-        FCM["Firebase Cloud Messaging\n(Device Tokens)"]
+    subgraph State ["⚡ State Management Layer"]
+        Prov["ChangeNotifier Providers (6x MultiProvider)"]
+        Scaler["IngredientScaler Arithmetic Engine"]
     end
 
-    subgraph CDN ["🌐 External Media Delivery"]
-        IMG["HTTPS Image CDNs\n(Unsplash / Cloudinary / Imgur)"]
+    subgraph Data ["💾 Data Access Layer"]
+        Repos["Firestore Repositories & AuthRepository"]
     end
 
-    UI --> PV
-    PV --> AUTH
-    PV --> FS
-    PV --> FCM
-    UI --> VAL
-    VAL --> IMG
+    subgraph Cloud ["🔥 Firebase Spark Backend"]
+        Auth["Firebase Authentication (Custom Claims)"]
+        Firestore["Cloud Firestore (Real-Time Streams)"]
+        FCM["Firebase Cloud Messaging (Device Tokens)"]
+        CDN["External HTTPS CDNs (Unsplash / Cloudinary)"]
+    end
+
+    Screens --> Prov
+    Widgets --> Prov
+    Prov --> Scaler
+    Prov --> Repos
+    Repos --> Auth
+    Repos --> Firestore
+    Repos --> FCM
+    Widgets --> CDN
 ```
+
+<details>
+<summary><b>🔍 Click to view Data Flow & State Management details</b></summary>
+<br/>
+
+1. **Reactive Subscriptions:** Repositories listen to Firestore snapshot streams (`watchPublishedRecipes()`, `watchActiveCategories()`).
+2. **State Updates:** Providers process strongly-typed Dart models and invoke `notifyListeners()`.
+3. **Targeted Rebuilds:** Widgets selectively repaint using `context.watch<T>()` or `Consumer<T>`, while event handlers use non-subscribing `context.read<T>()`.
+4. **Optimistic Local Updates:** Bookmarks and cart toggles reflect immediately in the UI while syncing asynchronously in the background.
+
+</details>
 
 ---
 
-## ⚡ Firebase Spark Plan Architecture
+## ⚡ Firebase Spark Tier Optimization
 
-The application is architected to run on the **Firebase Spark Plan** with zero infrastructure costs:
+This project is specifically engineered to run on the **Firebase Spark Plan (Free Tier)** with **zero cloud cost**:
 
-```
-                      +---------------------------------------+
-                      |         Firebase Spark Tier           |
-                      +---------------------------------------+
-                                          |
-        +---------------------------------+---------------------------------+
-        |                                 |                                 |
-        v                                 v                                 v
-+------------------+             +------------------+             +-------------------+
-|  Firebase Auth   |             |  Cloud Firestore |             |  External HTTPS   |
-|  - Custom Claims |             |  - Real-Time     |             |  - Fast CDN Media |
-|  - Google Sign-In|             |  - User Data     |             |  - Zero Storage   |
-+------------------+             +------------------+             +-------------------+
-```
-
-* **No Cloud Storage Dependency**: Zero storage billing by utilizing verified HTTPS image URLs.
-* **No Cloud Functions Dependency**: Client-driven reactive Firestore streams replace background functions.
-* **Centralized URL Validation**: Strict scheme verification (`https://`), loopback prevention (`localhost`, `127.0.0.1`), and fallback error boundaries.
+| Metric / Service | Traditional Architecture | This Application |
+| :--- | :--- | :--- |
+| **Media Storage** | Paid Firebase Storage bucket | **Validated HTTPS URLs** with client-side caching & fallback boundaries |
+| **Backend Compute** | Cloud Functions for calculations | **Client-side Atomic Transactions** (`runTransaction`) & Scaler engine |
+| **Database Access** | Polling queries | **Reactive Snapshot Streams** with local Firestore cache |
 
 ---
 
 ## 🔐 Security & Access Control
 
-| Resource | Audience / Normal Users | Administrator (`admin == true`) |
+Role-Based Access Control (RBAC) is enforced cryptographically at the Cloud Firestore rules level:
+
+| Resource Path | Audience / General Users | Administrator (`token.admin == true`) |
 | :--- | :--- | :--- |
-| **Published Recipes** | Read-only (`isPublished == true`) | Full CRUD (Create, Read, Update, Delete) |
-| **Draft Recipes** | ❌ Blocked | Full Access |
-| **Active Categories** | Read-only (`isActive == true`) | Full CRUD |
-| **User Profile & Cart** | Own UID documents only | Own UID documents only |
-| **Reviews & Ratings** | Create & manage own reviews | Full visibility |
-| **Admin Dashboard** | ❌ Blocked | Full Access |
+| `/recipes/{id}` | Read published only (`isPublished == true`) | Full CRUD (Create, Read, Update, Delete) |
+| `/categories/{id}` | Read active only (`isActive == true`) | Full CRUD |
+| `/users/{uid}/**` | Strict UID isolation (`request.auth.uid == uid`) | Strict UID isolation |
+| `/recipes/{id}/reviews` | Public read; Authors can manage own reviews | Full visibility & moderation |
+| `Admin Dashboard` | ❌ Blocked | ✅ Full Access |
+
+---
+
+## 🚀 Quick Start
+
+Get the application running on your local machine in 4 easy steps:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/SOURAVcse9/recipe-app-flutter-firebase.git
+cd recipe-app-flutter-firebase
+
+# 2. Install Flutter packages
+flutter pub get
+
+# 3. Run automated tests to verify environment
+flutter test
+
+# 4. Launch the app on connected device / emulator
+flutter run
+```
+
+<details>
+<summary><b>📦 Production Build Commands</b></summary>
+<br/>
+
+```bash
+# Build Android Release APK
+flutter build apk --release
+
+# Build Web Bundle
+flutter build web --no-tree-shake-icons
+
+# Run Code Analyzer
+flutter analyze
+```
+
+</details>
+
+---
+
+## 🗂️ Project Directory Structure
+
+```text
+lib/
+├── firebase_options.dart          # Auto-generated Firebase platform configs
+├── main.dart                      # App entry point & MultiProvider registration
+├── models/                        # Strongly-typed data models (Recipe, Review, etc.)
+├── providers/                     # Reactive ChangeNotifier state managers
+├── repositories/                  # Firestore CRUD, transactions & Auth wrappers
+├── screens/                       # Presentation screens
+│   ├── admin/                     # Admin CMS dashboard & management forms
+│   └── audience/                  # Discovery, search, details, cart & profile screens
+├── services/                      # FCM push notifications (NotificationService)
+├── utils/                         # IngredientScaler, ImageUrlValidator & AppTheme
+└── widgets/                       # Reusable UI widgets (SafeNetworkImage, RecipeCard)
+```
+
+---
+
+## 🧪 Quality Assurance & Test Suite
+
+The codebase is backed by **54 comprehensive automated tests** across 9 test suites:
+
+- `test/ingredient_scaler_test.dart` — Fractional arithmetic, unit preservation, and multiplier logic.
+- `test/image_url_validator_test.dart` — Strict HTTPS validation, loopback blocking, and CDN verification.
+- `test/recipe_data_validation_test.dart` — Model deserialization with legacy array backward compatibility.
+- `test/recipe_provider_test.dart` — Category filtering, search query handling, and favorite state toggles.
+- `test/phase2_test.dart` — Shopping list batch inserts, completion toggles, and view history.
+- `test/phase3_test.dart` — Atomic rolling average calculation and review transactions.
+- `test/phase4_admin_test.dart` — Admin custom claims verification and publication visibility toggles.
+- `test/profile_navigation_test.dart` — Screen routing and widget tree navigation.
+- `test/widget_test.dart` — Component smoke tests and error boundary assertions.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technology | Purpose |
+| Component | Technology | Version / Specification |
 | :--- | :--- | :--- |
-| **Framework** | [Flutter 3.22+](https://flutter.dev) | Cross-platform UI toolkit (Android, Web, Windows) |
-| **Language** | [Dart 3.4+](https://dart.dev) | Strongly-typed client application language |
-| **State Management** | [Provider](https://pub.dev/packages/provider) | Reactive dependency injection and state handling |
-| **Authentication** | [Firebase Auth](https://firebase.google.com/docs/auth) | Identity, Google Sign-In, and Custom Claims RBAC |
-| **Database** | [Cloud Firestore](https://firebase.google.com/docs/firestore) | NoSQL real-time document streams |
-| **Notifications** | [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) | Multi-device push notification token synchronization |
-| **Icons & Design** | [Iconsax](https://pub.dev/packages/iconsax) | Modern UI iconography |
-| **Image Pipeline** | `SafeNetworkImage` & `ImageUrlValidator` | Secure external HTTPS image validation and caching |
+| **Framework** | [Flutter](https://flutter.dev) | `^3.22.0` (Dart `^3.4.0`) |
+| **State Management** | [Provider](https://pub.dev/packages/provider) | `^6.1.5` |
+| **Backend & Identity** | [Firebase Auth](https://firebase.google.com/docs/auth) | `^5.4.11` (Custom Claims + Google Sign-In) |
+| **Cloud Database** | [Cloud Firestore](https://firebase.google.com/docs/firestore) | `^5.6.12` (Real-Time Streams) |
+| **Push Notifications** | [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) | `^15.2.10` |
+| **Local Persistence** | [SharedPreferences](https://pub.dev/packages/shared_preferences) | `^2.3.2` |
+| **UI Design System** | [Iconsax](https://pub.dev/packages/iconsax) & Material 3 | Coral Orange `#FF5A36` Accent |
 
 ---
 
-## 📁 Project Structure
+## 📄 License & Credits
 
-```text
-lib/
-├── firebase_options.dart      # Platform Firebase configuration
-├── main.dart                  # Application entry & dynamic role routing
-├── models/                    # Data models & JSON serialization
-│   ├── app_preferences.dart   # User notification & theme settings
-│   ├── food_category.dart     # Category entity & search indexing
-│   ├── recipe.dart            # Recipe model with legacy array adapters
-│   ├── review.dart            # User rating & review model
-│   └── shopping_list_item.dart# Cart item model
-├── providers/                 # State management layer
-│   ├── auth_provider.dart     # Auth session & admin claims
-│   └── recipe_provider.dart   # Real-time recipe & category streams
-├── repositories/              # Firestore data access layer
-├── screens/                   # User interface & navigation
-│   ├── admin/                 # Admin CMS (Dashboard, Recipes, Categories)
-│   ├── home_screen.dart       # Discovery feed & popular carousel
-│   ├── recipe_detail_screen.dart # Interactive scaler, timer & reviews
-│   └── profile_screen.dart    # User settings & admin switcher
-├── utils/                     # Themes, validators & scaling logic
-│   ├── app_theme.dart         # Dark / warm orange design system
-│   ├── image_url_validator.dart # Strict HTTPS image URL validator
-│   └── ingredient_scaler.dart # Serving multiplier engine
-└── widgets/                   # Reusable UI components
-    └── safe_network_image.dart# Fail-safe network image loader
-```
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
----
-
-## 🚀 Getting Started
-
-Follow these steps to set up and run the project locally:
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/SOURAVcse9/recipe-app-flutter-firebase.git
-cd recipe-app-flutter-firebase
-```
-
-### 2. Install dependencies
-```bash
-flutter pub get
-```
-
-### 3. Configure Firebase
-Ensure your Firebase project is connected via FlutterFire CLI or replace `lib/firebase_options.dart` and `android/app/google-services.json` with your project credentials.
-
-### 4. Run the application
-```bash
-# Run on connected Android device or emulator
-flutter run
-
-# Run on Web (Chrome)
-flutter run -d chrome
-```
-
-### 5. Run Automated Tests
-```bash
-flutter test
-```
-
----
-
-## 📦 Building for Production
-
-### Android Release APK
-```bash
-flutter build apk --release
-```
-The compiled binary will be generated at `build/app/outputs/flutter-apk/app-release.apk`.
-
-### Web Build
-```bash
-flutter build web --no-tree-shake-icons
-```
-The production web bundle will be generated in `build/web/`.
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+Developed with ❤️ by **[SOURAV DEBNATH](https://github.com/SOURAVcse9)** (*Student ID: 22CSE009*).

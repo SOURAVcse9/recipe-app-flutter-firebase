@@ -1,9 +1,9 @@
 # ==============================================================================
-# Production .gitignore for Public GitHub Repository (Flutter + Firebase)
+# Production .gitignore for Flutter + Firebase Recipe App
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. Operating System & Local Environment Files
+# 1. Operating System & Local Temporary Files
 # ------------------------------------------------------------------------------
 .DS_Store
 .DS_Store?
@@ -23,26 +23,21 @@ desktop.ini
 *.tmp
 
 # ------------------------------------------------------------------------------
-# Local Media, Raw Screenshots, PDFs & Local Assets
+# 2. Local Media, Raw Screenshots, PDFs & Local Assets
 # ------------------------------------------------------------------------------
 images/
 docs/images/
 *.pdf
 docs/*.pdf
 
-
-
 # ------------------------------------------------------------------------------
-# 2. IDE & Editor Specific Configs
+# 3. IDE & Editor Specific Configs
 # ------------------------------------------------------------------------------
-# Visual Studio Code (preserves team recommended configs if desired)
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# IntelliJ / Android Studio
 .idea/
 *.iml
 *.ipr
@@ -53,7 +48,7 @@ docs/*.pdf
 .settings/
 
 # ------------------------------------------------------------------------------
-# 3. Flutter & Dart Build Outputs & Caches
+# 4. Flutter & Dart Build Outputs & Caches
 # ------------------------------------------------------------------------------
 .dart_tool/
 .flutter-plugins
@@ -68,7 +63,7 @@ coverage/
 .widget_preview/
 
 # ------------------------------------------------------------------------------
-# 4. Android Build Files & Local Properties
+# 5. Android Build Files & Local Properties
 # ------------------------------------------------------------------------------
 android/.gradle/
 android/build/
@@ -83,7 +78,7 @@ android/key.properties
 android/.idea/
 
 # ------------------------------------------------------------------------------
-# 5. iOS & macOS Build Files
+# 6. iOS & macOS Build Files
 # ------------------------------------------------------------------------------
 ios/Pods/
 ios/.symlinks/
@@ -101,7 +96,7 @@ ios/DerivedData/
 *.perspectivev3
 
 # ------------------------------------------------------------------------------
-# 6. Desktop & Web Build Ephemerals
+# 7. Desktop & Web Build Ephemerals
 # ------------------------------------------------------------------------------
 windows/flutter/ephemeral/
 windows/.gradle/
@@ -113,25 +108,20 @@ macos/Flutter/ephemeral/
 *.dylib
 
 # ------------------------------------------------------------------------------
-# 7. CRITICAL: Security, Private Keys & Credentials (NEVER PUBLISH)
+# 8. CRITICAL: Security, Private Keys & Credentials (NEVER PUBLISH)
 # ------------------------------------------------------------------------------
-# Android Keystores & Signing Certificates
 *.jks
 *.keystore
 *.pem
 *.p12
 *.pfx
 key.properties
-
-# Environment Variables & Local Secrets
 .env
 .env.*
 *.secret
 secrets/
 credentials/
 private_keys/
-
-# Firebase Admin SDK & Server Keys (Never leak in public repositories)
 **/serviceAccountKey.json
 **/serviceAccountKey.json.local
 **/firebase-adminsdk-*.json
@@ -139,7 +129,7 @@ sample_data/serviceAccountKey.json
 *.serviceAccount.json
 
 # ------------------------------------------------------------------------------
-# 8. Node.js & Tooling (Seed script)
+# 9. Node.js & Tooling (Seed script)
 # ------------------------------------------------------------------------------
 node_modules/
 npm-debug.log*
@@ -148,7 +138,7 @@ yarn-error.log*
 package-lock.json
 
 # ------------------------------------------------------------------------------
-# 9. AI Assistant & Local Workspace Caches
+# 10. AI Assistant & Local Workspace Caches
 # ------------------------------------------------------------------------------
 .gemini/
 .system_generated/
