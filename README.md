@@ -3,22 +3,60 @@
 # 🍳 Flutter & Firebase Recipe App
 **A Cloud-Synced, Production-Grade Recipe Discovery & Meal Planning Platform**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
-[![Firebase](https://img.shields.io/badge/Firebase-Backend-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
-[![Provider](https://img.shields.io/badge/State_Management-Provider-68B984?style=for-the-badge&logo=dart&logoColor=white)](https://pub.dev/packages/provider)
-[![Tests](https://img.shields.io/badge/Tests-54%2F54%20Passing-2ECC71?style=for-the-badge&logo=checkmarx&logoColor=white)](test/)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+<!-- Primary Action & Metric Badges -->
+<p align="center">
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk">
+    <img src="https://img.shields.io/badge/Download_APK-Direct_Install-FF5A36?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" />
+  </a>
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases">
+    <img src="https://img.shields.io/github/downloads/SOURAVcse9/recipe-app-flutter-firebase/total?style=for-the-badge&logo=github&logoColor=white&label=Total%20Downloads&color=2ECC71" alt="Total Downloads" />
+  </a>
+  <a href="https://github.com/SOURAVcse9/recipe-app-flutter-firebase">
+    <img src="https://komarev.com/ghpvc/?username=SOURAVcse9-recipe-app&label=Repo%20Visitors&color=E65100&style=for-the-badge" alt="Repository Visitors" />
+  </a>
+</p>
+
+<!-- Tech Stack & Build Badges -->
+<p align="center">
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.22+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" /></a>
+  <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-3.4+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" /></a>
+  <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/Firebase-Backend-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" /></a>
+  <a href="https://pub.dev/packages/provider"><img src="https://img.shields.io/badge/Provider-6.1.5+-68B984?style=for-the-badge&logo=dart&logoColor=white" alt="Provider" /></a>
+  <a href="test/"><img src="https://img.shields.io/badge/Tests-54%2F54%20Passing-2ECC71?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Tests" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License" /></a>
+</p>
 
 <br/>
 
 > **Modern, reactive cross-platform mobile application powered by Flutter and Firebase. Engineered with a strict 3-tier clean architecture, dynamic serving scaler, atomic multi-user reviews, role-based access control, and 100% Firebase Spark Plan (Free Tier) compliance.**
 
-[Explore Features](#-core-features) • [Architecture](#-architecture) • [Quick Start](#-quick-start) • [Security & RBAC](#-security--access-control) • [Tech Stack](#-technology-stack)
+[📥 Download APK](#-instant-apk-download--installation) • [Explore Features](#-key-highlights-at-a-glance) • [Architecture](#-architecture) • [Quick Start](#-quick-start) • [Security & RBAC](#-security--access-control) • [Tech Stack](#-technology-stack)
 
 ---
 
 </div>
+
+## 📥 Instant APK Download & Installation
+
+You can download and install the pre-built production release APK on any Android phone (Android 7.0+):
+
+| Option | Download Link | Description |
+| :--- | :--- | :--- |
+| **Direct APK File** | [⬇️ Download `app-release.apk`](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/raw/main/release/app-release.apk) | Direct raw download from this repository |
+| **GitHub Releases** | [🏷️ View GitHub Releases](https://github.com/SOURAVcse9/recipe-app-flutter-firebase/releases) | Tagged releases with changelogs and asset counts |
+
+<details>
+<summary><b>📱 How to Install on Android</b></summary>
+<br/>
+
+1. Tap the download link above on your Android phone or transfer the `.apk` via USB.
+2. Open the downloaded file from your **Downloads** folder or notification bar.
+3. If prompted with *"Install unknown apps"*, tap **Settings** and enable permission for your browser or file manager.
+4. Tap **Install** and launch the **Recipe App**!
+
+</details>
+
+---
 
 ## ✨ Key Highlights at a Glance
 
